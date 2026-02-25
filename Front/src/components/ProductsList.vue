@@ -1,9 +1,7 @@
 <!-- Componente para pintar los productos en el Home -->
 <template>
-<div class="mt-10 w-full max-w-md">
-      <!-- <h2 class="text-center text-yellow-500 font-bold text-lg mb-2">PRODUCTOS</h2> -->
-       <div class="mt-10 w-full max-w-md">
-          <!-- <h2 class="text-center text-yellow-500 font-bold text-lg mb-2">PRODUCTOS</h2> -->
+<div id="productos" class="mt-10 w-full max-w-md scroll-mt-6">
+       <div class="w-full max-w-md">
           <h2 class="text-center text-yellow-500 font-bold text-lg mb-2 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer">
               PRODUCTOS
           </h2>

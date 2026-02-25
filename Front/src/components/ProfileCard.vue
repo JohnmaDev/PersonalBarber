@@ -53,11 +53,19 @@
         </div>
 
         <div class="space-y-4">
-          <ServiceButton title="CORTE" priceCOP="40.000" priceUSD="10.00" @click="() => goToWhatsApp('CORTE')" />
-          <ServiceButton title="CORTE Y BARBA" priceCOP="50.000" priceUSD="13.00" @click="() => goToWhatsApp('CORTE Y BARBA')" />
-          <ServiceButton title="SOLO BARBA" priceCOP="25.000" priceUSD="7.00" @click="() => goToWhatsApp('SOLO BARBA')" />
-          <ServiceButton title="DEPILACIÓN DE NARIZ" priceCOP="20.000" priceUSD="5.00" @click="() => goToWhatsApp('DEPILACIÓN DE NARIZ')" />
-          <ServiceButton title="DEPILACIÓN DE OIDOS" priceCOP="20.000" priceUSD="5.00" @click="() => goToWhatsApp('DEPILACIÓN DE OIDOS')" />
+          <!-- Botón Principal hacia la nueva vista -->
+          <div 
+            @click="goToAgendarCita('')"
+            class="w-full bg-white text-black font-bold text-center rounded-full py-4 text-lg mb-6 cursor-pointer hover:bg-zinc-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+          >
+            🔥 RESERVAR CITA AHORA 🔥
+          </div>
+
+          <ServiceButton title="CORTE" priceCOP="40.000" priceUSD="10.00" @click="() => goToAgendarCita('Corte Sencillo')" />
+          <ServiceButton title="CORTE Y BARBA" priceCOP="50.000" priceUSD="13.00" @click="() => goToAgendarCita('Corte + Barba')" />
+          <ServiceButton title="SOLO BARBA" priceCOP="25.000" priceUSD="7.00" @click="() => goToAgendarCita('Solo Barba')" />
+          <ServiceButton title="DEPILACIÓN DE NARIZ" priceCOP="20.000" priceUSD="5.00" @click="() => goToAgendarCita('Depilación Nariz')" />
+          <ServiceButton title="DEPILACIÓN DE OIDOS" priceCOP="20.000" priceUSD="5.00" @click="() => goToAgendarCita('Depilación Oídos')" />
         </div>
     </div>
   </div>
@@ -71,9 +79,10 @@ export default {
     ServiceButton
   },
   methods: {
-    // goToAgendarCita() {
-    //   this.$router.push({ name: 'AgendarCita' })
-    // },
+    goToAgendarCita(serviceName) {
+      // Navegamos a la vista de reservar. Podríamos pasar el servicio por Query o Params si quisiéramos auto-llenarlo.
+      this.$router.push({ name: 'ReservaCita', query: { service: serviceName } })
+    },
     goToWhatsApp(serviceName) {
       const barberName = 'Andrés'
       const phone = '573045840264'
