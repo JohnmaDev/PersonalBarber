@@ -18,21 +18,21 @@
         <a href="https://api.whatsapp.com/send?phone=573045840264&text=Hola,%20quiero%20agendar%20una%20cita%20con%20Andres%20el%20barbero.%20¿Podrías%20ayudarme%20con%20la%20disponibilidad?" target="_blank" rel="noopener noreferrer" class="hover:text-green-500 transition duration-300">
           <i class="fab fa-whatsapp text-white text-2xl transition-transform duration-300 hover:scale-125 hover:text-green-500"></i>
         </a>
-        <a href="#" target="#" rel="#" class="transition-transform duration-300 hover:scale-125 group">
+        <a href="https://www.tiktok.com/@pipehpbarber?lang=en" target="#" rel="#" class="transition-transform duration-300 hover:scale-125 group">
           <i class="fab fa-tiktok text-white fab fa-tiktok text-white text-2xl group-hover:text-pink-500"></i>
         </a>
         <a href="https://www.instagram.com/pipehp_/" target="_blank" rel="noopener noreferrer" class="rounded-full transition-transform duration-300 hover:scale-125 group">
           <i class="fab fa-instagram text-white text-2xl group-hover:text-pink-500"></i>
         </a>
-        <a href="#" target="#" rel="#" class="rounded-full transition-transform duration-300 hover:scale-125 group">
+        <!-- <a href="#" target="#" rel="#" class="rounded-full transition-transform duration-300 hover:scale-125 group">
           <i class="fab fa-facebook text-white text-2xl group-hover:text-blue-500"></i>
         </a>
         <a href="#" target="#" rel="#" class="rounded-full transition-transform duration-300 hover:scale-125 group">
           <i class="fab fa-x-twitter text-white text-2xl group-hover:text-neutral-400"></i>
         </a>
         <a href="#" target="#" rel="#" class="rounded-full transition-transform duration-300 hover:scale-125 group">
-          <i class="fab fa-pinterest text-white text-2xl group-hover:text-red-500"></i>
-        </a>
+          <i class="fab fa-pinterest text-white text-2xl group-hover:text-red-500"></i> 
+        </a>-->
       </div>
     </div>
 
