@@ -6,6 +6,13 @@
 
 **BarberCol** is a high-end landing page and automated booking system for professional barbers. Built with a focus on **Visual Excellence**, **Security**, and **Efficiency**, it connects a modern Vue.js frontend with a flexible Google Sheets backend.
 
+---
+
+### 🌐 Live Demo
+Visit the live site: [https://p-rose-col.netlify.app/](https://p-rose-col.netlify.app/)
+
+---
+
 ## 🌟 Key Features
 
 ### 🛡️ Enhanced Security

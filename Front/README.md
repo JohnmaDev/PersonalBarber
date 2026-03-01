@@ -1,5 +1,7 @@
 # barbercol-ui
 
+### 🌐 Live Site: [https://p-rose-col.netlify.app/](https://p-rose-col.netlify.app/)
+
 ## Project setup
 ```
 npm install
