@@ -1,79 +1,65 @@
 <!-- Componente para pintar los clientes satisfechos en el Home -->
 <template>
-<div class="mt-10 w-full max-w-md">
-      <div class="mt-10 w-full max-w-md">
-            <h2 class="text-center text-yellow-500 font-bold text-lg mb-2 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer">
-              SERVICIOS DESTACADOS
-            </h2>
-            <!-- <div class="flex justify-center text-yellow-500 text-xl mb-6">
-                <span>✦✧✦━━❖━━✦✧✦</span>
-            </div> -->
-            <div class="flex justify-center text-xl mb-6">
-              <span class="glitch-gold" style="animation-delay: 0s;">✦</span>
-              <span class="glitch-gold" style="animation-delay: 0.1s;">✧</span>
-              <span class="glitch-gold" style="animation-delay: 0.2s;">✦</span>
-              <span class="glitch-gold" style="animation-delay: 0.3s;">━</span>
-              <span class="glitch-gold" style="animation-delay: 0.4s;">━</span>
-              <span class="glitch-gold" style="animation-delay: 0.5s;">❖</span>
-              <span class="glitch-gold" style="animation-delay: 0.6s;">━</span>
-              <span class="glitch-gold" style="animation-delay: 0.7s;">━</span>
-              <span class="glitch-gold" style="animation-delay: 0.8s;">✦</span>
-              <span class="glitch-gold" style="animation-delay: 0.9s;">✧</span>
-              <span class="glitch-gold" style="animation-delay: 1s;">✦</span>
-            </div>
+<div id="clientes" class="mt-24 w-full scroll-mt-24">
+       <div class="text-center mb-12">
+          <h2 class="text-4xl font-bold text-white mb-2 tracking-tighter uppercase">
+              CLIENTES <span class="text-barber-gold">SATISFECHOS</span>
+          </h2>
+          <div class="flex justify-center gap-1 opacity-50">
+            <span v-for="i in 3" :key="i" class="w-1.5 h-1.5 bg-barber-gold rounded-full"></span>
+          </div>
         </div>
-    </div>
 
     <!-- Swiper con navegación -->
-    <div class="relative w-full py-10 px-4 bg-black overflow-hidden">
+    <div class="relative w-full py-10 overflow-visible">
       
-      <!-- Botón Anterior (sin rotación, flecha real hacia la izquierda) -->
-      <div class="clientes-prev absolute top-1/2 left-0 z-30 w-12 h-12 bg-yellow-400 rounded-full shadow-xl flex items-center justify-center hover:bg-yellow-500 transition duration-300 -translate-y-1/2 group">
-        <svg class="w-5 h-5 text-black group-hover:-translate-x-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M12.293 4.293a1 1 0 010 1.414L8.414 10l3.879 4.293a1 1 0 01-1.586 1.414l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.586 0z" clip-rule="evenodd" />
-        </svg>
-      </div>
-
-      <!-- Botón Siguiente -->
-      <div class="clientes-next absolute top-1/2 right-0 z-30 w-12 h-12 bg-yellow-400 rounded-full shadow-xl flex items-center justify-center hover:bg-yellow-500 transition duration-300 -translate-y-1/2 group">
-        <svg class="w-5 h-5 text-black group-hover:translate-x-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M7.707 15.707a1 1 0 010-1.414L11.586 10 7.707 6.707a1 1 0 011.586-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.586 0z" clip-rule="evenodd" />
-        </svg>
-      </div>
-
       <!-- Swiper -->
       <Swiper
-        class="z-10 !overflow-visible"
+        class="!overflow-visible"
         :modules="[Navigation]"
         :navigation="{
           nextEl: '.clientes-next',
           prevEl: '.clientes-prev'
         }"
-        :slides-per-view="1.1"
-        :space-between="16"
+        :slides-per-view="1.2"
+        :space-between="24"
         :centeredSlides="true"
         :loop="true"
         :breakpoints="{
-          640: { slidesPerView: 2.2 },
-          1024: { slidesPerView: 3.2 }
+          640: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 }
         }"
-        :pagination="true"
       >
         <SwiperSlide
           v-for="services in SatisfiedCustomers"
           :key="services.id"
-          class="overflow-visible"
+          class="pb-12"
         >
-          <div class="w-full aspect-square rounded-2xl overflow-hidden shadow-lg transition duration-300 ease-in-out hover:scale-[1.02] origin-center cursor-crosshair">
+          <div class="group relative aspect-square glass-dark rounded-3xl overflow-hidden hover:border-barber-gold transition-all duration-500 cursor-crosshair">
             <img
               :src="services.image"
               alt=""
-              class="w-full h-full object-cover"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent flex items-bottom p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <span class="text-white font-bold tracking-wider text-lg uppercase">{{ services.name }}</span>
+            </div>
           </div>
         </SwiperSlide>
       </Swiper>
+
+      <!-- Custom Navigation Buttons -->
+      <div class="flex justify-center gap-4 mt-8">
+        <button class="clientes-prev w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <button class="clientes-next w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>

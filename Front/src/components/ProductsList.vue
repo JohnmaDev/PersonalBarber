@@ -1,94 +1,79 @@
 <!-- Componente para pintar los productos en el Home -->
 <template>
-<div id="productos" class="mt-10 w-full max-w-md scroll-mt-6">
-       <div class="w-full max-w-md">
-          <h2 class="text-center text-yellow-500 font-bold text-lg mb-2 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer">
-              PRODUCTOS
+<div id="productos" class="mt-24 w-full scroll-mt-24">
+       <div class="text-center mb-12">
+          <h2 class="text-4xl font-bold text-white mb-2 tracking-tighter">
+              NUESTROS <span class="text-barber-gold">PRODUCTOS</span>
           </h2>
-          <!-- <div class="flex justify-center text-yellow-500 text-xl mb-6">
-            <span>⋆⁺₊✧༚━━━༺✨༻━━━༚✧₊⁺⋆</span>
-          </div> -->
-          <div class="flex justify-center text-yellow-500 text-xl mb-6 text-ornament">
-            <span class="glitch-gold" style="animation-delay: 0s;">⋆</span>
-            <span class="glitch-gold" style="animation-delay: 0.1s;">⁺</span>
-            <span class="glitch-gold" style="animation-delay: 0.2s;">₊</span>
-            <span class="glitch-gold" style="animation-delay: 0.3s;">✧</span>
-            <span class="glitch-gold" style="animation-delay: 0.4s;">༚</span>
-            <span class="glitch-gold" style="animation-delay: 0.5s;">━</span>
-            <span class="glitch-gold" style="animation-delay: 0.6s;">━</span>
-            <span class="glitch-gold" style="animation-delay: 0.7s;">༺</span>
-            <span class="glitch-gold" style="animation-delay: 0.8s;">✨</span>
-            <span class="glitch-gold" style="animation-delay: 0.9s;">༻</span>
-            <span class="glitch-gold" style="animation-delay: 1s;">━</span>
-            <span class="glitch-gold" style="animation-delay: 1.1s;">━</span>
-            <span class="glitch-gold" style="animation-delay: 1.2s;">༚</span>
-            <span class="glitch-gold" style="animation-delay: 1.3s;">✧</span>
-            <span class="glitch-gold" style="animation-delay: 1.4s;">₊</span>
-            <span class="glitch-gold" style="animation-delay: 1.5s;">⁺</span>
-            <span class="glitch-gold" style="animation-delay: 1.6s;">⋆</span>
+          <div class="flex justify-center gap-1 opacity-50">
+            <span v-for="i in 3" :key="i" class="w-1.5 h-1.5 bg-barber-gold rounded-full"></span>
           </div>
         </div>
-    </div>
 
     <!-- Swiper con navegación -->
-    <div class="relative w-full py-10 px-4 bg-black overflow-hidden">
-
-      <!-- Botón Anterior (sin rotación, flecha real hacia la izquierda) -->
-      <div class="productos-prev absolute top-1/2 left-0 z-30 w-12 h-12 bg-yellow-400 rounded-full shadow-xl flex items-center justify-center hover:bg-yellow-500 transition duration-300 -translate-y-1/2 group">
-        <svg class="w-5 h-5 text-black group-hover:-translate-x-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M12.293 4.293a1 1 0 010 1.414L8.414 10l3.879 4.293a1 1 0 01-1.586 1.414l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.586 0z" clip-rule="evenodd" />
-        </svg>
-      </div>
-
-      <!-- Botón Siguiente -->
-      <div class="productos-next absolute top-1/2 right-0 z-30 w-12 h-12 bg-yellow-400 rounded-full shadow-xl flex items-center justify-center hover:bg-yellow-500 transition duration-300 -translate-y-1/2 group">
-        <svg class="w-5 h-5 text-black group-hover:translate-x-1 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M7.707 15.707a1 1 0 010-1.414L11.586 10 7.707 6.707a1 1 0 011.586-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.586 0z" clip-rule="evenodd" />
-        </svg>
-      </div>
+    <div class="relative w-full py-10 overflow-visible">
 
       <!-- Swiper -->
       <Swiper
-        class="z-10 !overflow-visible"
+        class="!overflow-visible"
         :modules="[Navigation]"
         :navigation="{
           nextEl: '.productos-next',
           prevEl: '.productos-prev'
         }"
         :slides-per-view="1.2"
-        :space-between="14"
+        :space-between="24"
         :centeredSlides="true"
         :loop="true"
         :breakpoints="{
           640: { slidesPerView: 2 },
-          768: { slidesPerView: 3 },
           1024: { slidesPerView: 3 }
         }"
-        :pagination="true"
       >
         <SwiperSlide
           v-for="product in products"
           :key="product.id"
-          class="overflow-visible"
+          class="pb-12"
         >
           <div
-              class="h-[460px] max-w-[420px] bg-gradient-to-b from-black via-gray-900 to-black border border-yellow-400 rounded-2xl shadow-lg text-white mx-auto overflow-hidden hover:scale-105 transition-transform duration-300 flex flex-col cursor-crosshair"
+              class="group relative h-[500px] glass-dark rounded-3xl overflow-hidden hover:border-barber-gold transition-all duration-500 flex flex-col cursor-pointer"
               @click="enviarMensajeWhatsApp(product.name, product.price)"
           >
-              <img :src="product.image" alt="" class="h-[65%] w-full object-cover" />
+              <div class="h-3/5 w-full overflow-hidden">
+                <img :src="product.image" alt="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              </div>
 
-              <div class="p-3 flex flex-col flex-grow justify-between">
+              <div class="p-6 flex flex-col flex-grow justify-between">
                   <div> 
-                      <h3 class="text-xl font-bold leading-tight">{{ product.name }}</h3>
-                      <h2 class="text-sm font-bold text-gray-400 mt-1 line-clamp-3">{{ product.description }}</h2>
+                      <h3 class="text-2xl font-bold text-white group-hover:text-barber-gold transition-colors duration-300">{{ product.name }}</h3>
+                      <p class="text-gray-400 mt-2 text-sm leading-relaxed line-clamp-2 italic">{{ product.description }}</p>
                   </div>
                   
-                  <p class="text-lg text-yellow-300 font-semibold mt-2">{{ product.price }}</p>
+                  <div class="flex items-center justify-between mt-4">
+                    <span class="text-xl text-barber-gold font-bold">{{ product.price }}</span>
+                    <div class="w-10 h-10 rounded-full glass flex items-center justify-center group-hover:bg-barber-gold group-hover:text-black transition-all duration-300">
+                      <i class="fab fa-whatsapp"></i>
+                    </div>
+                  </div>
               </div>
+
+              <!-- Decorative Overlay -->
+              <div class="absolute inset-0 border-2 border-transparent group-hover:border-barber-gold/30 rounded-3xl pointer-events-none transition-all duration-500"></div>
           </div>
         </SwiperSlide>
       </Swiper>
+
+      <!-- Custom Navigation Buttons -->
+      <div class="flex justify-center gap-4 mt-8">
+        <button class="productos-prev w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <button class="productos-next w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
