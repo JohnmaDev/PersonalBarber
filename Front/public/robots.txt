@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://p-rose-col.netlify.app/sitemap.xml
