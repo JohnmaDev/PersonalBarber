@@ -11,7 +11,7 @@
         </div>
 
     <!-- Swiper con navegación -->
-    <div class="relative w-full py-10 overflow-visible">
+    <div class="relative w-full py-10 overflow-hidden">
       
       <!-- Swiper -->
       <Swiper
@@ -38,8 +38,9 @@
           <div class="group relative aspect-square glass-dark rounded-3xl overflow-hidden hover:border-barber-gold transition-all duration-500 cursor-crosshair">
             <img
               :src="services.image"
-              alt=""
+              :alt="'Cliente satisfecho: ' + services.name"
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              loading="lazy"
             />
             <!-- Gradient Overlay -->
             <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent flex items-bottom p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -51,11 +52,11 @@
 
       <!-- Custom Navigation Buttons -->
       <div class="flex justify-center gap-4 mt-8">
-        <button class="clientes-prev w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
-          <i class="fas fa-arrow-left"></i>
+        <button aria-label="Anterior cliente" class="clientes-prev w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
         </button>
-        <button class="clientes-next w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
-          <i class="fas fa-arrow-right"></i>
+        <button aria-label="Siguiente cliente" class="clientes-next w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
         </button>
       </div>
     </div>
@@ -84,8 +85,10 @@ const SatisfiedCustomers = [
 ]
 
 onMounted(async () => {
-  await nextTick()
-  // Esto asegura que Swiper pueda encontrar los botones personalizados
+  requestAnimationFrame(async () => {
+    await nextTick()
+    // Esto asegura que Swiper pueda encontrar los botones personalizados despues de que el layout inicial se haya asentado
+  })
 })
 
 </script>

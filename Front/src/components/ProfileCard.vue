@@ -4,7 +4,7 @@
     <div class="flex flex-col items-center">
       <div class="group relative w-76 h-80 rounded-xl overflow-hidden bg-black">
         <img
-          src="@/assets/profile_andres.jpg"
+          src="@/assets/profile_andres.webp"
           alt="Andres Felipe Hernandez"
           class="w-full h-full object-cover mask-fade"
           loading="lazy"

@@ -11,7 +11,7 @@
         </div>
 
     <!-- Swiper con navegación -->
-    <div class="relative w-full py-10 overflow-visible">
+    <div class="relative w-full py-10 overflow-hidden">
 
       <!-- Swiper -->
       <Swiper
@@ -36,7 +36,7 @@
           class="pb-12"
         >
           <div
-              class="group relative h-[500px] glass-dark rounded-3xl overflow-hidden hover:border-barber-gold transition-all duration-500 flex flex-col cursor-pointer"
+              class="group relative h-[500px] glass-dark rounded-3xl overflow-hidden border border-barber-gold/20 hover:border-2 hover:border-barber-gold transition-all duration-500 flex flex-col cursor-pointer"
               @click="enviarMensajeWhatsApp(product.name, product.price)"
           >
               <div class="h-3/5 w-full overflow-hidden">
@@ -57,8 +57,7 @@
                   </div>
               </div>
 
-              <!-- Decorative Overlay -->
-              <div class="absolute inset-0 border-2 border-transparent group-hover:border-barber-gold/30 rounded-3xl pointer-events-none transition-all duration-500"></div>
+
           </div>
         </SwiperSlide>
       </Swiper>
@@ -95,8 +94,10 @@ const products = [
 ]
 
 onMounted(async () => {
-  await nextTick()
-  // Esto asegura que Swiper pueda encontrar los botones personalizados
+  requestAnimationFrame(async () => {
+    await nextTick()
+    // Esto asegura que Swiper pueda encontrar los botones personalizados despues de que el layout inicial se haya asentado
+  })
 })
 
 const phone = '573045840264'

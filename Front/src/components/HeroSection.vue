@@ -3,7 +3,7 @@
     <!-- Background Image with Overlay -->
     <div class="absolute inset-0 z-0">
       <img 
-        src="@/assets/hero_barber.png" 
+        src="@/assets/hero_barber.webp" 
         alt="Fondo de la barbería BarberCol" 
         class="w-full h-full object-cover filter brightness-50"
         fetchpriority="high"
@@ -14,13 +14,13 @@
     <!-- Content -->
     <div class="relative z-10 container mx-auto px-6 text-center lg:text-left flex flex-col lg:flex-row items-center justify-between">
       <div class="max-w-2xl">
-        <h1 class="text-5xl lg:text-7xl font-bold text-white mb-4 tracking-tighter animate-fade-in-up">
+        <h1 class="text-5xl lg:text-7xl font-bold text-white mb-4 tracking-tighter animate-fade-in-up opacity-0">
           <span class="text-barber-gold">Barbel</span>Col
         </h1>
-        <p class="text-xl lg:text-2xl text-gray-300 mb-8 italic tracking-wide animate-fade-in-up" style="animation-delay: 0.2s;">
+        <p class="text-xl lg:text-2xl text-gray-300 mb-8 italic tracking-wide animate-fade-in-up opacity-0" style="animation-delay: 0.2s;">
           REFLEJÁ TU MEJOR VERSIÓN
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up" style="animation-delay: 0.4s;">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up opacity-0" style="animation-delay: 0.4s;">
           <button 
             @click="$emit('reserve')"
             class="px-8 py-4 bg-barber-gold hover:bg-yellow-600 text-black font-bold rounded-lg transition-all duration-300 shadow-lg shadow-barber-gold/20"
@@ -37,10 +37,10 @@
       </div>
 
       <!-- Social Floating Card (Glassmorphism) -->
-      <div class="mt-12 lg:mt-0 glass-dark p-8 rounded-2xl animate-fade-in-up" style="animation-delay: 0.6s;">
+      <div class="mt-12 lg:mt-0 glass-dark p-8 rounded-2xl animate-fade-in-up opacity-0" style="animation-delay: 0.6s;">
         <div class="flex flex-col items-center gap-6">
           <div class="w-24 h-24 rounded-full border-2 border-barber-gold overflow-hidden">
-            <img src="@/assets/profile_andres.jpg" alt="Andres" class="w-full h-full object-cover" />
+            <img src="@/assets/profile_andres.webp" alt="Andres" class="w-full h-full object-cover" />
           </div>
           <div class="text-center">
             <h2 class="text-xl font-bold text-white">Andrés Hernández</h2>
@@ -96,6 +96,6 @@ export default {
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out forwards;
+  animation: fade-in-up 0.8s ease-out both;
 }
 </style>
