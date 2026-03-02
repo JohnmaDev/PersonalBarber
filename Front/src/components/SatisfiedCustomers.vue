@@ -44,7 +44,7 @@
             />
             <!-- Gradient Overlay -->
             <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent flex items-bottom p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <span class="text-white font-bold tracking-wider text-lg uppercase">{{ services.name }}</span>
+              <!-- <span class="text-white font-bold tracking-wider text-lg uppercase">{{ services.name }}</span> -->
             </div>
           </div>
         </SwiperSlide>
@@ -72,16 +72,16 @@ import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
 const SatisfiedCustomers = [
-  { id: 10, name: 'Liam Torres', image: 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/a321a2a3-4cd5-4b8c-853c-ade4d6e2a330/Derivates/885d4ee3-4751-4921-a6d5-7f0f0c9638a3.jpg' },
-  { id: 11, name: 'Matías Rivas', image: 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/a321a2a3-4cd5-4b8c-853c-ade4d6e2a330/Derivates/885d4ee3-4751-4921-a6d5-7f0f0c9638a3.jpg' },
-  { id: 12, name: 'Matías Rivas', image: 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/a321a2a3-4cd5-4b8c-853c-ade4d6e2a330/Derivates/885d4ee3-4751-4921-a6d5-7f0f0c9638a3.jpg' },
-  { id: 13, name: 'Renzo Calderón', image: 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/a321a2a3-4cd5-4b8c-853c-ade4d6e2a330/Derivates/885d4ee3-4751-4921-a6d5-7f0f0c9638a3.jpg' },
-  { id: 14, name: 'Simón Aranda', image: 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/a321a2a3-4cd5-4b8c-853c-ade4d6e2a330/Derivates/885d4ee3-4751-4921-a6d5-7f0f0c9638a3.jpg' },
-  { id: 15, name: 'Iván Gallardo', image: 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/a321a2a3-4cd5-4b8c-853c-ade4d6e2a330/Derivates/885d4ee3-4751-4921-a6d5-7f0f0c9638a3.jpg' },
-  { id: 16, name: 'Tomás Villamil', image: 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/a321a2a3-4cd5-4b8c-853c-ade4d6e2a330/Derivates/885d4ee3-4751-4921-a6d5-7f0f0c9638a3.jpg' },
-  { id: 17, name: 'Dante Salazar', image: 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/a321a2a3-4cd5-4b8c-853c-ade4d6e2a330/Derivates/885d4ee3-4751-4921-a6d5-7f0f0c9638a3.jpg' },
-  { id: 18, name: 'Álex Carvajal', image: 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/a321a2a3-4cd5-4b8c-853c-ade4d6e2a330/Derivates/885d4ee3-4751-4921-a6d5-7f0f0c9638a3.jpg' },
-  { id: 19, name: 'Marioso', image: 'https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/a321a2a3-4cd5-4b8c-853c-ade4d6e2a330/Derivates/885d4ee3-4751-4921-a6d5-7f0f0c9638a3.jpg' },
+  { id: 10, name: 'Liam Torres', image: '/customers/customer_1.webp' },
+  { id: 11, name: 'Matías Rivas', image: '/customers/customer_2.webp' },
+  { id: 12, name: 'Samuel Ortiz', image: '/customers/customer_3.webp' },
+  { id: 13, name: 'Renzo Calderón', image: '/customers/customer_1.webp' },
+  { id: 14, name: 'Simón Aranda', image: '/customers/customer_2.webp' },
+  { id: 15, name: 'Iván Gallardo', image: '/customers/customer_3.webp' },
+  { id: 16, name: 'Tomás Villamil', image: '/customers/customer_1.webp' },
+  { id: 17, name: 'Dante Salazar', image: '/customers/customer_2.webp' },
+  { id: 18, name: 'Álex Carvajal', image: '/customers/customer_3.webp' },
+  { id: 19, name: 'Marioso', image: '/customers/customer_1.webp' },
 ]
 
 onMounted(async () => {

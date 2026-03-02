@@ -62,12 +62,11 @@
         </SwiperSlide>
       </Swiper>
 
-      <!-- Custom Navigation Buttons -->
       <div class="flex justify-center gap-4 mt-8">
-        <button class="productos-prev w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
+        <button aria-label="Anterior producto" class="productos-prev w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
           <i class="fas fa-arrow-left"></i>
         </button>
-        <button class="productos-next w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
+        <button aria-label="Siguiente producto" class="productos-next w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300">
           <i class="fas fa-arrow-right"></i>
         </button>
       </div>
