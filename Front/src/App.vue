@@ -1,5 +1,5 @@
 <template>
-  <div id="app-container">
+  <main id="app-container">
     <router-view />
     <div>
       <!-- Tu contenido -->
@@ -13,7 +13,7 @@
         ↑ Top
       </button>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>

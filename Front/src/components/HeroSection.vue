@@ -4,8 +4,9 @@
     <div class="absolute inset-0 z-0">
       <img 
         src="@/assets/hero_barber.png" 
-        alt="Barber Hero" 
+        alt="Fondo de la barbería BarberCol" 
         class="w-full h-full object-cover filter brightness-50"
+        fetchpriority="high"
       />
       <div class="absolute inset-0 bg-gradient-to-b from-transparent via-barber-black/60 to-barber-black"></div>
     </div>
@@ -42,12 +43,12 @@
             <img src="@/assets/profile_andres.jpg" alt="Andres" class="w-full h-full object-cover" />
           </div>
           <div class="text-center">
-            <h3 class="text-xl font-bold text-white">Andrés Hernández</h3>
+            <h2 class="text-xl font-bold text-white">Andrés Hernández</h2>
             <p class="text-barber-gold text-sm font-semibold tracking-widest uppercase mt-1">Master Barber</p>
           </div>
           <div class="flex gap-4">
-            <a v-for="social in socials" :key="social.icon" :href="social.link" target="_blank" class="w-10 h-10 flex items-center justify-center rounded-full glass hover:text-barber-gold transition-colors">
-              <i :class="social.icon"></i>
+            <a v-for="social in socials" :key="social.name" :href="social.link" target="_blank" class="w-10 h-10 flex items-center justify-center rounded-full glass hover:text-barber-gold transition-colors focus:outline-none focus:ring-2 focus:ring-barber-gold" :aria-label="social.name">
+              <i :class="social.icon" aria-hidden="true"></i>
             </a>
           </div>
         </div>
@@ -67,9 +68,9 @@ export default {
   data() {
     return {
       socials: [
-        { icon: 'fab fa-whatsapp', link: 'https://api.whatsapp.com/send?phone=573045840264' },
-        { icon: 'fab fa-tiktok', link: 'https://www.tiktok.com/@pipehpbarber' },
-        { icon: 'fab fa-instagram', link: 'https://www.instagram.com/pipehp_/' }
+        { name: 'WhatsApp', icon: 'fab fa-whatsapp', link: 'https://api.whatsapp.com/send?phone=573045840264' },
+        { name: 'TikTok', icon: 'fab fa-tiktok', link: 'https://www.tiktok.com/@pipehpbarber' },
+        { name: 'Instagram', icon: 'fab fa-instagram', link: 'https://www.instagram.com/pipehp_/' }
       ]
     }
   },

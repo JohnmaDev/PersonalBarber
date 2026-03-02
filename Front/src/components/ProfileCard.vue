@@ -7,22 +7,23 @@
           src="@/assets/profile_andres.jpg"
           alt="Andres Felipe Hernandez"
           class="w-full h-full object-cover mask-fade"
+          loading="lazy"
         />
       </div>
       <h1 class="text-2xl font-bold mt-4">Andres Felipe Hernandez</h1>
-      <p class="text-md text-gray-300 mt-2">REFLEJÁ TU MEJOR VERSIÓN ⭐</p>
+      <p class="text-md text-gray-200 mt-2">REFLEJÁ TU MEJOR VERSIÓN ⭐</p>
       <br>
-      <p class="text-sm text-gray-300 italic tracking-wide">Tu look habla por vos. Asegurate de que diga lo correcto.</p>
+      <p class="text-sm text-gray-200 italic tracking-wide">Tu look habla por vos. Asegurate de que diga lo correcto.</p>
 
       <div class="flex space-x-4 mt-4 text-xl text-white">
-        <a href="https://api.whatsapp.com/send?phone=573045840264&text=Hola,%20quiero%20agendar%20una%20cita%20con%20Andres%20el%20barbero.%20¿Podrías%20ayudarme%20con%20la%20disponibilidad?" target="_blank" rel="noopener noreferrer" class="hover:text-green-500 transition duration-300">
-          <i class="fab fa-whatsapp text-white text-2xl transition-transform duration-300 hover:scale-125 hover:text-green-500"></i>
+        <a href="https://api.whatsapp.com/send?phone=573045840264&text=Hola,%20quiero%20agendar%20una%20cita%20con%20Andres%20el%20barbero.%20¿Podrías%20ayudarme%20con%20la%20disponibilidad?" target="_blank" rel="noopener noreferrer" class="hover:text-green-500 transition duration-300 focus:outline-none focus:ring-2 focus:ring-green-500" aria-label="WhatsApp">
+          <i class="fab fa-whatsapp text-white text-2xl transition-transform duration-300 hover:scale-125 hover:text-green-500" aria-hidden="true"></i>
         </a>
-        <a href="https://www.tiktok.com/@pipehpbarber?lang=en" target="#" rel="#" class="transition-transform duration-300 hover:scale-125 group">
-          <i class="fab fa-tiktok text-white fab fa-tiktok text-white text-2xl group-hover:text-pink-500"></i>
+        <a href="https://www.tiktok.com/@pipehpbarber?lang=en" target="#" rel="#" class="transition-transform duration-300 hover:scale-125 group focus:outline-none focus:ring-2 focus:ring-pink-500" aria-label="TikTok">
+          <i class="fab fa-tiktok text-white fab fa-tiktok text-white text-2xl group-hover:text-pink-500" aria-hidden="true"></i>
         </a>
-        <a href="https://www.instagram.com/pipehp_/" target="_blank" rel="noopener noreferrer" class="rounded-full transition-transform duration-300 hover:scale-125 group">
-          <i class="fab fa-instagram text-white text-2xl group-hover:text-pink-500"></i>
+        <a href="https://www.instagram.com/pipehp_/" target="_blank" rel="noopener noreferrer" class="rounded-full transition-transform duration-300 hover:scale-125 group focus:outline-none focus:ring-2 focus:ring-pink-500" aria-label="Instagram">
+          <i class="fab fa-instagram text-white text-2xl group-hover:text-pink-500" aria-hidden="true"></i>
         </a>
         <!-- <a href="#" target="#" rel="#" class="rounded-full transition-transform duration-300 hover:scale-125 group">
           <i class="fab fa-facebook text-white text-2xl group-hover:text-blue-500"></i>
@@ -54,12 +55,13 @@
 
         <div class="space-y-4">
           <!-- Botón Principal hacia la nueva vista -->
-          <div 
+          <button 
+            type="button"
             @click="goToAgendarCita('')"
-            class="w-full bg-white text-black font-bold text-center rounded-full py-4 text-lg mb-6 cursor-pointer hover:bg-zinc-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+            class="w-full bg-white text-black font-bold text-center rounded-full py-4 text-lg mb-6 cursor-pointer hover:bg-zinc-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.3)] block focus:outline-none focus:ring-2 focus:ring-yellow-500"
           >
             🔥 RESERVAR CITA AHORA 🔥
-          </div>
+          </button>
 
           <ServiceButton title="CORTE" priceCOP="40.000" priceUSD="10.00" @click="() => goToAgendarCita('Corte Sencillo')" />
           <ServiceButton title="CORTE Y BARBA" priceCOP="50.000" priceUSD="13.00" @click="() => goToAgendarCita('Corte + Barba')" />

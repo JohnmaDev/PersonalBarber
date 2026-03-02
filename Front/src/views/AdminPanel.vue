@@ -4,7 +4,7 @@
     <!-- PIN de acceso -->
     <div v-if="!autenticado" class="w-full max-w-xs mt-20 bg-zinc-900 rounded-2xl p-8 shadow-xl border border-zinc-800 text-center">
       <h1 class="text-2xl font-bold mb-2">Panel Admin</h1>
-      <p class="text-zinc-400 text-sm mb-6">Ingresa el PIN de acceso</p>
+      <p class="text-zinc-300 text-sm mb-6">Ingresa el PIN de acceso</p>
       <input
         v-model="pinIngresado"
         type="password"
@@ -26,7 +26,7 @@
       <div class="flex items-center justify-between mb-8">
         <div>
           <h1 class="text-2xl font-bold">💈 Panel de Reservas</h1>
-          <p class="text-zinc-400 text-sm mt-1">{{ reservas.length }} reserva(s) registrada(s)</p>
+          <p class="text-zinc-300 text-sm mt-1">{{ reservas.length }} reserva(s) registrada(s)</p>
         </div>
         <div class="flex gap-3">
           <button @click="cargarReservas" :disabled="cargando" class="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-xl text-sm hover:bg-zinc-700 transition-colors disabled:opacity-50">
@@ -74,8 +74,8 @@
               <!-- Info -->
               <div class="flex-1 space-y-1">
                 <p class="font-semibold text-white">{{ r.nombre }}</p>
-                <p class="text-zinc-400 text-sm">✂️ {{ r.servicio }}</p>
-                <p class="text-zinc-500 text-xs">📍 {{ r.direccion }}</p>
+                <p class="text-zinc-300 text-sm">✂️ {{ r.servicio }}</p>
+                <p class="text-zinc-400 text-xs">📍 {{ r.direccion }}</p>
               </div>
 
               <!-- Tel + Estado -->
