@@ -8,7 +8,7 @@
 //      (¡Importante! Debe crease una NUEVA VERSIÓN, no solo guardar)
 // ============================================================
 
-const SHEET_ID = '1VpwjbqtM-4vpCozVTBKLorB2wTJVjq0A_jvWZJTbh9s';
+const SHEET_ID = 'TU_SHEET_ID_AQUI'; // <--- REEMPLAZA CON EL ID DE TU GOOGLE SHEET
 const SHEET_NAME = 'Hoja 1'; // Cambia si tu hoja se llama "Sheet1"
 
 // --- Columnas esperadas en el Sheet (orden) ---
