@@ -15,7 +15,7 @@
     <div class="relative z-10 container mx-auto px-6 text-center lg:text-left flex flex-col lg:flex-row items-center justify-between">
       <div class="max-w-2xl">
         <h1 class="text-5xl lg:text-7xl font-bold text-white mb-4 tracking-tighter animate-fade-in-up opacity-0">
-          <span class="text-barber-gold">Barbel</span>Col
+          <span class="text-barber-gold">Personal</span>Barber
         </h1>
         <p class="text-xl lg:text-2xl text-gray-300 mb-8 italic tracking-wide animate-fade-in-up opacity-0" style="animation-delay: 0.2s;">
           REFLEJÁ TU MEJOR VERSIÓN

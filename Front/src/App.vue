@@ -2,8 +2,6 @@
   <main id="app-container">
     <router-view />
     <div>
-      <!-- Tu contenido -->
-
       <!-- Botón flotante -->
       <button
         v-if="showScrollTop"
