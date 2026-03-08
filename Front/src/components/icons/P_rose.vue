@@ -1,5 +1,5 @@
 <template>
-    <img src="./image.png" class="w-32 h-32" alt="P_Rose"/>
+    <img src="./PersonalBarber.svg" class="w-32 h-32" alt="P_Rose"/>
     <footer class="text-center text-xs text-gray-400 py-6 mt-10">
             <p>
               &lt;/&gt; 2026 — Built with ❤️ by
