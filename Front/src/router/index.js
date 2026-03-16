@@ -6,7 +6,10 @@ const routes = [
   { path: '/', name: 'Home', component: Home },
   { path: '/about', name: 'About', component: About },
   { path: '/agendar', name: 'ReservaCita', component: () => import('@/views/ReservaCita.vue') },
-  { path: '/admin', name: 'AdminPanel', component: () => import('@/views/AdminPanel.vue') }
+  { path: '/admin', name: 'AdminPanel', component: () => import('@/views/AdminPanel.vue') },
+  { path: '/tienda', name: 'Tienda', component: () => import('@/views/StoreView.vue') },
+  { path: '/tienda/producto/:id', name: 'ProductDetail', component: () => import('@/views/ProductDetailView.vue') },
+  { path: '/checkout', name: 'Checkout', component: () => import('@/views/CheckoutView.vue') },
 ]
 
 const router = createRouter({

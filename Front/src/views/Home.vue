@@ -2,25 +2,25 @@
     <div class="bg-barber-black min-h-screen text-white flex flex-col items-center">
         <HeroSection @reserve="goToReserva" />
         <div class="w-full max-w-6xl px-4 flex flex-col items-center pb-20">
-          <ProductsList />
-          <SatisfiedCustomers />
-          <PRose class="mt-20 opacity-50 hover:opacity-100 transition-opacity" />
+          <ShopCategories />
+          <MasonryGallery />
+          <PRose class="mt-14" />
         </div>
     </div>
 </template>
 
 <script>
 import HeroSection from '@/components/HeroSection.vue'
-import ProductsList from '@/components/ProductsList.vue'
-import SatisfiedCustomers from '@/components/SatisfiedCustomers.vue'
+import ShopCategories from '@/components/ShopCategories.vue'
+import MasonryGallery from '@/components/MasonryGallery.vue'
 import PRose from '@/components/icons/P_rose.vue'
 
 export default {
   name: 'HomeView',
   components: {
     HeroSection,
-    ProductsList,
-    SatisfiedCustomers,
+    ShopCategories,
+    MasonryGallery,
     PRose,
   },
   methods: {

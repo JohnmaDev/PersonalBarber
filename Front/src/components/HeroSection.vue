@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     scrollToProducts() {
-      const el = document.getElementById('productos');
+      const el = document.getElementById('tienda');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   }
