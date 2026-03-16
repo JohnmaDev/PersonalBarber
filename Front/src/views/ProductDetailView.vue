@@ -3,15 +3,16 @@
 
     <!-- Header con back -->
     <div class="sticky top-0 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
-      <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-        <button @click="$router.back()" class="flex items-center gap-2 text-gray-400 hover:text-barber-gold transition-colors">
-          <i class="fas fa-arrow-left text-sm"></i>
-          <span class="text-sm font-semibold">Volver</span>
+      <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-2">
+        <button @click="$router.back()" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-barber-gold transition-colors">
+          <i class="fas fa-arrow-left text-xs"></i>
+          <span class="text-xs font-semibold hidden sm:inline">Volver</span>
+          <span class="text-[10px] font-semibold sm:hidden">Volver</span>
         </button>
-        <h1 class="text-sm font-bold tracking-widest uppercase text-white">
+        <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1">
           <span class="text-barber-gold">Personal</span>Barber · Tienda
         </h1>
-        <div class="w-16"></div>
+        <div class="w-10 sm:w-16 flex-shrink-0"></div>
       </div>
     </div>
 
@@ -129,6 +130,50 @@
           </div>
         </div>
       </div>
+
+      <!-- Otros productos recomendados -->
+      <div v-if="recommendedProducts.length > 0" class="mt-20">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-xl font-black uppercase tracking-tight text-white">Recomendados para ti</h2>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Completa tu kit de barbería</p>
+          </div>
+          <div class="h-px flex-1 bg-white/10 mx-6 hidden sm:block"></div>
+          <router-link to="/tienda" class="text-barber-gold text-sm font-bold hover:underline">Tienda →</router-link>
+        </div>
+        
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          <router-link
+            v-for="item in recommendedProducts"
+            :key="item.id"
+            :to="{ name: 'ProductDetail', params: { id: item.id } }"
+            class="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-barber-gold/50 transition-all duration-300"
+          >
+            <div class="aspect-square overflow-hidden bg-white/5">
+              <img :src="item.image" :alt="item.name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            </div>
+            <div class="p-4">
+              <h4 class="text-xs font-bold text-white group-hover:text-barber-gold transition-colors line-clamp-1">{{ item.name }}</h4>
+              <p class="text-barber-gold font-bold text-xs mt-1">{{ item.price }}</p>
+            </div>
+          </router-link>
+        </div>
+      </div>
+
+      <!-- Explorar otras categorías -->
+      <div class="mt-20 pt-10 border-t border-white/10">
+        <h2 class="text-xl font-black uppercase tracking-tight text-white mb-6">Explorar por categoría</h2>
+        <div class="flex flex-wrap gap-3">
+          <router-link
+            v-for="cat in availableCategories"
+            :key="cat.id"
+            :to="{ path: '/tienda', query: { cat: cat.id } }"
+            class="px-5 py-3 rounded-2xl glass border border-white/10 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-barber-gold hover:border-barber-gold/50 transition-all duration-300"
+          >
+            {{ cat.label }}
+          </router-link>
+        </div>
+      </div>
     </div>
 
     <!-- Producto no encontrado -->
@@ -141,7 +186,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { products, categories } from '@/data/products.js'
 import { useCart } from '@/composables/useCart.js'
@@ -150,24 +195,51 @@ const route = useRoute()
 const router = useRouter()
 const { addToCart } = useCart()
 
-const product = products.find(p => p.id === Number(route.params.id))
+// Producto reactivo basado en el ID de la URL
+const product = computed(() => products.find(p => p.id === Number(route.params.id)))
 const qty = ref(1)
 const showConfirm = ref(false)
+
+// Resetear cantidad cuando cambia el producto
+watch(() => route.params.id, () => {
+  qty.value = 1
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+})
+
+const recommendedProducts = computed(() => {
+  if (!product.value) return []
+  
+  // 2 del mismo tipo (Up-sell)
+  const sameCategory = products
+    .filter(p => p.category === product.value.category && p.id !== product.value.id)
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 2)
+
+  // 2 de otras categorías (Cross-sell)
+  const otherCategories = products
+    .filter(p => p.category !== product.value.category)
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 2)
+
+  return [...sameCategory, ...otherCategories]
+})
+
+const availableCategories = computed(() => categories.filter(c => c.id !== 'all'))
 
 function getCategoryLabel(catId) {
   return categories.find(c => c.id === catId)?.label ?? catId
 }
 
 function handleAddToCart() {
-  if (!product) return
-  addToCart(product, qty.value)
+  if (!product.value) return
+  addToCart(product.value, qty.value)
   showConfirm.value = true
   setTimeout(() => { showConfirm.value = false }, 2500)
 }
 
 function handleBuyNow() {
-  if (!product) return
-  addToCart(product, qty.value)
+  if (!product.value) return
+  addToCart(product.value, qty.value)
   router.push('/checkout')
 }
 

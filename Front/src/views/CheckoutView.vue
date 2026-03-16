@@ -9,7 +9,7 @@
           <span class="text-xs font-semibold hidden sm:inline">Tienda</span>
           <span class="text-[10px] font-semibold sm:hidden">Tienda</span>
         </router-link>
-        <h1 class="text-xs sm:text-sm font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1">
+        <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1">
           <span class="text-barber-gold">Personal</span>Barber · Checkout
         </h1>
         <div class="w-10 sm:w-16 flex-shrink-0"></div>
