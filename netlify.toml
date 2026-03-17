@@ -1,4 +1,6 @@
 [build]
+  command = "cd Front && npm run build"
+  publish = "Front/dist"
   functions = "backend/functions"
 
 [[redirects]]
