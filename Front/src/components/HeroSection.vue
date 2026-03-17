@@ -4,7 +4,7 @@
     <div class="absolute inset-0 z-0">
       <img 
         src="@/assets/hero_barber.webp" 
-        alt="Fondo de la barbería BarberCol" 
+        alt="Fondo de la barbería PersonalBarber" 
         class="w-full h-full object-cover filter brightness-50"
         fetchpriority="high"
       />

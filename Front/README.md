@@ -1,6 +1,6 @@
-# barbercol-ui
+# personalbarber-ui
 
-### 🌐 Live Site: [https://p-rose-col.netlify.app/](https://p-rose-col.netlify.app/)
+### 🌐 Live Site: [https://personalbarber.netlify.app/](https://personalbarber.netlify.app/)
 
 ## Project setup
 ```
