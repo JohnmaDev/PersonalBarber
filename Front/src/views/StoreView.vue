@@ -47,7 +47,7 @@
         <div
           v-for="(product, index) in filteredProducts"
           :key="product.id"
-          :style="{ '--i': index }"
+          :style="isFirstVisit ? { '--i': index } : {}"
           class="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-barber-gold/50 transition-all duration-500"
         >
           <!-- Imagen – clic navega al detalle -->
@@ -103,7 +103,7 @@ export default {
 </script>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onActivated } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { products, categories } from '@/data/products.js'
 import { useCart } from '@/composables/useCart.js'
@@ -119,12 +119,26 @@ const filters = [
 
 const activeFilter = ref('all')
 const justAdded = ref(null)
+const isFirstVisit = ref(true)
 
 function syncFilter() {
   const cat = route.query.cat
   activeFilter.value = (cat && filters.find(f => f.id === cat)) ? cat : 'all'
 }
-onMounted(syncFilter)
+
+onMounted(() => {
+  syncFilter()
+  // Marcamos que ya pasó la primera carga después de un breve delay
+  setTimeout(() => {
+    isFirstVisit.value = false
+  }, 1000)
+})
+
+onActivated(() => {
+  // Aseguramos que el filtro esté sincronizado al volver del caché
+  syncFilter()
+})
+
 watch(() => route.query.cat, syncFilter)
 
 const filteredProducts = computed(() => {

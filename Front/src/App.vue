@@ -2,7 +2,7 @@
   <main id="app-container">
     <router-view v-slot="{ Component }">
       <keep-alive include="StoreView">
-        <component :is="Component" :key="$route.fullPath" />
+        <component :is="Component" :key="$route.path" />
       </keep-alive>
     </router-view>
 
