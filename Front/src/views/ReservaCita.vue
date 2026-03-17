@@ -312,8 +312,11 @@ export default {
         });
 
         if (response.ok) {
-          // Si la función en Go responde bien, mostramos éxito
+          // Si la función en Go responde bien, mostramos éxito y redirigimos en 3 seg
           this.success = true;
+          setTimeout(() => {
+            this.goToProducts();
+          }, 3000);
         } else {
           const errorData = await response.json();
           throw new Error(errorData.error || 'Error en el servidor');
