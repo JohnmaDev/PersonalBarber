@@ -15,12 +15,14 @@ import (
 )
 
 type Reservation struct {
-	Name      string    `json:"name" bson:"name"`
-	Phone     string    `json:"phone" bson:"phone"`
-	Service   string    `json:"service" bson:"service"`
-	Date      string    `json:"date" bson:"date"`
-	Time      string    `json:"time" bson:"time"`
-	CreatedAt time.Time `json:"createdAt" bson:"createdAt"`
+	Nombre      string    `json:"nombre" bson:"nombre"`
+	Telefono    string    `json:"telefono" bson:"telefono"`
+	Servicio    string    `json:"servicio" bson:"servicio"`
+	FechaRaw    string    `json:"fechaRaw" bson:"fechaRaw"`
+	HoraRaw     string    `json:"horaRaw" bson:"horaRaw"`
+	Direccion   string    `json:"direccion" bson:"direccion"`
+	WhatsappUrl string    `json:"whatsappUrl" bson:"whatsappUrl"`
+	CreatedAt   time.Time `json:"createdAt" bson:"createdAt"`
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

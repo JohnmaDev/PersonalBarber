@@ -302,8 +302,8 @@ export default {
       };
 
       try {
-        // 2. Enviamos los datos silenciosamente al Webhook de Make
-        const response = await fetch(process.env.VUE_APP_MAKE_WEBHOOK, {
+        // 2. Enviamos los datos a nuestra nueva API en Go (Netlify Functions)
+        const response = await fetch('/.netlify/functions/reserve', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -312,10 +312,11 @@ export default {
         });
 
         if (response.ok) {
-          // Si Make.com responde "Accepted", mostramos la vista de éxito
+          // Si la función en Go responde bien, mostramos éxito
           this.success = true;
         } else {
-          throw new Error('Error en la respuesta del Webhook');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Error en el servidor');
         }
 
       } catch (error) {
