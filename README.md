@@ -9,7 +9,7 @@
 ---
 
 ### 🌐 Live Demo
-Visit the live site: [https://p-rose-col.netlify.app/](https://p-rose-col.netlify.app/)
+Visit the live site: [https://personalbarber.netlify.app/](https://personalbarber.netlify.app/)
 
 ---
 
