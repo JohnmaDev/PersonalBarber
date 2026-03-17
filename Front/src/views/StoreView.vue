@@ -96,6 +96,12 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'StoreView'
+}
+</script>
+
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

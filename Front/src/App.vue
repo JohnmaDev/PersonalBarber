@@ -1,10 +1,16 @@
 <template>
   <main id="app-container">
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <keep-alive include="StoreView">
+        <component :is="Component" :key="$route.fullPath" />
+      </keep-alive>
+    </router-view>
 
-    <!-- Carrito Drawer + Ícono flotante -->
-    <CartDrawer :isOpen="cartOpen" @close="cartOpen = false" />
-    <CartIcon v-if="!cartOpen" @open="cartOpen = true" />
+    <!-- Carrito Drawer + Ícono flotante (Solo si no estamos en el Home) -->
+    <template v-if="showCart">
+      <CartDrawer :isOpen="cartOpen" @close="cartOpen = false" />
+      <CartIcon v-if="!cartOpen" @open="cartOpen = true" />
+    </template>
 
     <!-- Botón volver arriba -->
     <button
@@ -19,11 +25,19 @@
 </template>
 
 <script>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import CartDrawer from '@/components/CartDrawer.vue'
 import CartIcon from '@/components/CartIcon.vue'
 
 export default {
   components: { CartDrawer, CartIcon },
+  setup() {
+    const route = useRoute()
+    const showCart = computed(() => route.name !== 'Home')
+    
+    return { showCart }
+  },
   data() {
     return {
       showScrollTop: false,
