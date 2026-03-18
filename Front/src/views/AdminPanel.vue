@@ -20,83 +20,194 @@
     </div>
 
     <!-- Panel principal -->
-    <div v-else class="w-full max-w-3xl">
+    <div v-else class="w-full max-w-5xl">
 
-      <!-- Header -->
-      <div class="flex items-center justify-between mb-8">
+      <!-- Header & Tabs -->
+      <div class="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
         <div>
-          <h1 class="text-2xl font-bold">💈 Panel de Reservas</h1>
-          <p class="text-zinc-300 text-sm mt-1">{{ reservas.length }} reserva(s) registrada(s)</p>
+          <h1 class="text-3xl font-black uppercase tracking-tighter">
+            <span class="text-barber-gold">Admin</span> Panel
+          </h1>
+          <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mt-1">Gestión Central de Barbería</p>
         </div>
+        
+        <div class="flex bg-zinc-900 p-1 rounded-2xl border border-zinc-800">
+          <button 
+            @click="activeTab = 'reservas'"
+            :class="activeTab === 'reservas' ? 'bg-barber-gold text-black' : 'text-zinc-400 hover:text-white'"
+            class="px-6 py-2 rounded-xl text-xs font-black uppercase transition-all duration-300"
+          >
+            Reservas
+          </button>
+          <button 
+            @click="activeTab = 'tienda'"
+            :class="activeTab === 'tienda' ? 'bg-barber-gold text-black' : 'text-zinc-400 hover:text-white'"
+            class="px-6 py-2 rounded-xl text-xs font-black uppercase transition-all duration-300"
+          >
+            Tienda
+          </button>
+        </div>
+
         <div class="flex gap-3">
-          <button @click="cargarReservas" :disabled="cargando" class="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-xl text-sm hover:bg-zinc-700 transition-colors disabled:opacity-50">
-            {{ cargando ? 'Cargando...' : '🔄 Actualizar' }}
-          </button>
-          <button @click="salir" class="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-xl text-sm hover:bg-zinc-700 transition-colors">
-            Salir
+          <button @click="salir" class="p-2 w-10 h-10 flex items-center justify-center bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-red-400 transition-colors">
+            <i class="fas fa-sign-out-alt"></i>
           </button>
         </div>
       </div>
 
-      <!-- Estado vacío -->
-      <div v-if="!cargando && reservas.length === 0" class="text-center py-20 text-zinc-500">
-        <p class="text-4xl mb-4">📭</p>
-        <p>No hay reservas registradas aún.</p>
-      </div>
+      <!-- SECCIÓN RESERVAS -->
+      <div v-if="activeTab === 'reservas'">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-lg font-bold">Agenda de Citas</h2>
+          <button @click="cargarReservas" :disabled="cargando" class="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold hover:border-barber-gold/50 transition-all">
+            <i class="fas fa-sync-alt" :class="{'animate-spin': cargando}"></i>
+            {{ cargando ? 'Cargando...' : 'Actualizar' }}
+          </button>
+        </div>
 
-      <!-- Cargando -->
-      <div v-if="cargando" class="text-center py-20 text-zinc-500">
-        <p class="text-3xl mb-4 animate-spin inline-block">⚙️</p>
-        <p>Cargando reservas...</p>
-      </div>
+        <!-- Estado vacío Reservas -->
+        <div v-if="!cargando && reservas.length === 0" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
+          <i class="fas fa-calendar-times text-4xl text-zinc-700 mb-4"></i>
+          <p class="text-zinc-500 font-medium">No hay reservas registradas aún.</p>
+        </div>
 
-      <!-- Tarjetas por fecha -->
-      <div v-if="!cargando && reservas.length > 0">
-        <div v-for="(grupo, fecha) in reservasPorFecha" :key="fecha" class="mb-8">
-          <!-- Cabecera de fecha -->
-          <div class="flex items-center gap-3 mb-3">
-            <span class="text-yellow-400 font-bold text-sm uppercase tracking-wider">📅 {{ fecha }}</span>
-            <div class="flex-1 h-px bg-zinc-800"></div>
-            <span class="text-zinc-500 text-xs">{{ grupo.length }} reserva(s)</span>
-          </div>
+        <!-- Lista de Reservas -->
+        <div v-if="!cargando && reservas.length > 0">
+          <div v-for="(grupo, fecha) in reservasPorFecha" :key="fecha" class="mb-10">
+            <div class="flex items-center gap-4 mb-4">
+              <span class="bg-barber-gold text-black text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">{{ fecha }}</span>
+              <div class="flex-1 h-px bg-zinc-800"></div>
+            </div>
 
-          <!-- Reservas del día -->
-          <div class="space-y-3">
-            <div
-              v-for="r in grupo" :key="r.fecha + r.hora + r.nombre"
-              class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center gap-4"
-            >
-              <!-- Hora -->
-              <div class="shrink-0 w-24 text-center bg-zinc-800 rounded-xl py-2 px-3">
-                <span class="text-lg font-bold text-yellow-400">{{ r.hora }}</span>
-              </div>
-
-              <!-- Info -->
-              <div class="flex-1 space-y-1">
-                <p class="font-semibold text-white">{{ r.nombre }}</p>
-                <p class="text-zinc-300 text-sm">✂️ {{ r.servicio }}</p>
-                <p class="text-zinc-400 text-xs">📍 {{ r.direccion }}</p>
-              </div>
-
-              <!-- Tel + Estado -->
-              <div class="flex flex-col items-end gap-2 shrink-0">
-                <a
-                  :href="`https://wa.me/57${r.telefono.replace(/[\s\-+]/g,'').replace(/^57/,'')}`"
-                  target="_blank"
-                  class="text-green-400 text-sm hover:text-green-300 transition-colors flex items-center gap-1"
-                >
-                  💬 {{ r.telefono }}
-                </a>
-                <span :class="estadoClase(r.estado)" class="text-xs font-semibold px-3 py-1 rounded-full">
-                  {{ r.estado }}
-                </span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div v-for="r in grupo" :key="r.fecha + r.hora + r.nombre" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-4 hover:border-zinc-700 transition-all">
+                <div class="w-16 h-16 bg-zinc-800 rounded-xl flex flex-col items-center justify-center border border-zinc-700 shrink-0">
+                  <span class="text-xs font-black text-barber-gold leading-none">{{ r.hora.split(' ')[0] }}</span>
+                  <span class="text-[8px] font-bold text-zinc-500 uppercase">{{ r.hora.split(' ')[1] }}</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-bold text-sm truncate">{{ r.nombre }}</p>
+                  <p class="text-[10px] text-zinc-400 uppercase tracking-widest mt-0.5">{{ r.servicio }}</p>
+                  <div class="flex items-center gap-3 mt-3">
+                    <a :href="`https://wa.me/57${cleanPhone(r.telefono)}`" target="_blank" class="text-[10px] font-black text-green-500 hover:text-green-400 flex items-center gap-1.5 uppercase">
+                      <i class="fab fa-whatsapp text-xs"></i> WhatsApp
+                    </a>
+                    <span :class="estadoClase(r.estado)" class="text-[8px] font-black px-2 py-0.5 rounded-md uppercase tracking-tighter">
+                      {{ r.estado }}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- SECCIÓN TIENDA -->
+      <div v-if="activeTab === 'tienda'">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-lg font-bold">Inventario de Productos</h2>
+            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Gestiona el catálogo de la tienda</p>
+          </div>
+          <button @click="abrirModalProducto()" class="flex items-center gap-2 px-5 py-2.5 bg-barber-gold text-black rounded-xl text-xs font-black uppercase hover:bg-yellow-400 transition-all">
+            <i class="fas fa-plus"></i>
+            Nuevo Producto
+          </button>
+        </div>
+
+        <!-- Lista de Productos -->
+        <div v-if="cargando" class="flex flex-col items-center justify-center py-20">
+          <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-barber-gold mb-4"></div>
+          <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Cargando catálogo...</p>
+        </div>
+
+        <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
+          <div v-for="p in productos" :key="p.id" class="flex items-center p-4 gap-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/30 transition-colors">
+            <div class="w-12 h-12 bg-black rounded-lg overflow-hidden border border-zinc-800 shrink-0">
+              <img :src="p.image" :alt="p.name" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-bold text-sm truncate">{{ p.name }}</p>
+              <div class="flex items-center gap-2 mt-0.5">
+                <span class="text-[9px] font-black text-barber-gold uppercase px-1.5 py-0.5 bg-barber-gold/10 rounded border border-barber-gold/20">{{ p.category }}</span>
+                <span class="text-zinc-500 text-[10px] font-bold">{{ p.price }}</span>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button @click="abrirModalProducto(p)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all">
+                <i class="fas fa-edit text-xs"></i>
+              </button>
+              <button @click="borrarProducto(p.id)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-800 text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-all">
+                <i class="fas fa-trash-alt text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Agregar/Editar -->
+        <transition name="fade">
+          <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-lg p-6 overflow-y-auto max-h-[90vh]">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-black uppercase tracking-tight">{{ editando ? 'Editar' : 'Nuevo' }} Producto</h3>
+                <button @click="showModal = false" class="text-zinc-500 hover:text-white">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+
+              <div class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="space-y-1">
+                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Nombre</label>
+                    <input v-model="prodForm.name" type="text" class="input-modern" placeholder="Cera Nishman Gold">
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Precio</label>
+                    <input v-model="prodForm.price" type="text" class="input-modern" placeholder="$45.000 COP">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="space-y-1">
+                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Marca</label>
+                    <input v-model="prodForm.brand" type="text" class="input-modern" placeholder="Nishman">
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Categoría</label>
+                    <select v-model="prodForm.category" class="input-modern appearance-none">
+                      <option value="ceras">Ceras</option>
+                      <option value="tratamientos">Tratamientos</option>
+                      <option value="maquinas">Máquinas</option>
+                      <option value="combos">Combos</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">URL Imagen</label>
+                  <input v-model="prodForm.image" type="text" class="input-modern" placeholder="/products/ejemplo.webp">
+                  <p class="text-[8px] text-zinc-600 mt-1 italic pl-1">Próximamente: botón para subir fotos directamente.</p>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Descripción</label>
+                  <textarea v-model="prodForm.description" rows="3" class="input-modern resize-none" placeholder="Breve descripción del producto..."></textarea>
+                </div>
+              </div>
+
+              <button @click="guardarProducto" :disabled="guardando" class="w-full mt-8 py-4 bg-barber-gold text-black font-black uppercase rounded-2xl hover:bg-yellow-400 transition-all flex items-center justify-center gap-2">
+                <i v-if="guardando" class="fas fa-spinner animate-spin"></i>
+                {{ guardando ? 'Guardando...' : 'Guardar Producto' }}
+              </button>
+            </div>
+          </div>
+        </transition>
+      </div>
+
     </div>
+  </div>
+</template>
   </div>
 </template>
 
@@ -109,32 +220,52 @@ export default {
     return {
       autenticado: false,
       pinIngresado: '',
+      activeTab: 'reservas',
       pinError: false,
       cargando: false,
-      reservas: []
+      guardando: false,
+      reservas: [],
+      productos: [],
+      showModal: false,
+      editando: false,
+      prodForm: {
+        id: null,
+        name: '',
+        brand: '',
+        category: 'ceras',
+        description: '',
+        price: '',
+        image: ''
+      }
     }
   },
   mounted() {
-    // Restaurar sesión si existe
     const pinSesion = sessionStorage.getItem('admin_pin');
     if (pinSesion) {
       this.pinIngresado = pinSesion;
       this.verificarPin();
     }
   },
+  watch: {
+    activeTab(newTab) {
+      if (this.autenticado) {
+        if (newTab === 'tienda') this.cargarProductos();
+        else if (newTab === 'reservas') this.cargarReservas();
+      }
+    }
+  },
   computed: {
     reservasPorFecha() {
-      // Agrupa las reservas por fecha y las ordena por hora dentro de cada día
       const grupos = {};
       const ordenadas = [...this.reservas].sort((a, b) => {
-        if (a.fecha < b.fecha) return -1;
-        if (a.fecha > b.fecha) return 1;
-        // Misma fecha: ordenar por hora (convertimos a 24h para comparar)
-        return this.a24h(a.hora) - this.a24h(b.hora);
+        if (a.fechaRaw < b.fechaRaw) return -1;
+        if (a.fechaRaw > b.fechaRaw) return 1;
+        return this.a24h(a.horaRaw) - this.a24h(b.horaRaw);
       });
       ordenadas.forEach(r => {
-        if (!grupos[r.fecha]) grupos[r.fecha] = [];
-        grupos[r.fecha].push(r);
+        const f = r.fechaRaw || 'Sin fecha';
+        if (!grupos[f]) grupos[f] = [];
+        grupos[f].push(r);
       });
       return grupos;
     }
@@ -144,9 +275,9 @@ export default {
       if (this.pinIngresado === process.env.VUE_APP_ADMIN_PIN) {
         this.autenticado = true;
         this.pinError = false;
-        // Guardar en sesión
         sessionStorage.setItem('admin_pin', this.pinIngresado);
-        this.cargarReservas();
+        if (this.activeTab === 'reservas') this.cargarReservas();
+        else this.cargarProductos();
       } else {
         this.pinError = true;
         this.pinIngresado = '';
@@ -159,36 +290,88 @@ export default {
       sessionStorage.removeItem('admin_pin');
     },
     async cargarReservas() {
-      if (!process.env.VUE_APP_SLOTS_API) {
-        alert('Configura VUE_APP_SLOTS_API en .env.local');
-        return;
-      }
       this.cargando = true;
       try {
-        const url = new URL(process.env.VUE_APP_SLOTS_API);
-        url.searchParams.append('token', this.pinIngresado);
-        
-        const res = await fetch(url);
+        const res = await fetch(`/.netlify/functions/list_reservations?token=${this.pinIngresado}`);
         const data = await res.json();
-        if (data.ok) {
-          this.reservas = data.reservas;
-        }
+        if (data.ok) this.reservas = data.reservas;
       } catch (e) {
         console.error('Error cargando reservas:', e);
       } finally {
         this.cargando = false;
       }
     },
+    async cargarProductos() {
+      this.cargando = true;
+      try {
+        const res = await fetch('/.netlify/functions/get_products');
+        const data = await res.json();
+        if (data.ok) this.productos = data.products.sort((a, b) => a.id - b.id);
+      } catch (e) {
+        console.error('Error cargando productos:', e);
+      } finally {
+        this.cargando = false;
+      }
+    },
+    abrirModalProducto(p = null) {
+      if (p) {
+        this.editando = true;
+        this.prodForm = { ...p };
+      } else {
+        this.editando = false;
+        const nextId = this.productos.length > 0 ? Math.max(...this.productos.map(pr => pr.id)) + 1 : 1;
+        this.prodForm = { id: nextId, name: '', brand: '', category: 'ceras', description: '', price: '', image: '' };
+      }
+      this.showModal = true;
+    },
+    async guardarProducto() {
+      this.guardando = true;
+      try {
+        const res = await fetch('/.netlify/functions/manage_products', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': this.pinIngresado 
+          },
+          body: JSON.stringify(this.prodForm)
+        });
+        const data = await res.json();
+        if (data.ok) {
+          this.showModal = false;
+          this.cargarProductos();
+        } else {
+          alert('Error: ' + data.error);
+        }
+      } catch (e) {
+        alert('Error conectando con el servidor');
+      } finally {
+        this.guardando = false;
+      }
+    },
+    async borrarProducto(id) {
+      if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
+      try {
+        const res = await fetch(`/.netlify/functions/manage_products?id=${id}&token=${this.pinIngresado}`, {
+          method: 'DELETE'
+        });
+        const data = await res.json();
+        if (data.ok) this.cargarProductos();
+      } catch (e) {
+        alert('Error al eliminar');
+      }
+    },
+    cleanPhone(tel) {
+      return tel.replace(/[\s\-+]/g,'').replace(/^57/,'');
+    },
     estadoClase(estado) {
       const mapa = {
-        pendiente: 'bg-yellow-900/60 text-yellow-400',
-        confirmada: 'bg-green-900/60 text-green-400',
-        cancelada: 'bg-red-900/60 text-red-400'
+        pendiente: 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20',
+        confirmada: 'bg-green-500/10 text-green-500 border border-green-500/20',
+        cancelada: 'bg-red-500/10 text-red-500 border border-red-500/20'
       };
       return mapa[estado] || 'bg-zinc-800 text-zinc-400';
     },
     a24h(horaStr) {
-      // Convierte "02:00 PM" a minutos totales para ordenar
       if (!horaStr) return 0;
       const [time, period] = horaStr.split(' ');
       let [h, m] = time.split(':').map(Number);
@@ -199,3 +382,25 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.input-modern {
+  width: 100%;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.3s;
+}
+.input-modern:focus {
+  border-color: #d4af37;
+  background: #27272a;
+}
+
+.fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+</style>
