@@ -110,22 +110,34 @@
             <h2 class="text-lg font-bold">Inventario de Productos</h2>
             <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Gestiona el catálogo de la tienda</p>
           </div>
-          <button @click="abrirModalProducto()" class="flex items-center gap-2 px-5 py-2.5 bg-barber-gold text-black rounded-xl text-xs font-black uppercase hover:bg-yellow-400 transition-all">
-            <i class="fas fa-plus"></i>
-            Nuevo Producto
-          </button>
+          <div class="flex gap-2">
+            <button @click="cargarProductos" :disabled="cargando" class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-all">
+              <i class="fas fa-sync-alt" :class="{'animate-spin': cargando}"></i>
+            </button>
+            <button @click="abrirModalProducto()" class="flex items-center gap-2 px-5 py-2.5 bg-barber-gold text-black rounded-xl text-xs font-black uppercase hover:bg-yellow-400 transition-all">
+              <i class="fas fa-plus"></i>
+              Nuevo Producto
+            </button>
+          </div>
         </div>
 
         <!-- Lista de Productos -->
-        <div v-if="cargando" class="flex flex-col items-center justify-center py-20">
+        <div v-if="cargando" class="flex flex-col items-center justify-center py-20 bg-zinc-900/50 rounded-3xl border border-zinc-800">
           <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-barber-gold mb-4"></div>
           <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Cargando catálogo...</p>
         </div>
 
+        <div v-else-if="productos.length === 0" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
+          <i class="fas fa-box-open text-4xl text-zinc-700 mb-4"></i>
+          <p class="text-zinc-500 font-medium">No se encontraron productos en la base de datos.</p>
+          <button @click="cargarProductos" class="mt-4 text-barber-gold text-xs font-bold uppercase hover:underline">Reintentar conexión</button>
+        </div>
+
         <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
           <div v-for="p in productos" :key="p.id" class="flex items-center p-4 gap-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/30 transition-colors">
-            <div class="w-12 h-12 bg-black rounded-lg overflow-hidden border border-zinc-800 shrink-0">
-              <img :src="p.image" :alt="p.name" class="w-full h-full object-cover">
+            <div class="w-12 h-12 bg-black rounded-lg overflow-hidden border border-zinc-800 shrink-0 uppercase flex items-center justify-center text-[8px] font-bold text-zinc-700">
+              <img v-if="p.image" :src="p.image" :alt="p.name" class="w-full h-full object-cover">
+              <span v-else>Sin foto</span>
             </div>
             <div class="flex-1 min-w-0">
               <p class="font-bold text-sm truncate">{{ p.name }}</p>
