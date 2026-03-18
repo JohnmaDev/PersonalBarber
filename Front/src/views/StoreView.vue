@@ -152,16 +152,30 @@ async function fetchProducts() {
   isLoading.value = true
   errorMessage.value = null
   try {
-    const res = await fetch('/.netlify/functions/get_products')
+    const res = await fetch('/api/get_products')
+    const contentType = res.headers.get('content-type')
+    
+    if (!res.ok) {
+      const text = await res.text()
+      errorMessage.value = `Error ${res.status}: ${text.substring(0, 50)}...`
+      return
+    }
+
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await res.text()
+      errorMessage.value = `Respuesta no válida (no es JSON): ${text.substring(0, 50)}...`
+      return
+    }
+
     const data = await res.json()
     if (data.ok) {
       products.value = data.products
     } else {
-      errorMessage.value = data.error || 'Error desconocido al cargar productos'
+      errorMessage.value = data.error || 'Error desconocido'
     }
   } catch (err) {
-    errorMessage.value = 'Fallo la conexión con el servidor'
-    console.error('Error cargando productos:', err)
+    errorMessage.value = 'Fallo la conexión o error de red'
+    console.error('Error:', err)
   } finally {
     isLoading.value = false
   }

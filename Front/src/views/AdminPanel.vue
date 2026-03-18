@@ -329,10 +329,23 @@ export default {
       this.errorMessage = null;
       try {
         const url = window.location.hostname === 'localhost'
-          ? 'https://personalbarber.netlify.app/.netlify/functions/get_products'
-          : '/.netlify/functions/get_products';
+          ? 'https://personalbarber.netlify.app/api/get_products'
+          : '/api/get_products';
 
         const res = await fetch(url);
+        const contentType = res.headers.get('content-type');
+
+        if (!res.ok) {
+          const text = await res.text();
+          this.errorMessage = `Error ${res.status}: ${text.substring(0, 40)}`;
+          return;
+        }
+
+        if (!contentType || !contentType.includes('application/json')) {
+          this.errorMessage = 'El servidor devolvió HTML en lugar de datos (Posible error de despliegue)';
+          return;
+        }
+
         const data = await res.json();
         if (data.ok) {
           this.productos = (data.products || []).sort((a, b) => (a.id || 0) - (b.id || 0));
