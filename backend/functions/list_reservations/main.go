@@ -16,8 +16,12 @@ import (
 
 type Reservation struct {
 	Nombre    string `json:"nombre" bson:"nombre"`
+	Telefono  string `json:"telefono" bson:"telefono"`
+	Servicio  string `json:"servicio" bson:"servicio"`
 	FechaRaw  string `json:"fechaRaw" bson:"fechaRaw"`
 	HoraRaw   string `json:"horaRaw" bson:"horaRaw"`
+	Direccion string `json:"direccion" bson:"direccion"`
+	Estado    string `json:"estado" bson:"estado"`
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

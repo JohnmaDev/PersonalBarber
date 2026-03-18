@@ -290,7 +290,11 @@ export default {
     async cargarReservas() {
       this.cargando = true;
       try {
-        const res = await fetch(`/.netlify/functions/list_reservations?token=${this.pinIngresado}`);
+        const url = window.location.hostname === 'localhost' 
+          ? `https://personalbarber.netlify.app/.netlify/functions/list_reservations?token=${this.pinIngresado}`
+          : `/.netlify/functions/list_reservations?token=${this.pinIngresado}`;
+        
+        const res = await fetch(url);
         const data = await res.json();
         if (data.ok) this.reservas = data.reservas;
       } catch (e) {
@@ -302,7 +306,11 @@ export default {
     async cargarProductos() {
       this.cargando = true;
       try {
-        const res = await fetch('/.netlify/functions/get_products');
+        const url = window.location.hostname === 'localhost'
+          ? 'https://personalbarber.netlify.app/.netlify/functions/get_products'
+          : '/.netlify/functions/get_products';
+
+        const res = await fetch(url);
         const data = await res.json();
         if (data.ok) this.productos = data.products.sort((a, b) => a.id - b.id);
       } catch (e) {
