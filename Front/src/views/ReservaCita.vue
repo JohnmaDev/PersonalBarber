@@ -324,7 +324,9 @@ export default {
 
       } catch (error) {
         console.error("Hubo un error enviando la reserva:", error);
-        alert("Ocurrió un problema enviando tu reserva. Por favor intenta de nuevo.");
+        alert(error.message || "Ocurrió un problema enviando tu reserva. Por favor intenta de nuevo.");
+        // Si falló, recargamos los slots por si acaso alguien tomó el turno mientras el usuario llenaba el formulario
+        this.cargarSlotsOcupados();
       } finally {
         this.isSubmitting = false;
       }

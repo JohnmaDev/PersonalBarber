@@ -73,6 +73,29 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	}
 
 	collection := client.Database("personalbarber").Collection("reservations")
+
+	// Verificar si ya existe una reserva para la misma fecha y hora
+	var existing Reservation
+	filter := map[string]string{
+		"fechaRaw": res.FechaRaw,
+		"horaRaw":  res.HoraRaw,
+	}
+	err = collection.FindOne(ctx, filter).Decode(&existing)
+	if err == nil {
+		// Si no hay error, significa que encontró una reserva coincidente
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusConflict, // 409 Conflict
+			Body:       `{"error": "Este turno ya ha sido reservado por otra persona. Por favor elige otro."}`,
+		}, nil
+	} else if err != mongo.ErrNoDocuments {
+		// Si hubo un error que no sea "No se encontró el documento"
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusInternalServerError,
+			Body:       fmt.Sprintf(`{"error": "Error al verificar disponibilidad: %v"}`, err),
+		}, nil
+	}
+
+	// Si no existe, procedemos a insertar
 	_, err = collection.InsertOne(ctx, res)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
