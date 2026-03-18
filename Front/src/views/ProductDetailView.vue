@@ -192,6 +192,14 @@
 </template>
 
 <script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { categories } from '@/data/products.js'
+import { useCart } from '@/composables/useCart.js'
+
+const route = useRoute()
+const router = useRouter()
+const { addToCart } = useCart()
 const products = ref([])
 const isLoading = ref(true)
 
