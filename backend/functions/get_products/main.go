@@ -15,7 +15,7 @@ import (
 )
 
 type Product struct {
-	ID          int    `json:"id" bson:"id"`
+	ID          int64  `json:"id" bson:"id"`
 	Name        string `json:"name" bson:"name"`
 	Brand       string `json:"brand" bson:"brand"`
 	Category    string `json:"category" bson:"category"`
@@ -28,16 +28,16 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
 		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusInternalServerError,
-			Body:       `{"error": "Database configuration missing"}`,
+			StatusCode: 500,
+			Body:       `{"error": "MONGODB_URI not configured in environment"}`,
 		}, nil
 	}
 
 	client, err := mongo.Connect(options.Client().ApplyURI(uri))
 	if err != nil {
 		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusInternalServerError,
-			Body:       fmt.Sprintf(`{"error": "Failed to connect to DB: %v"}`, err),
+			StatusCode: 500,
+			Body:       fmt.Sprintf(`{"error": "Failed to connect: %v"}`, err),
 		}, nil
 	}
 	defer client.Disconnect(ctx)
@@ -47,22 +47,23 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	cursor, err := collection.Find(ctx, bson.M{})
 	if err != nil {
 		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusInternalServerError,
-			Body:       fmt.Sprintf(`{"error": "Failed to fetch products: %v"}`, err),
+			StatusCode: 500,
+			Body:       fmt.Sprintf(`{"error": "Query failed: %v"}`, err),
 		}, nil
 	}
 	defer cursor.Close(ctx)
 
-	var products []Product
+	var products []Product = []Product{} // Initialize as empty slice to avoid 'null' in JSON
 	if err = cursor.All(ctx, &products); err != nil {
 		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusInternalServerError,
-			Body:       fmt.Sprintf(`{"error": "Failed to decode products: %v"}`, err),
+			StatusCode: 500,
+			Body:       fmt.Sprintf(`{"error": "Decode failed: %v"}`, err),
 		}, nil
 	}
 
 	body, _ := json.Marshal(map[string]interface{}{
 		"ok":       true,
+		"count":    len(products),
 		"products": products,
 	})
 
