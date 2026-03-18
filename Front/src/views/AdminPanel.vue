@@ -333,7 +333,11 @@ export default {
     async guardarProducto() {
       this.guardando = true;
       try {
-        const res = await fetch('/.netlify/functions/manage_products', {
+        const url = window.location.hostname === 'localhost'
+          ? 'https://personalbarber.netlify.app/.netlify/functions/manage_products'
+          : '/.netlify/functions/manage_products';
+
+        const res = await fetch(url, {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
@@ -357,7 +361,11 @@ export default {
     async borrarProducto(id) {
       if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
       try {
-        const res = await fetch(`/.netlify/functions/manage_products?id=${id}&token=${this.pinIngresado}`, {
+        const url = window.location.hostname === 'localhost'
+          ? `https://personalbarber.netlify.app/.netlify/functions/manage_products?id=${id}&token=${this.pinIngresado}`
+          : `/.netlify/functions/manage_products?id=${id}&token=${this.pinIngresado}`;
+
+        const res = await fetch(url, {
           method: 'DELETE'
         });
         const data = await res.json();
