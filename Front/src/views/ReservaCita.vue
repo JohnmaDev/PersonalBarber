@@ -197,21 +197,20 @@ export default {
   methods: {
     async cargarSlotsOcupados() {
       this.isLoadingSlots = true;
-      if (!process.env.VUE_APP_SLOTS_API) {
-        this.isLoadingSlots = false;
-        return;
-      }
       try {
-        const url = new URL(process.env.VUE_APP_SLOTS_API);
-        url.searchParams.append('view', 'public'); // Permite ver disponibilidad sin PIN
-        
-        const res = await fetch(url);
+        // Consultamos nuestra propia API en Go que lee de MongoDB
+        const res = await fetch('/.netlify/functions/list_reservations');
         const data = await res.json();
+        
         if (data.ok) {
-          this.bookedSlots = data.reservas.map(r => ({ fecha: r.fecha, hora: r.hora }));
+          // Adaptamos los nombres de campos si es necesario (ya coinciden en el nuevo backend)
+          this.bookedSlots = data.reservas.map(r => ({ 
+            fecha: r.fechaRaw, 
+            hora: r.horaRaw 
+          }));
         }
       } catch (e) {
-        console.warn('No se pudo cargar disponibilidad:', e);
+        console.warn('No se pudo cargar disponibilidad de MongoDB:', e);
       } finally {
         this.isLoadingSlots = false;
       }
