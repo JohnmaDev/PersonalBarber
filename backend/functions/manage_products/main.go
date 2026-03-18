@@ -57,7 +57,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		}
 
 		// Si es nuevo (ID auto-increment o similar, por ahora usamos el ID enviado)
-		opts := options.UpdateOne().SetUpsert(true)
+		opts := options.Update().SetUpsert(true)
 		filter := bson.M{"id": p.ID}
 		update := bson.M{"$set": p}
 
@@ -72,7 +72,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 
 	case "DELETE": // Delete
 		idStr := request.QueryStringParameters["id"]
-		var id int
+		var id int64
 		fmt.Sscanf(idStr, "%d", &id)
 
 		_, err := collection.DeleteOne(ctx, bson.M{"id": id})
