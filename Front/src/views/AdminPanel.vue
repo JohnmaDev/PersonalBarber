@@ -208,8 +208,6 @@
     </div>
   </div>
 </template>
-  </div>
-</template>
 
 <script>
 // El PIN ahora se maneja vía variables de entorno VUE_APP_ADMIN_PIN
