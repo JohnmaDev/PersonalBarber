@@ -127,7 +127,15 @@
           <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Cargando catálogo...</p>
         </div>
 
-        <div v-else-if="productos.length === 0" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
+        <!-- Error State Tienda -->
+        <div v-if="errorMessage && !cargando" class="text-center py-20 bg-red-500/5 rounded-3xl border border-dashed border-red-500/20">
+          <i class="fas fa-exclamation-circle text-4xl text-red-500/50 mb-4"></i>
+          <p class="text-red-400 font-medium mb-2">Error de Conexión</p>
+          <p class="text-zinc-500 text-xs">{{ errorMessage }}</p>
+          <button @click="cargarProductos" class="mt-4 text-barber-gold text-xs font-bold uppercase hover:underline">Reintentar</button>
+        </div>
+
+        <div v-else-if="productos.length === 0 && !cargando" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
           <i class="fas fa-box-open text-4xl text-zinc-700 mb-4"></i>
           <p class="text-zinc-500 font-medium">No se encontraron productos en la base de datos.</p>
           <button @click="cargarProductos" class="mt-4 text-barber-gold text-xs font-bold uppercase hover:underline">Reintentar conexión</button>
@@ -236,6 +244,7 @@ export default {
       guardando: false,
       reservas: [],
       productos: [],
+      errorMessage: null,
       showModal: false,
       editando: false,
       prodForm: {
@@ -317,6 +326,7 @@ export default {
     },
     async cargarProductos() {
       this.cargando = true;
+      this.errorMessage = null;
       try {
         const url = window.location.hostname === 'localhost'
           ? 'https://personalbarber.netlify.app/.netlify/functions/get_products'
@@ -326,8 +336,11 @@ export default {
         const data = await res.json();
         if (data.ok) {
           this.productos = (data.products || []).sort((a, b) => (a.id || 0) - (b.id || 0));
+        } else {
+          this.errorMessage = data.error || 'Error al obtener productos';
         }
       } catch (e) {
+        this.errorMessage = 'No se pudo conectar con el servidor';
         console.error('Error cargando productos:', e);
       } finally {
         this.cargando = false;

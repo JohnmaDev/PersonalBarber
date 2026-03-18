@@ -93,8 +93,20 @@
         </div>
       </transition-group>
 
+      <!-- Error State -->
+      <div v-if="errorMessage && !isLoading" class="flex flex-col items-center justify-center py-20 text-center px-4">
+        <div class="bg-red-500/10 border border-red-500/20 p-6 rounded-3xl max-w-md">
+          <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-4"></i>
+          <h3 class="text-white font-bold mb-2">Error de Conexión</h3>
+          <p class="text-zinc-400 text-sm mb-6">{{ errorMessage }}</p>
+          <button @click="fetchProducts" class="px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl text-xs font-bold uppercase transition-all">
+            Reintentar
+          </button>
+        </div>
+      </div>
+
       <!-- Estado vacío (por si acaso) -->
-      <div v-if="!isLoading && filteredProducts.length === 0" class="text-center py-24">
+      <div v-if="!isLoading && filteredProducts.length === 0 && !errorMessage" class="text-center py-24">
         <i class="fas fa-box-open text-4xl text-gray-600 mb-4"></i>
         <p class="text-gray-500">No hay productos en esta categoría aún.</p>
       </div>
@@ -116,6 +128,7 @@ import { useCart } from '@/composables/useCart.js'
 
 const products = ref([])
 const isLoading = ref(true)
+const errorMessage = ref(null)
 
 const route = useRoute()
 const router = useRouter()
@@ -137,21 +150,25 @@ function syncFilter() {
 
 async function fetchProducts() {
   isLoading.value = true
+  errorMessage.value = null
   try {
     const res = await fetch('/.netlify/functions/get_products')
     const data = await res.json()
     if (data.ok) {
       products.value = data.products
+    } else {
+      errorMessage.value = data.error || 'Error desconocido al cargar productos'
     }
   } catch (err) {
+    errorMessage.value = 'Fallo la conexión con el servidor'
     console.error('Error cargando productos:', err)
   } finally {
     isLoading.value = false
-    // Marcamos que ya pasó la primera carga después de un breve delay
-    setTimeout(() => {
-      isFirstVisit.value = false
-    }, 1000)
   }
+  // Marcamos que ya pasó la primera carga después de un breve delay
+  setTimeout(() => {
+    isFirstVisit.value = false
+  }, 1000)
 }
 
 onMounted(() => {
