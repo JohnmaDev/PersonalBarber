@@ -80,10 +80,10 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div v-for="r in grupo" :key="r.fecha + r.hora + r.nombre" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-4 hover:border-zinc-700 transition-all">
+              <div v-for="r in grupo" :key="(r.fechaRaw || '') + (r.horaRaw || '') + (r.nombre || '')" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-4 hover:border-zinc-700 transition-all">
                 <div class="w-16 h-16 bg-zinc-800 rounded-xl flex flex-col items-center justify-center border border-zinc-700 shrink-0">
-                  <span class="text-xs font-black text-barber-gold leading-none">{{ r.hora.split(' ')[0] }}</span>
-                  <span class="text-[8px] font-bold text-zinc-500 uppercase">{{ r.hora.split(' ')[1] }}</span>
+                  <span class="text-xs font-black text-barber-gold leading-none">{{ (r.horaRaw || '00:00 AM').split(' ')[0] }}</span>
+                  <span class="text-[8px] font-bold text-zinc-500 uppercase">{{ (r.horaRaw || '00:00 AM').split(' ')[1] }}</span>
                 </div>
                 <div class="flex-1 min-w-0">
                   <p class="font-bold text-sm truncate">{{ r.nombre }}</p>
