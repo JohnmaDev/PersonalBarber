@@ -167,8 +167,8 @@ onActivated(() => {
 watch(() => route.query.cat, syncFilter)
 
 const filteredProducts = computed(() => {
-  if (activeFilter.value === 'all') return products
-  return products.filter(p => p.category === activeFilter.value)
+  if (activeFilter.value === 'all') return products.value
+  return products.value.filter(p => p.category === activeFilter.value)
 })
 
 const activeFilterLabel = computed(() => {
