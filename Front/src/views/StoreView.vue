@@ -42,8 +42,14 @@
         </p>
       </div>
 
+      <!-- Estado de carga -->
+      <div v-if="isLoading" class="flex flex-col items-center justify-center py-24">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-barber-gold mb-4"></div>
+        <p class="text-gray-400 font-medium">Cargando productos...</p>
+      </div>
+
       <!-- Grid de productos -->
-      <transition-group name="products-grid" tag="div" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      <transition-group v-else name="products-grid" tag="div" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         <div
           v-for="(product, index) in filteredProducts"
           :key="product.id"
@@ -88,7 +94,7 @@
       </transition-group>
 
       <!-- Estado vacío (por si acaso) -->
-      <div v-if="filteredProducts.length === 0" class="text-center py-24">
+      <div v-if="!isLoading && filteredProducts.length === 0" class="text-center py-24">
         <i class="fas fa-box-open text-4xl text-gray-600 mb-4"></i>
         <p class="text-gray-500">No hay productos en esta categoría aún.</p>
       </div>
@@ -105,8 +111,11 @@ export default {
 <script setup>
 import { ref, computed, onMounted, watch, onActivated } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { products, categories } from '@/data/products.js'
+import { categories } from '@/data/products.js'
 import { useCart } from '@/composables/useCart.js'
+
+const products = ref([])
+const isLoading = ref(true)
 
 const route = useRoute()
 const router = useRouter()
@@ -126,12 +135,28 @@ function syncFilter() {
   activeFilter.value = (cat && filters.find(f => f.id === cat)) ? cat : 'all'
 }
 
+async function fetchProducts() {
+  isLoading.value = true
+  try {
+    const res = await fetch('/.netlify/functions/get_products')
+    const data = await res.json()
+    if (data.ok) {
+      products.value = data.products
+    }
+  } catch (err) {
+    console.error('Error cargando productos:', err)
+  } finally {
+    isLoading.value = false
+    // Marcamos que ya pasó la primera carga después de un breve delay
+    setTimeout(() => {
+      isFirstVisit.value = false
+    }, 1000)
+  }
+}
+
 onMounted(() => {
   syncFilter()
-  // Marcamos que ya pasó la primera carga después de un breve delay
-  setTimeout(() => {
-    isFirstVisit.value = false
-  }, 1000)
+  fetchProducts()
 })
 
 onActivated(() => {

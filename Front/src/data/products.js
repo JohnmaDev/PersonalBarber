@@ -6,7 +6,7 @@ export const products = [
     brand: 'Nishman',
     category: 'ceras',
     description: 'Fijación fuerte con brillo medio, ideal para un look dinámico y fresco.',
-    price: '$85.000 COP',
+    price: '$45.000 COP',
     image: '/products/cera_naranja_nishman.webp',
   },
   {
@@ -15,7 +15,7 @@ export const products = [
     brand: 'Nishman',
     category: 'ceras',
     description: 'A base de keratina, ofrece una fijación alta sin dejar residuos grasos.',
-    price: '$85.000 COP',
+    price: '$45.000 COP',
     image: '/products/cera_verde_nishman.webp',
   },
   {
@@ -24,7 +24,7 @@ export const products = [
     brand: 'Nishman',
     category: 'ceras',
     description: 'Edición especial Gold One, brillo medio y formulación elaborada.',
-    price: '$85.000 COP',
+    price: '$45.000 COP',
     image: '/products/cera_gold_nishman.webp',
   },
   {
@@ -33,7 +33,7 @@ export const products = [
     brand: 'Nishman',
     category: 'ceras',
     description: 'Acabado mate a brillante, fijación flexible y textura ligera.',
-    price: '$85.000 COP',
+    price: '$45.000 COP',
     image: '/products/cera_verde_y_morado_nishman.webp',
   },
   {
@@ -103,12 +103,24 @@ export const products = [
   },
   {
     id: 12,
-    name: 'Minoxidil Kirkland x2',
+    name: 'Minoxidil Kirkland x3',
     brand: 'Kirkland',
     category: 'tratamientos',
-    description: 'Pack doble al 5%. Mejor precio por unidad, tratamiento completo.',
+    description: 'Pack triple al 5%. Mejor precio por unidad, tratamiento completo.',
     price: '$120.000 COP',
     image: '/products/Minoxidil_Kirkland_2_Remaster.webp',
+  },
+
+
+  // ── Maquinas ───────────────────────────────────────────
+  {
+    id: 13,
+    name: 'Rasuradora Kemei',
+    brand: 'Kemei',
+    category: 'maquinas',
+    description: 'Rasuradora profesional para hombres.',
+    price: '$70.000 COP',
+    image: '/products/Rasuradora_Kemei.webp',
   },
 ]
 
@@ -130,17 +142,18 @@ export const categories = [
     accent: '#34d399',
     comingSoon: false,
   },
-
-  // ── Próximamente ───────────────────────────────────────────
   {
     id: 'maquinas',
     label: 'Máquinas de Corte',
-    subtitle: 'Próximamente',
-    cover: null,
+    subtitle: '1 productos',
+    cover: '/products/Rasuradora_Kemei.webp',
     accent: '#a78bfa',
-    comingSoon: true,
+    comingSoon: false,
     icon: 'fas fa-cut',
   },
+
+
+  // ── Próximamente ───────────────────────────────────────────
   {
     id: 'cepillos',
     label: 'Cepillos & Peines',
