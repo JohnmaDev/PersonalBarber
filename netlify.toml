@@ -3,6 +3,9 @@
   publish = "dist"
   functions = "backend/functions"
 
+[build.environment]
+  GO_VERSION = "1.22.0"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

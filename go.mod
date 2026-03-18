@@ -1,4 +1,4 @@
-module github.com/JohnmaDev/PersonalBarber/backend
+module github.com/JohnmaDev/PersonalBarber
 
 go 1.22.0
 
