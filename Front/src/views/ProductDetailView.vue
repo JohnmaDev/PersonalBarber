@@ -16,8 +16,14 @@
       </div>
     </div>
 
+    <!-- Estado de carga -->
+    <div v-if="isLoading" class="flex flex-col items-center justify-center min-h-[60vh]">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-barber-gold mb-4"></div>
+      <p class="text-gray-400 font-medium">Cargando detalles...</p>
+    </div>
+
     <!-- Contenido principal -->
-    <div v-if="product" class="max-w-5xl mx-auto px-4 py-6 md:py-10 pb-56">
+    <div v-else-if="product" class="max-w-5xl mx-auto px-4 py-6 md:py-10 pb-56">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-start">
 
         <!-- Imagen del producto -->
@@ -186,17 +192,30 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { products, categories } from '@/data/products.js'
-import { useCart } from '@/composables/useCart.js'
+const products = ref([])
+const isLoading = ref(true)
 
-const route = useRoute()
-const router = useRouter()
-const { addToCart } = useCart()
+async function fetchProducts() {
+  isLoading.value = true
+  try {
+    const res = await fetch('/.netlify/functions/get_products')
+    const data = await res.json()
+    if (data.ok) {
+      products.value = data.products
+    }
+  } catch (err) {
+    console.error('Error cargando detalles del producto:', err)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchProducts()
+})
 
 // Producto reactivo basado en el ID de la URL
-const product = computed(() => products.find(p => p.id === Number(route.params.id)))
+const product = computed(() => products.value.find(p => p.id === Number(route.params.id)))
 const qty = ref(1)
 const showConfirm = ref(false)
 
@@ -207,16 +226,16 @@ watch(() => route.params.id, () => {
 })
 
 const recommendedProducts = computed(() => {
-  if (!product.value) return []
+  if (!product.value || products.value.length === 0) return []
   
   // 2 del mismo tipo (Up-sell)
-  const sameCategory = products
+  const sameCategory = products.value
     .filter(p => p.category === product.value.category && p.id !== product.value.id)
     .sort(() => 0.5 - Math.random())
     .slice(0, 2)
 
   // 2 de otras categorías (Cross-sell)
-  const otherCategories = products
+  const otherCategories = products.value
     .filter(p => p.category !== product.value.category)
     .sort(() => 0.5 - Math.random())
     .slice(0, 2)
