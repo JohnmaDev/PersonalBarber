@@ -324,7 +324,9 @@ export default {
 
         const res = await fetch(url);
         const data = await res.json();
-        if (data.ok) this.productos = data.products.sort((a, b) => a.id - b.id);
+        if (data.ok) {
+          this.productos = (data.products || []).sort((a, b) => (a.id || 0) - (b.id || 0));
+        }
       } catch (e) {
         console.error('Error cargando productos:', e);
       } finally {
