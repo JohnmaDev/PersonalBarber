@@ -121,7 +121,33 @@
           </div>
         </div>
 
-        <!-- Lista de Productos -->
+        <!-- Buscador y Filtro -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div class="relative group">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-barber-gold transition-colors"></i>
+            <input 
+              v-model="searchQuery" 
+              type="text" 
+              placeholder="Buscar por nombre o marca..." 
+              class="w-full pl-10 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-barber-gold/50 transition-all"
+            >
+          </div>
+          <div class="relative">
+            <select 
+              v-model="filterCategory" 
+              class="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-barber-gold/50 appearance-none cursor-pointer"
+            >
+              <option value="all">Todas las categorías</option>
+              <option value="ceras">Ceras & Pomadas</option>
+              <option value="tratamientos">Tratamientos</option>
+              <option value="maquinas">Equipos & Tecnología</option>
+              <option value="combos">Combos</option>
+              <option value="boutique">Boutique (Merch)</option>
+            </select>
+            <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none text-xs"></i>
+          </div>
+        </div>
+
         <div v-if="cargando" class="flex flex-col items-center justify-center py-20 bg-zinc-900/50 rounded-3xl border border-zinc-800">
           <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-barber-gold mb-4"></div>
           <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Cargando catálogo...</p>
@@ -135,14 +161,14 @@
           <button @click="cargarProductos" class="mt-4 text-barber-gold text-xs font-bold uppercase hover:underline">Reintentar</button>
         </div>
 
-        <div v-else-if="productos.length === 0 && !cargando" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
-          <i class="fas fa-box-open text-4xl text-zinc-700 mb-4"></i>
-          <p class="text-zinc-500 font-medium">No se encontraron productos en la base de datos.</p>
-          <button @click="cargarProductos" class="mt-4 text-barber-gold text-xs font-bold uppercase hover:underline">Reintentar conexión</button>
+        <div v-else-if="filteredProducts.length === 0 && !cargando" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
+          <i class="fas fa-search text-4xl text-zinc-700 mb-4"></i>
+          <p class="text-zinc-500 font-medium">No se encontraron productos que coincidan.</p>
+          <button v-if="searchQuery || filterCategory !== 'all'" @click="searchQuery = ''; filterCategory = 'all'" class="mt-4 text-barber-gold text-xs font-bold uppercase hover:underline">Limpiar filtros</button>
         </div>
 
         <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
-          <div v-for="p in productos" :key="p.id" class="flex items-center p-4 gap-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/30 transition-colors">
+          <div v-for="p in filteredProducts" :key="p.id" class="flex items-center p-4 gap-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/30 transition-colors">
             <div class="w-12 h-12 bg-black rounded-lg overflow-hidden border border-zinc-800 shrink-0 uppercase flex items-center justify-center text-[8px] font-bold text-zinc-700">
               <img v-if="p.images && p.images.length > 0" :src="p.images[0]" :alt="p.name" class="w-full h-full object-cover">
               <span v-else>Sin foto</span>
@@ -251,6 +277,8 @@ export default {
       guardando: false,
       reservas: [],
       productos: [],
+      searchQuery: '',
+      filterCategory: 'all',
       errorMessage: null,
       showModal: false,
       editando: false,
@@ -294,6 +322,14 @@ export default {
         grupos[f].push(r);
       });
       return grupos;
+    },
+    filteredProducts() {
+      return this.productos.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+                             (p.brand && p.brand.toLowerCase().includes(this.searchQuery.toLowerCase()));
+        const matchesCategory = this.filterCategory === 'all' || p.category === this.filterCategory;
+        return matchesSearch && matchesCategory;
+      });
     }
   },
   methods: {
