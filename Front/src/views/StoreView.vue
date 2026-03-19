@@ -78,7 +78,7 @@
               </p>
             </div>
             <div class="flex items-center justify-between mt-4">
-              <span class="text-barber-gold font-bold text-sm">{{ product.price }}</span>
+              <span class="text-barber-gold font-bold text-sm">{{ formatPrice(product.price) }}</span>
               <!-- Botón agregar al carrito rápido -->
               <button
                 @click.stop="quickAddToCart(product)"
@@ -121,10 +121,10 @@ export default {
 </script>
 
 <script setup>
-import { ref, computed, onMounted, watch, onActivated } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { categories } from '@/data/products.js'
 import { useCart } from '@/composables/useCart.js'
+import { formatPrice } from '@/utils/format.js'
 
 const products = ref([])
 const isLoading = ref(true)

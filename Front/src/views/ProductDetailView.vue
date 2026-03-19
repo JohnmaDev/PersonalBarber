@@ -94,7 +94,7 @@
 
           <!-- Precio -->
           <div class="flex items-baseline gap-3">
-            <span class="text-4xl font-black text-barber-gold">{{ product.price }}</span>
+            <span class="text-4xl font-black text-barber-gold">{{ formatPrice(product.price) }}</span>
           </div>
 
           <!-- Descripción -->
@@ -198,7 +198,7 @@
             </div>
             <div class="p-4">
               <h4 class="text-xs font-bold text-white group-hover:text-barber-gold transition-colors line-clamp-1">{{ item.name }}</h4>
-              <p class="text-barber-gold font-bold text-xs mt-1">{{ item.price }}</p>
+              <p class="text-barber-gold font-bold text-xs mt-1">{{ formatPrice(item.price) }}</p>
             </div>
           </router-link>
         </div>
@@ -234,6 +234,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { categories } from '@/data/products.js'
 import { useCart } from '@/composables/useCart.js'
+import { formatPrice } from '@/utils/format.js'
 
 const route = useRoute()
 const router = useRouter()

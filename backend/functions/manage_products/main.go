@@ -20,7 +20,7 @@ type Product struct {
 	Brand       string   `json:"brand" bson:"brand"`
 	Category    string   `json:"category" bson:"category"`
 	Description string   `json:"description" bson:"description"`
-	Price       string   `json:"price" bson:"price"`
+	Price       int64    `json:"price" bson:"price"`
 	Images      []string `json:"images" bson:"images"`
 }
 

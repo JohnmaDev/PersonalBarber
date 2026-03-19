@@ -177,7 +177,7 @@
               <p class="font-bold text-sm truncate">{{ p.name }}</p>
               <div class="flex items-center gap-2 mt-0.5">
                 <span class="text-[9px] font-black text-barber-gold uppercase px-1.5 py-0.5 bg-barber-gold/10 rounded border border-barber-gold/20">{{ p.category }}</span>
-                <span class="text-zinc-500 text-[10px] font-bold">{{ p.price }}</span>
+                <span class="text-zinc-500 text-[10px] font-bold">{{ formatPrice(p.price) }}</span>
               </div>
             </div>
             <div class="flex gap-2">
@@ -209,8 +209,8 @@
                     <input v-model="prodForm.name" type="text" class="input-modern" placeholder="Cera Nishman Gold">
                   </div>
                   <div class="space-y-1">
-                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Precio</label>
-                    <input v-model="prodForm.price" type="text" class="input-modern" placeholder="$45.000 COP">
+                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Precio (Solo números)</label>
+                    <input v-model.number="prodForm.price" type="number" class="input-modern" placeholder="45000">
                   </div>
                 </div>
 
@@ -224,8 +224,9 @@
                     <select v-model="prodForm.category" class="input-modern appearance-none">
                       <option value="ceras">Ceras</option>
                       <option value="tratamientos">Tratamientos</option>
-                      <option value="maquinas">Máquinas</option>
+                      <option value="maquinas">Equipos & Tecnología</option>
                       <option value="combos">Combos</option>
+                      <option value="boutique">Boutique (Merch)</option>
                     </select>
                   </div>
                 </div>
@@ -263,6 +264,8 @@
 </template>
 
 <script>
+import { formatPrice } from '@/utils/format.js'
+
 // El PIN ahora se maneja vía variables de entorno VUE_APP_ADMIN_PIN
 
 export default {
