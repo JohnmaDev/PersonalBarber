@@ -85,7 +85,12 @@
     </div>
 
     <!-- SECCIÓN BOUTIQUE (DESTACADO CENTRAL) -->
-    <div v-if="boutiqueCategory" class="mt-8">
+    <div v-if="boutiqueCategory" class="mt-12 relative pt-4">
+      <!-- Badge Premium (Fuera del overflow para que no se corte en móvil) -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black px-4 py-1 rounded-full border border-pink-500/40 shadow-[0_0_15px_rgba(236,72,153,0.3)]">
+        <span class="text-[10px] font-black tracking-[0.2em] text-pink-500 uppercase">Premium Merch</span>
+      </div>
+
       <div 
         class="group relative h-48 sm:h-56 rounded-3xl overflow-hidden border border-pink-500/20 bg-gradient-to-r from-pink-900/20 via-black to-zinc-900/40 p-1 flex items-center justify-center cursor-default transition-all duration-700 hover:border-pink-500/50 shadow-2xl"
       >
@@ -94,10 +99,6 @@
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-pink-500/5 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
         
         <div class="relative flex flex-col items-center text-center p-6 sm:p-10 z-10 w-full border border-white/5 rounded-[22px] bg-black/60 backdrop-blur-sm">
-          <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black px-4 py-1 rounded-full border border-pink-500/30">
-            <span class="text-[10px] font-black tracking-[0.2em] text-pink-500 uppercase">Premium Merch</span>
-          </div>
-
           <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
             <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-500">
                <i class="fas fa-tshirt text-3xl sm:text-4xl text-pink-500 drop-shadow-[0_0_10px_rgba(236,72,153,0.5)]"></i>
