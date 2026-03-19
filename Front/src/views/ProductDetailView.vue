@@ -235,6 +235,10 @@ onMounted(() => {
   fetchProducts()
 })
 
+
+// Producto reactivo basado en el ID de la URL
+const product = computed(() => products.value.find(p => p.id === Number(route.params.id)))
+
 // SEO: Actualizar título dinámicamente
 watch(product, (newProd) => {
   if (newProd) {
@@ -245,9 +249,6 @@ watch(product, (newProd) => {
     }
   }
 }, { immediate: true })
-
-// Producto reactivo basado en el ID de la URL
-const product = computed(() => products.value.find(p => p.id === Number(route.params.id)))
 const qty = ref(1)
 const showConfirm = ref(false)
 const selectedImage = ref(null)
