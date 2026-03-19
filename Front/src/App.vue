@@ -7,14 +7,14 @@
     </router-view>
 
     <!-- Carrito Drawer + Ícono flotante (Solo si no estamos en el Home) -->
-    <template v-if="showCart">
+    <template v-if="showCart && $route.name !== 'AdminPanel'">
       <CartDrawer :isOpen="cartOpen" @close="cartOpen = false" />
       <CartIcon v-if="!cartOpen" @open="cartOpen = true" />
     </template>
 
-    <!-- Botón volver arriba -->
+    <!-- Botón volver arriba (Solo si no estamos en Admin) -->
     <button
-      v-if="showScrollTop"
+      v-if="showScrollTop && $route.name !== 'AdminPanel'"
       @click="scrollToTop"
       aria-label="Volver arriba"
       class="fixed bottom-10 sm:bottom-6 right-6 z-50 bg-yellow-400 text-black px-4 py-2 rounded-full shadow-lg hover:bg-yellow-300 transition focus:outline-none focus:ring-2 focus:ring-yellow-500"
@@ -34,7 +34,7 @@ export default {
   components: { CartDrawer, CartIcon },
   setup() {
     const route = useRoute()
-    const showCart = computed(() => route.name !== 'Home')
+    const showCart = computed(() => route.name !== 'Home' && route.name !== 'AdminPanel')
     
     return { showCart }
   },
