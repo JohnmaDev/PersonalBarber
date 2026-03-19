@@ -59,7 +59,7 @@
           <!-- Imagen – clic navega al detalle -->
           <div class="aspect-square overflow-hidden bg-white/5 cursor-pointer" @click="goToDetail(product)">
             <img
-              :src="product.image"
+              :src="product.images && product.images.length > 0 ? product.images[0] : '/placeholder-product.webp'"
               :alt="product.name"
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               loading="lazy"

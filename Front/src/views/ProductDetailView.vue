@@ -26,14 +26,27 @@
     <div v-else-if="product" class="max-w-5xl mx-auto px-4 py-6 md:py-10 pb-56">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-start">
 
-        <!-- Imagen del producto -->
-        <div class="md:sticky md:top-24 flex justify-center">
-          <div class="w-full max-w-[320px] md:max-w-none aspect-square rounded-3xl overflow-hidden border border-white/10 bg-white/5 shadow-2xl">
+        <!-- Galería de imágenes -->
+        <div class="md:sticky md:top-24 flex flex-col gap-4">
+          <div class="w-full aspect-square rounded-3xl overflow-hidden border border-white/10 bg-white/5 shadow-2xl group relative">
             <img
-              :src="product.image"
+              :src="selectedImage || (product.images && product.images.length > 0 ? product.images[0] : '/placeholder-product.webp')"
               :alt="product.name"
-              class="w-full h-full object-cover"
+              class="w-full h-full object-cover transition-all duration-500"
             />
+          </div>
+          
+          <!-- Miniaturas -->
+          <div v-if="product.images && product.images.length > 1" class="flex flex-wrap gap-3">
+            <button 
+              v-for="(img, idx) in product.images" 
+              :key="idx"
+              @click="selectedImage = img"
+              class="w-16 h-16 rounded-xl overflow-hidden border-2 transition-all"
+              :class="selectedImage === img || (!selectedImage && idx === 0) ? 'border-barber-gold scale-105' : 'border-transparent opacity-60 hover:opacity-100'"
+            >
+              <img :src="img" :alt="product.name + ' ' + idx" class="w-full h-full object-cover" />
+            </button>
           </div>
         </div>
 
@@ -156,7 +169,7 @@
             class="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-barber-gold/50 transition-all duration-300"
           >
             <div class="aspect-square overflow-hidden bg-white/5">
-              <img :src="item.image" :alt="item.name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              <img :src="item.images && item.images.length > 0 ? item.images[0] : '/placeholder-product.webp'" :alt="item.name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
             </div>
             <div class="p-4">
               <h4 class="text-xs font-bold text-white group-hover:text-barber-gold transition-colors line-clamp-1">{{ item.name }}</h4>
@@ -206,7 +219,7 @@ const isLoading = ref(true)
 async function fetchProducts() {
   isLoading.value = true
   try {
-    const res = await fetch('/.netlify/functions/get_products')
+    const res = await fetch('/api/get_products')
     const data = await res.json()
     if (data.ok) {
       products.value = data.products
@@ -226,10 +239,12 @@ onMounted(() => {
 const product = computed(() => products.value.find(p => p.id === Number(route.params.id)))
 const qty = ref(1)
 const showConfirm = ref(false)
+const selectedImage = ref(null)
 
-// Resetear cantidad cuando cambia el producto
+// Resetear cantidad e imagen cuando cambia el producto
 watch(() => route.params.id, () => {
   qty.value = 1
+  selectedImage.value = null
   window.scrollTo({ top: 0, behavior: 'smooth' })
 })
 

@@ -144,7 +144,7 @@
         <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
           <div v-for="p in productos" :key="p.id" class="flex items-center p-4 gap-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/30 transition-colors">
             <div class="w-12 h-12 bg-black rounded-lg overflow-hidden border border-zinc-800 shrink-0 uppercase flex items-center justify-center text-[8px] font-bold text-zinc-700">
-              <img v-if="p.image" :src="p.image" :alt="p.name" class="w-full h-full object-cover">
+              <img v-if="p.images && p.images.length > 0" :src="p.images[0]" :alt="p.name" class="w-full h-full object-cover">
               <span v-else>Sin foto</span>
             </div>
             <div class="flex-1 min-w-0">
@@ -204,10 +204,17 @@
                   </div>
                 </div>
 
-                <div class="space-y-1">
-                  <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">URL Imagen</label>
-                  <input v-model="prodForm.image" type="text" class="input-modern" placeholder="/products/ejemplo.webp">
-                  <p class="text-[8px] text-zinc-600 mt-1 italic pl-1">Próximamente: botón para subir fotos directamente.</p>
+                <div class="space-y-3">
+                  <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Imágenes (URLs)</label>
+                  <div v-for="(img, index) in prodForm.images" :key="index" class="flex gap-2">
+                    <input v-model="prodForm.images[index]" type="text" class="input-modern" placeholder="/products/ejemplo.webp">
+                    <button @click="prodForm.images.splice(index, 1)" class="p-2 text-zinc-500 hover:text-red-400">
+                      <i class="fas fa-minus-circle"></i>
+                    </button>
+                  </div>
+                  <button @click="prodForm.images.push('')" class="text-xs font-bold text-barber-gold hover:underline flex items-center gap-2 pl-1">
+                    <i class="fas fa-plus-circle"></i> Añadir otra imagen
+                  </button>
                 </div>
 
                 <div class="space-y-1">
@@ -254,7 +261,7 @@ export default {
         category: 'ceras',
         description: '',
         price: '',
-        image: ''
+        images: ['']
       }
     }
   },
@@ -362,11 +369,11 @@ export default {
     abrirModalProducto(p = null) {
       if (p) {
         this.editando = true;
-        this.prodForm = { ...p };
+        this.prodForm = { ...p, images: p.images && p.images.length > 0 ? [...p.images] : [''] };
       } else {
         this.editando = false;
-        const nextId = this.productos.length > 0 ? Math.max(...this.productos.map(pr => pr.id)) + 1 : 1;
-        this.prodForm = { id: nextId, name: '', brand: '', category: 'ceras', description: '', price: '', image: '' };
+        const nextId = this.productos.length > 0 ? Math.max(...this.productos.map(pr => pr.id)) : 1;
+        this.prodForm = { id: nextId + 1, name: '', brand: '', category: 'ceras', description: '', price: '', images: [''] };
       }
       this.showModal = true;
     },

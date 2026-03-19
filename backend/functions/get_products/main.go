@@ -15,13 +15,14 @@ import (
 )
 
 type Product struct {
-	ID          int64  `json:"id" bson:"id"`
-	Name        string `json:"name" bson:"name"`
-	Brand       string `json:"brand" bson:"brand"`
-	Category    string `json:"category" bson:"category"`
-	Description string `json:"description" bson:"description"`
-	Price       string `json:"price" bson:"price"`
-	Image       string `json:"image" bson:"image"`
+	ID          int64    `json:"id" bson:"id"`
+	Name        string   `json:"name" bson:"name"`
+	Brand       string   `json:"brand" bson:"brand"`
+	Category    string   `json:"category" bson:"category"`
+	Description string   `json:"description" bson:"description"`
+	Price       string   `json:"price" bson:"price"`
+	Images      []string `json:"images" bson:"images"`
+	Image       string   `json:"image,omitempty" bson:"image,omitempty"` // For backward compatibility
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -59,6 +60,17 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 			StatusCode: 500,
 			Body:       fmt.Sprintf(`{"error": "Decode failed: %v"}`, err),
 		}, nil
+	}
+
+	// Dynamic migration: if Images is empty but Image exists, populate Images
+	for i := range products {
+		if len(products[i].Images) == 0 && products[i].Image != "" {
+			products[i].Images = []string{products[i].Image}
+		}
+		// Always ensure Images is at least an empty slice, never null
+		if products[i].Images == nil {
+			products[i].Images = []string{}
+		}
 	}
 
 	body, _ := json.Marshal(map[string]interface{}{

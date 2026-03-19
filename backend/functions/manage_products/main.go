@@ -15,13 +15,13 @@ import (
 )
 
 type Product struct {
-	ID          int64  `json:"id" bson:"id"`
-	Name        string `json:"name" bson:"name"`
-	Brand       string `json:"brand" bson:"brand"`
-	Category    string `json:"category" bson:"category"`
-	Description string `json:"description" bson:"description"`
-	Price       string `json:"price" bson:"price"`
-	Image       string `json:"image" bson:"image"`
+	ID          int64    `json:"id" bson:"id"`
+	Name        string   `json:"name" bson:"name"`
+	Brand       string   `json:"brand" bson:"brand"`
+	Category    string   `json:"category" bson:"category"`
+	Description string   `json:"description" bson:"description"`
+	Price       string   `json:"price" bson:"price"`
+	Images      []string `json:"images" bson:"images"`
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
