@@ -56,20 +56,16 @@
 
       <!-- Tarjetas próximamente (sin imagen) -->
       <div
-        v-for="cat in comingSoonCategories"
+        v-for="cat in otherComingSoonCategories"
         :key="cat.id"
-        class="group relative h-52 sm:h-64 rounded-2xl overflow-hidden border border-white/10 bg-white/3 transition-all duration-500 cursor-default"
-        :class="{ 'sm:col-span-2': cat.id === 'boutique' }"
-        :style="{ borderColor: `${cat.accent}25` }"
+        class="group relative h-52 sm:h-64 rounded-2xl overflow-hidden border border-white/10 bg-white/3 transition-all duration-300 cursor-default"
+        :style="{ borderColor: `${cat.accent}18` }"
       >
         <!-- Glow sutil de fondo -->
         <div
-          class="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity duration-700"
+          class="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500"
           :style="{ background: `radial-gradient(circle at 50% 50%, ${cat.accent} 0%, transparent 70%)` }"
         ></div>
-        
-        <!-- Animación de brillo extra para Boutique -->
-        <div v-if="cat.id === 'boutique'" class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
 
         <!-- Contenido centrado -->
         <div class="absolute inset-0 flex flex-col items-center justify-center p-5 text-center gap-3">
@@ -86,7 +82,43 @@
           >Próximamente</span>
         </div>
       </div>
+    </div>
 
+    <!-- SECCIÓN BOUTIQUE (DESTACADO CENTRAL) -->
+    <div v-if="boutiqueCategory" class="mt-8">
+      <div 
+        class="group relative h-48 sm:h-56 rounded-3xl overflow-hidden border border-pink-500/20 bg-gradient-to-r from-pink-900/20 via-black to-zinc-900/40 p-1 flex items-center justify-center cursor-default transition-all duration-700 hover:border-pink-500/50 shadow-2xl"
+      >
+        <!-- Fondo animado -->
+        <div class="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-700 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-pink-500/5 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
+        
+        <div class="relative flex flex-col items-center text-center p-6 sm:p-10 z-10 w-full border border-white/5 rounded-[22px] bg-black/60 backdrop-blur-sm">
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black px-4 py-1 rounded-full border border-pink-500/30">
+            <span class="text-[10px] font-black tracking-[0.2em] text-pink-500 uppercase">Premium Merch</span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-500">
+               <i class="fas fa-tshirt text-3xl sm:text-4xl text-pink-500 drop-shadow-[0_0_10px_rgba(236,72,153,0.5)]"></i>
+            </div>
+            <div class="flex flex-col items-center sm:items-start text-center sm:text-left">
+              <h3 class="text-2xl sm:text-4xl font-black text-white tracking-tighter uppercase italic italic-heavy">
+                {{ boutiqueCategory.label }}
+              </h3>
+              <p class="text-zinc-400 text-sm sm:text-base font-medium mt-1 max-w-sm">
+                Diseños exclusivos, gorras y prendas con el sello PersonalBarber.
+              </p>
+            </div>
+          </div>
+          
+          <div class="mt-6 flex items-center gap-4">
+            <span class="h-[1px] w-8 sm:w-16 bg-gradient-to-r from-transparent to-pink-500"></span>
+            <span class="text-xs font-bold tracking-widest text-pink-500 uppercase whitespace-nowrap">Muy Pronto</span>
+            <span class="h-[1px] w-8 sm:w-16 bg-gradient-to-l from-transparent to-pink-500"></span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- CTA ver toda la tienda -->
@@ -108,7 +140,8 @@ import { categories } from '@/data/products.js'
 
 const products = ref([])
 const activeCategories = computed(() => categories.filter(c => !c.comingSoon))
-const comingSoonCategories = computed(() => categories.filter(c => c.comingSoon))
+const boutiqueCategory = computed(() => categories.find(c => c.id === 'boutique'))
+const otherComingSoonCategories = computed(() => categories.filter(c => c.comingSoon && c.id !== 'boutique'))
 
 async function fetchCounts() {
   try {
