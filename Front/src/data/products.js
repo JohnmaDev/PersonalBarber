@@ -144,16 +144,25 @@ export const categories = [
   },
   {
     id: 'maquinas',
-    label: 'Máquinas de Corte',
+    label: 'Equipos & Tecnología',
     subtitle: '',
     cover: '/products/Rasuradora_Kemei.webp',
     accent: '#a78bfa',
     comingSoon: false,
-    icon: 'fas fa-cut',
+    icon: 'fas fa-plug',
   },
 
 
   // ── Próximamente ───────────────────────────────────────────
+  {
+    id: 'boutique',
+    label: 'Boutique (Merch)',
+    subtitle: 'Próximamente',
+    cover: null,
+    accent: '#ec4899', // Pink vibrante (cool factor)
+    comingSoon: true,
+    icon: 'fas fa-tshirt',
+  },
   {
     id: 'cepillos',
     label: 'Cepillos & Peines',

@@ -58,14 +58,18 @@
       <div
         v-for="cat in comingSoonCategories"
         :key="cat.id"
-        class="group relative h-52 sm:h-64 rounded-2xl overflow-hidden border border-white/10 bg-white/3 transition-all duration-300 cursor-default"
-        :style="{ borderColor: `${cat.accent}18` }"
+        class="group relative h-52 sm:h-64 rounded-2xl overflow-hidden border border-white/10 bg-white/3 transition-all duration-500 cursor-default"
+        :class="{ 'sm:col-span-2': cat.id === 'boutique' }"
+        :style="{ borderColor: `${cat.accent}25` }"
       >
         <!-- Glow sutil de fondo -->
         <div
-          class="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500"
+          class="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity duration-700"
           :style="{ background: `radial-gradient(circle at 50% 50%, ${cat.accent} 0%, transparent 70%)` }"
         ></div>
+        
+        <!-- Animación de brillo extra para Boutique -->
+        <div v-if="cat.id === 'boutique'" class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
 
         <!-- Contenido centrado -->
         <div class="absolute inset-0 flex flex-col items-center justify-center p-5 text-center gap-3">
