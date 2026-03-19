@@ -26,24 +26,49 @@
     <div v-else-if="product" class="max-w-5xl mx-auto px-4 py-6 md:py-10 pb-56">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-start">
 
-        <!-- Galería de imágenes -->
+        <!-- Galería de imágenes (Modo Carrusel para móvil) -->
         <div class="md:sticky md:top-24 flex flex-col gap-4">
-          <div class="w-full aspect-square rounded-3xl overflow-hidden border border-white/10 bg-white/5 shadow-2xl group relative">
-            <img
-              :src="selectedImage || (product.images && product.images.length > 0 ? product.images[0] : '/placeholder-product.webp')"
-              :alt="product.name"
-              class="w-full h-full object-cover transition-all duration-500"
-            />
+          <div 
+            ref="carouselRef"
+            @scroll="handleScroll"
+            class="w-full aspect-square rounded-3xl overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth hide-scrollbar border border-white/10 bg-white/5 shadow-2xl flex items-center"
+          >
+            <div 
+              v-for="(img, idx) in product.images" 
+              :key="idx"
+              class="w-full h-full flex-shrink-0 snap-center flex items-center justify-center p-2"
+            >
+              <img
+                :src="img"
+                :alt="product.name + ' ' + idx"
+                class="w-full h-full object-contain sm:object-cover rounded-2xl"
+                loading="lazy"
+              />
+            </div>
+            <!-- Fallback si no hay imágenes -->
+            <div v-if="!product.images || product.images.length === 0" class="w-full h-full flex items-center justify-center">
+              <img src="/placeholder-product.webp" alt="Sin imagen" class="w-full h-full object-cover">
+            </div>
           </div>
           
-          <!-- Miniaturas -->
-          <div v-if="product.images && product.images.length > 1" class="flex flex-wrap gap-3">
+          <!-- Dots indicadores (Solo móvil) -->
+          <div v-if="product.images && product.images.length > 1" class="flex justify-center gap-2 sm:hidden mt-[-10px] pb-2">
+            <div 
+              v-for="(_, idx) in product.images" 
+              :key="idx"
+              class="w-1.5 h-1.5 rounded-full transition-all duration-300"
+              :class="activeIdx === idx ? 'bg-barber-gold w-4' : 'bg-white/20'"
+            ></div>
+          </div>
+          
+          <!-- Miniaturas (Desktop y Móvil alternativo) -->
+          <div v-if="product.images && product.images.length > 1" class="hidden sm:flex flex-wrap gap-3">
             <button 
               v-for="(img, idx) in product.images" 
               :key="idx"
-              @click="selectedImage = img"
-              class="w-16 h-16 rounded-xl overflow-hidden border-2 transition-all"
-              :class="selectedImage === img || (!selectedImage && idx === 0) ? 'border-barber-gold scale-105' : 'border-transparent opacity-60 hover:opacity-100'"
+              @click="scrollToImage(idx)"
+              class="w-16 h-16 rounded-xl overflow-hidden border-2 transition-all shrink-0"
+              :class="activeIdx === idx ? 'border-barber-gold scale-105' : 'border-transparent opacity-60 hover:opacity-100'"
             >
               <img :src="img" :alt="product.name + ' ' + idx" class="w-full h-full object-cover" />
             </button>
@@ -251,12 +276,31 @@ watch(product, (newProd) => {
 }, { immediate: true })
 const qty = ref(1)
 const showConfirm = ref(false)
-const selectedImage = ref(null)
+const carouselRef = ref(null)
+const activeIdx = ref(0)
+
+function handleScroll(e) {
+  const container = e.target
+  const scrollLeft = container.scrollLeft
+  const itemWidth = container.offsetWidth
+  activeIdx.value = Math.round(scrollLeft / itemWidth)
+}
+
+function scrollToImage(idx) {
+  if (!carouselRef.value) return
+  const itemWidth = carouselRef.value.offsetWidth
+  carouselRef.value.scrollTo({
+    left: idx * itemWidth,
+    behavior: 'smooth'
+  })
+  activeIdx.value = idx
+}
 
 // Resetear cantidad e imagen cuando cambia el producto
 watch(() => route.params.id, () => {
   qty.value = 1
-  selectedImage.value = null
+  activeIdx.value = 0
+  if (carouselRef.value) carouselRef.value.scrollLeft = 0
   window.scrollTo({ top: 0, behavior: 'smooth' })
 })
 
@@ -307,4 +351,12 @@ const badges = [
 <style scoped>
 .confirm-fade-enter-active, .confirm-fade-leave-active { transition: all 0.3s ease; }
 .confirm-fade-enter-from, .confirm-fade-leave-to { opacity: 0; transform: translateY(-6px); }
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 </style>
