@@ -29,13 +29,16 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	adminPin := os.Getenv("VUE_APP_ADMIN_PIN")
 	providedToken := request.Headers["Authorization"]
 	if providedToken == "" {
+		providedToken = request.Headers["authorization"]
+	}
+	if providedToken == "" {
 		providedToken = request.QueryStringParameters["token"]
 	}
 
-	if providedToken != adminPin {
+	if adminPin == "" || providedToken != adminPin {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusUnauthorized,
-			Body:       `{"error": "Unauthorized"}`,
+			Body:       fmt.Sprintf(`{"error": "Unauthorized", "details": "Token mismatch or PIN not set"}`),
 		}, nil
 	}
 

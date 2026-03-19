@@ -312,8 +312,8 @@ export default {
       this.cargando = true;
       try {
         const url = window.location.hostname === 'localhost' 
-          ? `https://personalbarber.netlify.app/.netlify/functions/list_reservations?token=${this.pinIngresado}`
-          : `/.netlify/functions/list_reservations?token=${this.pinIngresado}`;
+          ? `https://personalbarber.netlify.app/api/list_reservations?token=${this.pinIngresado}`
+          : `/api/list_reservations?token=${this.pinIngresado}`;
         
         const res = await fetch(url);
         const data = await res.json();
@@ -374,8 +374,8 @@ export default {
       this.guardando = true;
       try {
         const url = window.location.hostname === 'localhost'
-          ? 'https://personalbarber.netlify.app/.netlify/functions/manage_products'
-          : '/.netlify/functions/manage_products';
+          ? `https://personalbarber.netlify.app/api/manage_products?token=${this.pinIngresado}`
+          : `/api/manage_products?token=${this.pinIngresado}`;
 
         const res = await fetch(url, {
           method: 'POST',
@@ -402,8 +402,8 @@ export default {
       if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
       try {
         const url = window.location.hostname === 'localhost'
-          ? `https://personalbarber.netlify.app/.netlify/functions/manage_products?id=${id}&token=${this.pinIngresado}`
-          : `/.netlify/functions/manage_products?id=${id}&token=${this.pinIngresado}`;
+          ? `https://personalbarber.netlify.app/api/manage_products?id=${id}&token=${this.pinIngresado}`
+          : `/api/manage_products?id=${id}&token=${this.pinIngresado}`;
 
         const res = await fetch(url, {
           method: 'DELETE'

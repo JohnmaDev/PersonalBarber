@@ -25,7 +25,24 @@ type Reservation struct {
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	// Conectar a MongoDB
+	// 1. Verificación de Seguridad
+	adminPin := os.Getenv("VUE_APP_ADMIN_PIN")
+	providedToken := request.Headers["Authorization"]
+	if providedToken == "" {
+		providedToken = request.Headers["authorization"]
+	}
+	if providedToken == "" {
+		providedToken = request.QueryStringParameters["token"]
+	}
+
+	if adminPin == "" || providedToken != adminPin {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusUnauthorized,
+			Body:       `{"error": "Unauthorized"}`,
+		}, nil
+	}
+
+	// 2. Conexión a DB
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
 		return events.APIGatewayProxyResponse{
