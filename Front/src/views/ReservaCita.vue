@@ -187,6 +187,7 @@ export default {
     }
   },
   mounted() {
+    document.title = 'Reservar Cita | PersonalBarber'
     this.generateDays();
     this.cargarSlotsOcupados();
 

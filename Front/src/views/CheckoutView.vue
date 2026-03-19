@@ -233,12 +233,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCart } from '@/composables/useCart.js'
 
 const router = useRouter()
 const { cartItems, cartTotalFormatted, formatPrice, parsePrice, clearCart } = useCart()
+
+onMounted(() => {
+  document.title = 'Finalizar Compra | PersonalBarber'
+})
 
 const form = ref({
   firstName: '', lastName: '', email: '', phone: '', city: '', address: ''
