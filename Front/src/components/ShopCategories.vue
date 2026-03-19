@@ -41,9 +41,9 @@
         <!-- Contenido -->
         <div class="absolute inset-0 flex flex-col justify-end p-4 sm:p-5">
           <span
-            class="text-xs font-bold tracking-widest uppercase mb-1"
+            class="text-[10px] font-bold tracking-widest uppercase mb-1"
             :style="{ color: cat.accent }"
-          >{{ cat.subtitle }}</span>
+          >{{ cat.subtitle || `${getCategoryCount(cat.id)} productos` }}</span>
           <h3 class="text-base sm:text-xl font-bold text-white tracking-tight group-hover:text-barber-gold transition-colors duration-300 leading-tight">
             {{ cat.label }}
           </h3>
@@ -99,9 +99,28 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { categories } from '@/data/products.js'
 
+const products = ref([])
 const activeCategories = computed(() => categories.filter(c => !c.comingSoon))
 const comingSoonCategories = computed(() => categories.filter(c => c.comingSoon))
+
+async function fetchCounts() {
+  try {
+    const res = await fetch('/api/get_products')
+    const data = await res.json()
+    if (data.ok) {
+      products.value = data.products
+    }
+  } catch (err) {
+    console.error('Error cargando conteos:', err)
+  }
+}
+
+function getCategoryCount(catId) {
+  return products.value.filter(p => p.category === catId).length
+}
+
+onMounted(fetchCounts)
 </script>

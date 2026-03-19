@@ -129,7 +129,7 @@ export const categories = [
   {
     id: 'ceras',
     label: 'Ceras & Pomadas',
-    subtitle: '10 productos',
+    subtitle: '',
     cover: '/products/Reuzel_Blue_Strong_Hold_Water_Soluble_Azul.webp',
     accent: '#facc15',
     comingSoon: false,
@@ -137,7 +137,7 @@ export const categories = [
   {
     id: 'tratamientos',
     label: 'Tratamientos',
-    subtitle: '2 productos',
+    subtitle: '',
     cover: '/products/Minoxidil_Kirkland_Remaster.webp',
     accent: '#34d399',
     comingSoon: false,
@@ -145,7 +145,7 @@ export const categories = [
   {
     id: 'maquinas',
     label: 'Máquinas de Corte',
-    subtitle: '1 productos',
+    subtitle: '',
     cover: '/products/Rasuradora_Kemei.webp',
     accent: '#a78bfa',
     comingSoon: false,
