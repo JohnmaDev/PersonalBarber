@@ -235,6 +235,17 @@ onMounted(() => {
   fetchProducts()
 })
 
+// SEO: Actualizar título dinámicamente
+watch(product, (newProd) => {
+  if (newProd) {
+    document.title = `${newProd.name} | PersonalBarber`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", `${newProd.name} de ${newProd.brand}. ${newProd.description.substring(0, 150)}...`);
+    }
+  }
+}, { immediate: true })
+
 // Producto reactivo basado en el ID de la URL
 const product = computed(() => products.value.find(p => p.id === Number(route.params.id)))
 const qty = ref(1)

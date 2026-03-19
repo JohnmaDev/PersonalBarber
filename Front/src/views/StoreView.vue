@@ -190,6 +190,12 @@ onMounted(() => {
   fetchProducts()
 })
 
+// SEO: Título dinámico por categoría
+watch(activeFilter, (newFilter) => {
+  const label = filters.find(f => f.id === newFilter)?.label || 'Tienda';
+  document.title = `${label} | PersonalBarber`;
+}, { immediate: true })
+
 onActivated(() => {
   // Aseguramos que el filtro esté sincronizado al volver del caché
   syncFilter()

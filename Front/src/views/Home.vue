@@ -9,6 +9,13 @@
     </div>
 </template>
 
+<script setup>
+import { onMounted } from 'vue'
+onMounted(() => {
+  document.title = 'PersonalBarber | Barbería Premium & Reservas'
+})
+</script>
+
 <script>
 import HeroSection from '@/components/HeroSection.vue'
 import ShopCategories from '@/components/ShopCategories.vue'
