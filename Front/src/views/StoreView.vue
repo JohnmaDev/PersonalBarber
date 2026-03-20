@@ -121,6 +121,7 @@ export default {
 </script>
 
 <script setup>
+import { ref, computed, onMounted, watch, onActivated } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { categories } from '@/data/products.js'
 import { useCart } from '@/composables/useCart.js'

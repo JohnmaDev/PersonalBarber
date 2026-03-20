@@ -336,6 +336,7 @@ export default {
     }
   },
   methods: {
+    formatPrice,
     verificarPin() {
       if (this.pinIngresado === process.env.VUE_APP_ADMIN_PIN) {
         this.autenticado = true;
