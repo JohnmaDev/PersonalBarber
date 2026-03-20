@@ -128,6 +128,7 @@ import { useCart } from '@/composables/useCart.js'
 import { formatPrice } from '@/utils/format.js'
 
 const products = ref([])
+const categories = ref([])
 const isLoading = ref(true)
 const errorMessage = ref(null)
 
@@ -135,10 +136,10 @@ const route = useRoute()
 const router = useRouter()
 const { addToCart } = useCart()
 
-const filters = [
+const filters = computed(() => [
   { id: 'all', label: 'Todos' },
-  ...categories.filter(c => !c.comingSoon).map(c => ({ id: c.id, label: c.label }))
-]
+  ...categories.value.filter(c => !c.comingSoon).map(c => ({ id: c.id, label: c.label }))
+])
 
 const activeFilter = ref('all')
 const justAdded = ref(null)
@@ -146,33 +147,42 @@ const isFirstVisit = ref(true)
 
 function syncFilter() {
   const cat = route.query.cat
-  activeFilter.value = (cat && filters.find(f => f.id === cat)) ? cat : 'all'
+  activeFilter.value = (cat && filters.value.find(f => f.id === cat)) ? cat : 'all'
 }
 
-async function fetchProducts() {
+async function fetchData() {
   isLoading.value = true
   errorMessage.value = null
   try {
-    const res = await fetch('/api/get_products')
-    const contentType = res.headers.get('content-type')
+    // Cargar Categorías Primero
+    const resCat = await fetch('/api/get_categories')
+    const dataCat = await resCat.json()
+    if (dataCat.ok) {
+      categories.value = dataCat.categories
+    }
+
+    // Cargar Productos
+    const resProd = await fetch('/api/get_products')
+    const contentType = resProd.headers.get('content-type')
     
-    if (!res.ok) {
-      const text = await res.text()
-      errorMessage.value = `Error ${res.status}: ${text.substring(0, 50)}...`
+    if (!resProd.ok) {
+      const text = await resProd.text()
+      errorMessage.value = `Error ${resProd.status}: ${text.substring(0, 50)}...`
       return
     }
 
     if (!contentType || !contentType.includes('application/json')) {
-      const text = await res.text()
+      const text = await resProd.text()
       errorMessage.value = `Respuesta no válida (no es JSON): ${text.substring(0, 50)}...`
       return
     }
 
-    const data = await res.json()
-    if (data.ok) {
-      products.value = data.products
+    const dataProd = await resProd.json()
+    if (dataProd.ok) {
+      products.value = dataProd.products
+      syncFilter() // Re-sincronizar después de cargar categorías
     } else {
-      errorMessage.value = data.error || 'Error desconocido'
+      errorMessage.value = dataProd.error || 'Error desconocido'
     }
   } catch (err) {
     errorMessage.value = 'Fallo la conexión o error de red'
@@ -180,15 +190,13 @@ async function fetchProducts() {
   } finally {
     isLoading.value = false
   }
-  // Marcamos que ya pasó la primera carga después de un breve delay
   setTimeout(() => {
     isFirstVisit.value = false
   }, 1000)
 }
 
 onMounted(() => {
-  syncFilter()
-  fetchProducts()
+  fetchData()
 })
 
 // SEO: Título dinámico por categoría

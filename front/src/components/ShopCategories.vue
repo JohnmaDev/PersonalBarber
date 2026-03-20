@@ -137,22 +137,29 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { categories } from '@/data/products.js'
 
 const products = ref([])
-const activeCategories = computed(() => categories.filter(c => !c.comingSoon))
-const boutiqueCategory = computed(() => categories.find(c => c.id === 'boutique'))
-const otherComingSoonCategories = computed(() => categories.filter(c => c.comingSoon && c.id !== 'boutique'))
+const categories = ref([])
 
-async function fetchCounts() {
+const activeCategories = computed(() => categories.value.filter(c => !c.comingSoon && c.style !== 'premium'))
+const boutiqueCategory = computed(() => categories.value.find(c => c.style === 'premium'))
+const otherComingSoonCategories = computed(() => categories.value.filter(c => c.comingSoon && c.style !== 'premium'))
+
+async function fetchData() {
   try {
-    const res = await fetch('/api/get_products')
-    const data = await res.json()
-    if (data.ok) {
-      products.value = data.products
+    // Cargar Productos (para conteos)
+    const resProd = await fetch('/api/get_products')
+    const dataProd = await resProd.json()
+    if (dataProd.ok) products.value = dataProd.products
+
+    // Cargar Categorías
+    const resCat = await fetch('/api/get_categories')
+    const dataCat = await resCat.json()
+    if (dataCat.ok) {
+      categories.value = dataCat.categories
     }
   } catch (err) {
-    console.error('Error cargando conteos:', err)
+    console.error('Error cargando datos de la tienda:', err)
   }
 }
 
@@ -160,5 +167,5 @@ function getCategoryCount(catId) {
   return products.value.filter(p => p.category === catId).length
 }
 
-onMounted(fetchCounts)
+onMounted(fetchData)
 </script>

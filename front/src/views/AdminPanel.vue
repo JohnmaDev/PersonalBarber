@@ -46,6 +46,13 @@
           >
             Tienda
           </button>
+          <button 
+            @click="activeTab = 'categorias'"
+            :class="activeTab === 'categorias' ? 'bg-barber-gold text-black' : 'text-zinc-400 hover:text-white'"
+            class="px-6 py-2 rounded-xl text-xs font-black uppercase transition-all duration-300"
+          >
+            Categorías
+          </button>
         </div>
 
         <div class="flex gap-3">
@@ -142,11 +149,7 @@
               class="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-barber-gold/50 appearance-none cursor-pointer"
             >
               <option value="all">Todas las categorías</option>
-              <option value="ceras">Ceras & Pomadas</option>
-              <option value="tratamientos">Tratamientos</option>
-              <option value="maquinas">Equipos & Tecnología</option>
-              <option value="combos">Combos</option>
-              <option value="boutique">Boutique (Merch)</option>
+              <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
             </select>
             <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none text-xs"></i>
           </div>
@@ -226,11 +229,7 @@
                   <div class="space-y-1">
                     <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Categoría</label>
                     <select v-model="prodForm.category" class="input-modern appearance-none">
-                      <option value="ceras">Ceras</option>
-                      <option value="tratamientos">Tratamientos</option>
-                      <option value="maquinas">Equipos & Tecnología</option>
-                      <option value="combos">Combos</option>
-                      <option value="boutique">Boutique (Merch)</option>
+                      <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
                     </select>
                   </div>
                 </div>
@@ -263,6 +262,123 @@
         </transition>
       </div>
 
+      <!-- SECCIÓN CATEGORÍAS -->
+      <div v-if="activeTab === 'categorias'">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-lg font-bold">Gestión de Categorías</h2>
+            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Administra las secciones de la tienda</p>
+          </div>
+          <button @click="abrirModalCategoria()" class="flex items-center gap-2 px-5 py-2.5 bg-barber-gold text-black rounded-xl text-xs font-black uppercase hover:bg-yellow-400 transition-all">
+            <i class="fas fa-plus"></i>
+            Nueva Categoría
+          </button>
+        </div>
+
+        <div v-if="cargando" class="flex flex-col items-center justify-center py-20 bg-zinc-900/50 rounded-3xl border border-zinc-800">
+          <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-barber-gold mb-4"></div>
+          <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Cargando categorías...</p>
+        </div>
+
+        <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
+          <div v-for="c in categorias" :key="c.id" class="flex items-center p-4 gap-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/30 transition-colors">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center border border-zinc-800 shrink-0" :style="{ background: c.accent + '10', borderColor: c.accent + '30' }">
+              <i :class="c.icon || 'fas fa-tag'" :style="{ color: c.accent }"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-bold text-sm">{{ c.label }}</p>
+              <div class="flex items-center gap-2 mt-0.5">
+                <span class="text-[9px] text-zinc-500 uppercase font-bold">{{ c.id }}</span>
+                <span v-if="c.comingSoon" class="text-[8px] bg-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded uppercase font-black">Próximamente</span>
+                <span v-if="c.style === 'premium'" class="text-[8px] bg-pink-500/10 text-pink-500 px-1.5 py-0.5 rounded uppercase font-black border border-pink-500/20">Premium</span>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button @click="abrirModalCategoria(c)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all">
+                <i class="fas fa-edit text-xs"></i>
+              </button>
+              <button @click="borrarCategoria(c.id)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-800 text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-all">
+                <i class="fas fa-trash-alt text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Categoría -->
+        <transition name="fade">
+          <div v-if="showCatModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-md p-6 overflow-y-auto max-h-[90vh]">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-black uppercase tracking-tight">{{ editandoCat ? 'Editar' : 'Nueva' }} Categoría</h3>
+                <button @click="showCatModal = false" class="text-zinc-500 hover:text-white">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+
+              <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="space-y-1">
+                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">ID (Slug)</label>
+                    <input v-model="catForm.id" type="text" class="input-modern" placeholder="ceras" :disabled="editandoCat">
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Etiqueta</label>
+                    <input v-model="catForm.label" type="text" class="input-modern" placeholder="Ceras & Pomadas">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="space-y-1">
+                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Color Acento</label>
+                    <div class="flex gap-2">
+                       <input v-model="catForm.accent" type="color" class="w-10 h-10 bg-transparent border-0 cursor-pointer p-0">
+                       <input v-model="catForm.accent" type="text" class="input-modern text-center" placeholder="#facc15">
+                    </div>
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Icono (FontAwesome)</label>
+                    <input v-model="catForm.icon" type="text" class="input-modern" placeholder="fas fa-tag">
+                  </div>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Imagen de Portada (URL)</label>
+                  <input v-model="catForm.cover" type="text" class="input-modern" placeholder="/products/portada.webp">
+                </div>
+
+                <div class="space-y-1">
+                  <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Subtítulo (Opcional)</label>
+                  <input v-model="catForm.subtitle" type="text" class="input-modern" placeholder="Próximamente">
+                </div>
+
+                <div class="flex gap-4 pt-2">
+                  <label class="flex items-center gap-2 cursor-pointer group">
+                    <div class="relative w-10 h-5 bg-zinc-800 rounded-full transition-colors group-hover:bg-zinc-700" :class="{'bg-barber-gold': catForm.comingSoon}">
+                      <div class="absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-all" :class="{'translate-x-5': catForm.comingSoon}"></div>
+                    </div>
+                    <input type="checkbox" v-model="catForm.comingSoon" class="hidden">
+                    <span class="text-[10px] font-bold uppercase text-zinc-400">Próximamente</span>
+                  </label>
+
+                  <label class="flex items-center gap-2 cursor-pointer group">
+                    <div class="relative w-10 h-5 bg-zinc-800 rounded-full transition-colors group-hover:bg-zinc-700" :class="{'bg-pink-500': catForm.style === 'premium'}">
+                      <div class="absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-all" :class="{'translate-x-5': catForm.style === 'premium'}"></div>
+                    </div>
+                    <input type="checkbox" :checked="catForm.style === 'premium'" @change="catForm.style = $event.target.checked ? 'premium' : 'default'" class="hidden">
+                    <span class="text-[10px] font-bold uppercase text-zinc-400">Estilo Premium</span>
+                  </label>
+                </div>
+              </div>
+
+              <button @click="guardarCategoria" :disabled="guardandoCat" class="w-full mt-8 py-4 bg-barber-gold text-black font-black uppercase rounded-2xl hover:bg-yellow-400 transition-all flex items-center justify-center gap-2">
+                <i v-if="guardandoCat" class="fas fa-spinner animate-spin"></i>
+                {{ guardandoCat ? 'Guardando...' : 'Guardar Categoría' }}
+              </button>
+            </div>
+          </div>
+        </transition>
+      </div>
+
     </div>
   </div>
 </template>
@@ -284,19 +400,33 @@ export default {
       guardando: false,
       reservas: [],
       productos: [],
+      categorias: [],
       searchQuery: '',
       filterCategory: 'all',
       errorMessage: null,
       showModal: false,
       editando: false,
+      showCatModal: false,
+      editandoCat: false,
+      guardandoCat: false,
       prodForm: {
         id: null,
         name: '',
         brand: '',
-        category: 'ceras',
+        category: '',
         description: '',
         price: '',
         images: ['']
+      },
+      catForm: {
+        id: '',
+        label: '',
+        subtitle: '',
+        cover: '',
+        accent: '#facc15',
+        comingSoon: false,
+        icon: 'fas fa-tag',
+        style: 'default'
       }
     }
   },
@@ -312,6 +442,7 @@ export default {
       if (this.autenticado) {
         if (newTab === 'tienda') this.cargarProductos();
         else if (newTab === 'reservas') this.cargarReservas();
+        else if (newTab === 'categorias') this.cargarCategorias();
       }
     }
   },
@@ -347,7 +478,11 @@ export default {
         this.pinError = false;
         sessionStorage.setItem('admin_pin', this.pinIngresado);
         if (this.activeTab === 'reservas') this.cargarReservas();
-        else this.cargarProductos();
+        else if (this.activeTab === 'tienda') this.cargarProductos();
+        else if (this.activeTab === 'categorias') this.cargarCategorias();
+        
+        // Cargar categorías siempre para los dropdowns
+        if (this.activeTab !== 'categorias') this.cargarCategorias();
       } else {
         this.pinError = true;
         this.pinIngresado = '';
@@ -461,6 +596,136 @@ export default {
         });
         const data = await res.json();
         if (data.ok) this.cargarProductos();
+      } catch (e) {
+        alert('Error al eliminar');
+      }
+    },
+    async cargarCategorias() {
+      this.cargando = true;
+      try {
+        const url = window.location.hostname === 'localhost'
+          ? 'https://personalbarber.netlify.app/api/get_categories'
+          : '/api/get_categories';
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.ok) this.categorias = data.categories;
+      } catch (e) {
+        console.error('Error cargando categorías:', e);
+      } finally {
+        this.cargando = false;
+      }
+    },
+    abrirModalCategoria(c = null) {
+      if (c) {
+        this.editandoCat = true;
+        this.catForm = { ...c };
+      } else {
+        this.editandoCat = false;
+        this.catForm = { id: '', label: '', subtitle: '', cover: '', accent: '#facc15', comingSoon: false, icon: 'fas fa-tag', style: 'default' };
+      }
+      this.showCatModal = true;
+    },
+    async guardarCategoria() {
+      if (!this.catForm.id || !this.catForm.label) return alert('ID y Etiqueta son obligatorios');
+      this.guardandoCat = true;
+      try {
+        const url = window.location.hostname === 'localhost'
+          ? `https://personalbarber.netlify.app/api/manage_categories?token=${this.pinIngresado}`
+          : `/api/manage_categories?token=${this.pinIngresado}`;
+
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(this.catForm)
+        });
+        const data = await res.json();
+        if (data.ok) {
+          this.showCatModal = false;
+          this.cargarCategorias();
+        } else {
+          alert('Error: ' + data.error);
+        }
+      } catch (e) {
+        alert('Error conectando con el servidor');
+      } finally {
+        this.guardandoCat = false;
+      }
+    },
+    async borrarCategoria(id) {
+      if (!confirm('¿Seguro que quieres eliminar esta categoría? Esto no borrará los productos, pero quedarán sin categoría asignada.')) return;
+      try {
+        const url = window.location.hostname === 'localhost'
+          ? `https://personalbarber.netlify.app/api/manage_categories?id=${id}&token=${this.pinIngresado}`
+          : `/api/manage_categories?id=${id}&token=${this.pinIngresado}`;
+
+        const res = await fetch(url, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.ok) this.cargarCategorias();
+      } catch (e) {
+        alert('Error al eliminar');
+      }
+    },
+    async cargarCategorias() {
+      this.cargando = true;
+      try {
+        const url = window.location.hostname === 'localhost'
+          ? 'https://personalbarber.netlify.app/api/get_categories'
+          : '/api/get_categories';
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.ok) this.categorias = data.categories;
+      } catch (e) {
+        console.error('Error cargando categorías:', e);
+      } finally {
+        this.cargando = false;
+      }
+    },
+    abrirModalCategoria(c = null) {
+      if (c) {
+        this.editandoCat = true;
+        this.catForm = { ...c };
+      } else {
+        this.editandoCat = false;
+        this.catForm = { id: '', label: '', subtitle: '', cover: '', accent: '#facc15', comingSoon: false, icon: 'fas fa-tag', style: 'default' };
+      }
+      this.showCatModal = true;
+    },
+    async guardarCategoria() {
+      if (!this.catForm.id || !this.catForm.label) return alert('ID y Etiqueta son obligatorios');
+      this.guardandoCat = true;
+      try {
+        const url = window.location.hostname === 'localhost'
+          ? `https://personalbarber.netlify.app/api/manage_categories?token=${this.pinIngresado}`
+          : `/api/manage_categories?token=${this.pinIngresado}`;
+
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(this.catForm)
+        });
+        const data = await res.json();
+        if (data.ok) {
+          this.showCatModal = false;
+          this.cargarCategorias();
+        } else {
+          alert('Error: ' + data.error);
+        }
+      } catch (e) {
+        alert('Error conectando con el servidor');
+      } finally {
+        this.guardandoCat = false;
+      }
+    },
+    async borrarCategoria(id) {
+      if (!confirm('¿Seguro que quieres eliminar esta categoría? Esto no borrará los productos, pero quedarán sin categoría asignada.')) return;
+      try {
+        const url = window.location.hostname === 'localhost'
+          ? `https://personalbarber.netlify.app/api/manage_categories?id=${id}&token=${this.pinIngresado}`
+          : `/api/manage_categories?id=${id}&token=${this.pinIngresado}`;
+
+        const res = await fetch(url, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.ok) this.cargarCategorias();
       } catch (e) {
         alert('Error al eliminar');
       }
