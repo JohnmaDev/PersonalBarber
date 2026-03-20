@@ -54,7 +54,7 @@ graph LR
 git clone https://github.com/JohnmaDev/P-Rose.git
 
 # Navigate to the project
-cd P-Rose/Front
+cd P-Rose/front
 
 # Configure Environment Variables
 # Copy the example file and fill in your keys
