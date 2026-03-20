@@ -125,13 +125,23 @@
               <option value="Depilación Oídos">Depilación Oídos</option>
             </select>
 
-            <textarea 
-              v-model="form.direccion"
-              placeholder="Dirección Domicilar (Ej. Calle 45 # 12-34, Piso 2, Apto 201)"
-              rows="2"
-              required
-              class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl focus:ring-2 focus:ring-white focus:border-transparent outline-none transition-all text-white placeholder-zinc-500 resize-none"
-            ></textarea>
+            <div class="relative group">
+              <textarea 
+                v-model="form.direccion"
+                placeholder="Dirección Domicilar (Ej. Calle 45 # 12-34, Piso 2, Apto 201)"
+                rows="2"
+                required
+                class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl focus:ring-2 focus:ring-white focus:border-transparent outline-none transition-all text-white placeholder-zinc-500 resize-none"
+              ></textarea>
+              <a 
+                v-if="form.direccion.length > 5"
+                :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(form.direccion)}`"
+                target="_blank"
+                class="absolute right-3 bottom-3 text-[10px] font-bold text-barber-gold hover:underline flex items-center gap-1 bg-zinc-900/80 px-2 py-1 rounded-lg backdrop-blur-sm transition-all"
+              >
+                <i class="fas fa-map-marker-alt"></i> Verificar mapa
+              </a>
+            </div>
 
             <button 
               type="submit" 

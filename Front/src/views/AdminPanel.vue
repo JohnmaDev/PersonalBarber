@@ -88,9 +88,13 @@
                 <div class="flex-1 min-w-0">
                   <p class="font-bold text-sm truncate">{{ r.nombre }}</p>
                   <p class="text-[10px] text-zinc-400 uppercase tracking-widest mt-0.5">{{ r.servicio }}</p>
+                  <p v-if="r.direccion" class="text-[9px] text-zinc-500 italic mt-1 line-clamp-1">📍 {{ r.direccion }}</p>
                   <div class="flex items-center gap-3 mt-3">
                     <a :href="`https://wa.me/57${cleanPhone(r.telefono)}`" target="_blank" class="text-[10px] font-black text-green-500 hover:text-green-400 flex items-center gap-1.5 uppercase">
                       <i class="fab fa-whatsapp text-xs"></i> WhatsApp
+                    </a>
+                    <a v-if="r.direccion" :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.direccion)}`" target="_blank" class="text-[10px] font-black text-barber-gold hover:text-yellow-400 flex items-center gap-1.5 uppercase">
+                      <i class="fas fa-map-marker-alt text-xs"></i> Maps
                     </a>
                     <span :class="estadoClase(r.estado)" class="text-[8px] font-black px-2 py-0.5 rounded-md uppercase tracking-tighter">
                       {{ r.estado }}
