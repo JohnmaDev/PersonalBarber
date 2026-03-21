@@ -4,11 +4,11 @@
     <div class="absolute inset-0 z-0">
       <picture>
         <!-- Si la pantalla está en modo HORIZONTAL (sin importar el dispositivo) -->
-        <source media="(orientation: landscape)" srcset="@/assets/bg_2.jpeg">
+        <source media="(orientation: landscape)" srcset="@/assets/bg_horizontal.webp">
 
         <!-- Por defecto (si está en VERTICAL), usa la de móvil - -->
         <img 
-          src="@/assets/bg_2.jpeg" 
+          src="@/assets/bg_vertical.webp" 
           alt="Fondo de la barbería PersonalBarber" 
           class="w-full h-full object-cover object-top filter brightness-50"
           fetchpriority="high"
