@@ -6,7 +6,7 @@
         <!-- Si la pantalla está en modo HORIZONTAL (sin importar el dispositivo) -->
         <source media="(orientation: landscape)" srcset="@/assets/bg_horizontal.webp">
 
-        <!-- Por defecto (si está en VERTICAL), usa la de móvil -->
+        <!-- Por defecto (si está en VERTICAL), usa la de móvil - -->
         <img 
           src="@/assets/bg_vertical.webp" 
           alt="Fondo de la barbería PersonalBarber" 
