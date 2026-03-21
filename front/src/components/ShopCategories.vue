@@ -81,18 +81,20 @@
             :style="{ color: cat.accent, borderColor: `${cat.accent}40`, background: `${cat.accent}12` }"
           >Próximamente</span>
         </div>
-      </div>
     </div>
-
+    
     <!-- SECCIÓN BOUTIQUE (DESTACADO CENTRAL) -->
-    <div v-if="boutiqueCategory" class="mt-12 relative pt-4">
-      <!-- Badge Premium (Fuera del overflow para que no se corte en móvil) -->
+    <div v-for="cat in boutiqueCategories" :key="cat.id" class="mt-12 relative pt-4">
+      <!-- Badge Premium -->
       <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black px-4 py-1 rounded-full border border-pink-500/40 shadow-[0_0_15px_rgba(236,72,153,0.3)]">
-        <span class="text-[10px] font-black tracking-[0.2em] text-pink-500 uppercase">Premium Merch</span>
+        <span class="text-[10px] font-black tracking-[0.2em] text-pink-500 uppercase">{{ cat.comingSoon ? 'Próximamente' : 'Edición Premium' }}</span>
       </div>
 
-      <div 
-        class="group relative h-48 sm:h-56 rounded-3xl overflow-hidden border border-pink-500/20 bg-gradient-to-r from-pink-900/20 via-black to-zinc-900/40 p-1 flex items-center justify-center cursor-default transition-all duration-700 hover:border-pink-500/50 shadow-2xl"
+      <component 
+        :is="cat.comingSoon ? 'div' : 'router-link'"
+        :to="cat.comingSoon ? null : `/tienda?cat=${cat.id}`"
+        class="group relative h-48 sm:h-56 rounded-3xl overflow-hidden border border-pink-500/20 bg-gradient-to-r from-pink-900/20 via-black to-zinc-900/40 p-1 flex items-center justify-center transition-all duration-700 hover:border-pink-500/50 shadow-2xl block"
+        :class="cat.comingSoon ? 'cursor-default' : 'cursor-pointer hover:scale-[1.01]'"
       >
         <!-- Fondo animado -->
         <div class="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-700 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]"></div>
@@ -101,26 +103,29 @@
         <div class="relative flex flex-col items-center text-center p-6 sm:p-10 z-10 w-full border border-white/5 rounded-[22px] bg-black/60 backdrop-blur-sm">
           <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
             <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center transform rotate-3 group-hover:rotate-0 transition-transform duration-500">
-               <i class="fas fa-tshirt text-3xl sm:text-4xl text-pink-500 drop-shadow-[0_0_10px_rgba(236,72,153,0.5)]"></i>
+               <i :class="cat.icon" class="text-3xl sm:text-4xl text-pink-500 drop-shadow-[0_0_10px_rgba(236,72,153,0.5)]"></i>
             </div>
             <div class="flex flex-col items-center sm:items-start text-center sm:text-left">
               <h3 class="text-2xl sm:text-4xl font-black text-white tracking-tighter uppercase italic italic-heavy">
-                {{ boutiqueCategory.label }}
+                {{ cat.label }}
               </h3>
               <p class="text-zinc-400 text-sm sm:text-base font-medium mt-1 max-w-sm">
-                Diseños exclusivos, gorras y prendas con el sello PersonalBarber.
+                {{ cat.subtitle || 'Diseños exclusivos y piezas premium con el sello PersonalBarber.' }}
               </p>
             </div>
           </div>
           
           <div class="mt-6 flex items-center gap-4">
             <span class="h-[1px] w-8 sm:w-16 bg-gradient-to-r from-transparent to-pink-500"></span>
-            <span class="text-xs font-bold tracking-widest text-pink-500 uppercase whitespace-nowrap">Muy Pronto</span>
+            <span class="text-xs font-bold tracking-widest text-pink-500 uppercase whitespace-nowrap">
+              {{ cat.comingSoon ? 'Muy Pronto' : 'Explorar Colección' }}
+            </span>
             <span class="h-[1px] w-8 sm:w-16 bg-gradient-to-l from-transparent to-pink-500"></span>
           </div>
         </div>
-      </div>
+      </component>
     </div>
+  </div>
 
     <!-- CTA ver toda la tienda -->
     <div class="flex justify-center mt-8">
@@ -142,7 +147,7 @@ const products = ref([])
 const categories = ref([])
 
 const activeCategories = computed(() => categories.value.filter(c => !c.comingSoon && c.style !== 'premium'))
-const boutiqueCategory = computed(() => categories.value.find(c => c.style === 'premium'))
+const boutiqueCategories = computed(() => categories.value.filter(c => c.style === 'premium'))
 const otherComingSoonCategories = computed(() => categories.value.filter(c => c.comingSoon && c.style !== 'premium'))
 
 async function fetchData() {
