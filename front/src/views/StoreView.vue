@@ -99,7 +99,7 @@
           <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-4"></i>
           <h3 class="text-white font-bold mb-2">Error de Conexión</h3>
           <p class="text-zinc-400 text-sm mb-6">{{ errorMessage }}</p>
-          <button @click="fetchProducts" class="px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl text-xs font-bold uppercase transition-all">
+          <button @click="fetchData" class="px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl text-xs font-bold uppercase transition-all">
             Reintentar
           </button>
         </div>
@@ -115,120 +115,124 @@
 </template>
 
 <script>
-export default {
-  name: 'StoreView'
-}
-</script>
-
-<script setup>
 import { ref, computed, onMounted, watch, onActivated } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { categories } from '@/data/products.js'
 import { useCart } from '@/composables/useCart.js'
 import { formatPrice } from '@/utils/format.js'
 
-const products = ref([])
-const categories = ref([])
-const isLoading = ref(true)
-const errorMessage = ref(null)
+export default {
+  name: 'StoreView',
+  setup() {
+    const products = ref([])
+    const categories = ref([])
+    const isLoading = ref(true)
+    const errorMessage = ref(null)
 
-const route = useRoute()
-const router = useRouter()
-const { addToCart } = useCart()
+    const route = useRoute()
+    const router = useRouter()
+    const { addToCart } = useCart()
 
-const filters = computed(() => [
-  { id: 'all', label: 'Todos' },
-  ...categories.value.filter(c => !c.comingSoon).map(c => ({ id: c.id, label: c.label }))
-])
+    const filters = computed(() => [
+      { id: 'all', label: 'Todos' },
+      ...categories.value.filter(c => !c.comingSoon).map(c => ({ id: c.id, label: c.label }))
+    ])
 
-const activeFilter = ref('all')
-const justAdded = ref(null)
-const isFirstVisit = ref(true)
+    const activeFilter = ref('all')
+    const justAdded = ref(null)
+    const isFirstVisit = ref(true)
 
-function syncFilter() {
-  const cat = route.query.cat
-  activeFilter.value = (cat && filters.value.find(f => f.id === cat)) ? cat : 'all'
-}
-
-async function fetchData() {
-  isLoading.value = true
-  errorMessage.value = null
-  try {
-    // Cargar Categorías Primero
-    const resCat = await fetch('/api/get_categories')
-    const dataCat = await resCat.json()
-    if (dataCat.ok) {
-      categories.value = dataCat.categories
+    function syncFilter() {
+      const cat = route.query.cat
+      activeFilter.value = (cat && filters.value.find(f => f.id === cat)) ? cat : 'all'
     }
 
-    // Cargar Productos
-    const resProd = await fetch('/api/get_products')
-    const contentType = resProd.headers.get('content-type')
-    
-    if (!resProd.ok) {
-      const text = await resProd.text()
-      errorMessage.value = `Error ${resProd.status}: ${text.substring(0, 50)}...`
-      return
+    async function fetchData() {
+      isLoading.value = true
+      errorMessage.value = null
+      try {
+        // Cargar Categorías Primero
+        const resCat = await fetch('/api/get_categories')
+        const dataCat = await resCat.json()
+        if (dataCat.ok) {
+          categories.value = dataCat.categories
+        }
+
+        // Cargar Productos
+        const resProd = await fetch('/api/get_products')
+        const contentType = resProd.headers.get('content-type')
+        
+        if (!resProd.ok) {
+          const text = await resProd.text()
+          errorMessage.value = `Error ${resProd.status}: ${text.substring(0, 50)}...`
+          return
+        }
+
+        if (!contentType || !contentType.includes('application/json')) {
+          const text = await resProd.text()
+          errorMessage.value = `Respuesta no válida (no es JSON): ${text.substring(0, 50)}...`
+          return
+        }
+
+        const dataProd = await resProd.json()
+        if (dataProd.ok) {
+          products.value = dataProd.products
+          syncFilter() // Re-sincronizar después de cargar categorías
+        } else {
+          errorMessage.value = dataProd.error || 'Error desconocido'
+        }
+      } catch (err) {
+        errorMessage.value = 'Fallo la conexión o error de red'
+        console.error('Error:', err)
+      } finally {
+        isLoading.value = false
+      }
+      setTimeout(() => {
+        isFirstVisit.value = false
+      }, 1000)
     }
 
-    if (!contentType || !contentType.includes('application/json')) {
-      const text = await resProd.text()
-      errorMessage.value = `Respuesta no válida (no es JSON): ${text.substring(0, 50)}...`
-      return
+    onMounted(() => {
+      fetchData()
+    })
+
+    // SEO: Título dinámico por categoría
+    watch(activeFilter, (newFilter) => {
+      const label = filters.value.find(f => f.id === newFilter)?.label || 'Tienda';
+      document.title = `${label} | PersonalBarber`;
+    }, { immediate: true })
+
+    onActivated(() => {
+      // Aseguramos que el filtro esté sincronizado al volver del caché
+      syncFilter()
+    })
+
+    watch(() => route.query.cat, syncFilter)
+
+    const filteredProducts = computed(() => {
+      if (activeFilter.value === 'all') return products.value
+      return products.value.filter(p => p.category === activeFilter.value)
+    })
+
+    const activeFilterLabel = computed(() => {
+      return filters.value.find(f => f.id === activeFilter.value)?.label ?? ''
+    })
+
+    function goToDetail(product) {
+      router.push({ name: 'ProductDetail', params: { id: product.id } })
     }
 
-    const dataProd = await resProd.json()
-    if (dataProd.ok) {
-      products.value = dataProd.products
-      syncFilter() // Re-sincronizar después de cargar categorías
-    } else {
-      errorMessage.value = dataProd.error || 'Error desconocido'
+    function quickAddToCart(product) {
+      addToCart(product, 1)
+      justAdded.value = product.id
+      setTimeout(() => { justAdded.value = null }, 1500)
     }
-  } catch (err) {
-    errorMessage.value = 'Fallo la conexión o error de red'
-    console.error('Error:', err)
-  } finally {
-    isLoading.value = false
+
+    return {
+      products, categories, isLoading, errorMessage, filters, activeFilter,
+      justAdded, isFirstVisit, filteredProducts, activeFilterLabel,
+      goToDetail, quickAddToCart, formatPrice, fetchData
+    }
   }
-  setTimeout(() => {
-    isFirstVisit.value = false
-  }, 1000)
-}
-
-onMounted(() => {
-  fetchData()
-})
-
-// SEO: Título dinámico por categoría
-watch(activeFilter, (newFilter) => {
-  const label = filters.find(f => f.id === newFilter)?.label || 'Tienda';
-  document.title = `${label} | PersonalBarber`;
-}, { immediate: true })
-
-onActivated(() => {
-  // Aseguramos que el filtro esté sincronizado al volver del caché
-  syncFilter()
-})
-
-watch(() => route.query.cat, syncFilter)
-
-const filteredProducts = computed(() => {
-  if (activeFilter.value === 'all') return products.value
-  return products.value.filter(p => p.category === activeFilter.value)
-})
-
-const activeFilterLabel = computed(() => {
-  return filters.find(f => f.id === activeFilter.value)?.label ?? ''
-})
-
-function goToDetail(product) {
-  router.push({ name: 'ProductDetail', params: { id: product.id } })
-}
-
-function quickAddToCart(product) {
-  addToCart(product, 1)
-  justAdded.value = product.id
-  setTimeout(() => { justAdded.value = null }, 1500)
 }
 </script>
 
