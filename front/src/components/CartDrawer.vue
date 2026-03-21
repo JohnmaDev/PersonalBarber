@@ -18,9 +18,9 @@
       <!-- Header -->
       <div class="flex items-center justify-between px-6 py-5 border-b border-white/10">
         <div class="flex items-center gap-3">
-          <i class="fas fa-shopping-bag text-barber-gold"></i>
+          <i class="fas fa-shopping-bag text-neon-green"></i>
           <h2 class="text-lg font-bold text-white tracking-tight">Tu Carrito</h2>
-          <span class="text-xs bg-barber-gold text-black font-black px-2 py-0.5 rounded-full">{{ cartCount }}</span>
+          <span class="text-xs bg-neon-green text-black font-black px-2 py-0.5 rounded-full">{{ cartCount }}</span>
         </div>
         <button
           @click="$emit('close')"
@@ -39,7 +39,7 @@
           <p class="text-gray-500 text-sm">Tu carrito está vacío</p>
           <button
             @click="$emit('close')"
-            class="text-barber-gold text-sm font-bold hover:underline"
+            class="text-neon-green text-sm font-bold hover:underline"
           >Ver productos →</button>
         </div>
 
@@ -57,7 +57,7 @@
             <!-- Info -->
             <div class="flex-1 min-w-0">
               <p class="text-white text-xs font-bold leading-tight truncate">{{ item.name }}</p>
-              <p class="text-barber-gold text-xs font-bold mt-1">{{ item.price }}</p>
+              <p class="text-neon-green text-xs font-bold mt-1">{{ item.price }}</p>
               <!-- Selector de cantidad -->
               <div class="flex items-center gap-2 mt-2">
                 <button
@@ -98,7 +98,7 @@
         <router-link
           to="/checkout"
           @click="$emit('close')"
-          class="block w-full py-4 bg-barber-gold hover:bg-yellow-400 text-black font-black text-center rounded-xl transition-colors duration-300 tracking-wide"
+          class="block w-full py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black text-center rounded-xl transition-colors duration-300 tracking-wide"
         >
           PROCEDER AL CHECKOUT →
         </router-link>

@@ -1,5 +1,5 @@
 <template>
-  <section class="relative w-full h-screen flex items-center justify-center overflow-hidden bg-barber-black">
+  <section class="relative w-full min-h-[100svh] flex items-center justify-center overflow-hidden bg-barber-black py-20 lg:py-0">
     <!-- Background Image with Overlay -->
     <div class="absolute inset-0 z-0">
       <picture>
@@ -18,42 +18,50 @@
     </div>
 
     <!-- Content -->
-    <div class="relative z-10 container mx-auto px-6 text-center lg:text-left flex flex-col lg:flex-row items-center justify-between">
-      <div class="max-w-2xl">
-        <h1 class="text-5xl lg:text-7xl font-bold text-white mb-4 tracking-tighter animate-fade-in-up opacity-0">
-          <span class="text-barber-gold">Personal</span>Barber
+    <div class="relative z-10 container mx-auto px-6 h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between pt-10 lg:pt-0">
+      
+      <!-- Massive Typography Left Column -->
+      <div class="w-full lg:w-3/5 text-center lg:text-left z-20 mt-12 lg:mt-0 flex flex-col items-center lg:items-start">
+        <h1 class="text-[3rem] leading-tight sm:text-[4.5rem] lg:text-[120px] xl:text-[145px] font-black lg:leading-tight tracking-tighter italic uppercase animate-fade-in-up opacity-0 text-shadow-premium">
+          <span class="text-neon-green block drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]">TU ESTILO.</span>
+          <span class="text-white block">TU BARBERO.</span>
+          <span class="text-white block">MEDELLÍN.</span>
         </h1>
-        <p class="text-xl lg:text-2xl text-gray-300 mb-8 italic tracking-wide animate-fade-in-up opacity-0" style="animation-delay: 0.2s;">
-          REFLEJÁ TU MEJOR VERSIÓN
+        <p class="text-lg sm:text-2xl lg:text-3xl text-gray-300 mt-8 mb-10 font-bold max-w-2xl mx-auto lg:mx-0 animate-fade-in-up opacity-0" style="animation-delay: 0.2s;">
+          <span class="text-white">PersonalBarber</span> — Donde la excelencia es el estándar. Reserva tu cita y <span class="text-neon-green">refleja tu mejor versión</span>.
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up opacity-0" style="animation-delay: 0.4s;">
+        
+        <div class="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start animate-fade-in-up opacity-0" style="animation-delay: 0.4s;">
           <button 
             @click="$emit('reserve')"
-            class="px-8 py-4 bg-barber-gold hover:bg-yellow-600 text-black font-bold rounded-lg transition-all duration-300 shadow-lg shadow-barber-gold/20"
+            class="px-10 py-5 bg-neon-green hover:bg-neon-green-dark text-black text-xl lg:text-2xl font-black italic tracking-wider rounded-2xl transition-all duration-300 shadow-[0_0_30px_rgba(57,255,20,0.3)] hover:shadow-[0_0_50px_rgba(57,255,20,0.6)] hover:-translate-y-1 uppercase flex items-center justify-center gap-3"
           >
-            RESERVAR CITA AHORA
+            RESERVAR AHORA <i class="fas fa-calendar-check"></i>
           </button>
           <button 
             @click="scrollToProducts"
-            class="px-8 py-4 glass text-white font-bold rounded-lg hover:bg-white/20 transition-all duration-300"
+            class="px-10 py-5 bg-transparent border-4 border-white/20 hover:border-white text-white text-xl lg:text-2xl font-black italic tracking-wider rounded-2xl transition-all duration-300 hover:bg-white hover:text-black uppercase flex items-center justify-center gap-3"
           >
-            VER PRODUCTOS
+            LA TIENDA <i class="fas fa-shopping-bag"></i>
           </button>
         </div>
       </div>
 
-      <!-- Social Floating Card (Glassmorphism) -->
-      <div class="mt-12 lg:mt-0 glass-dark p-8 rounded-2xl animate-fade-in-up opacity-0" style="animation-delay: 0.6s;">
-        <div class="flex flex-col items-center gap-6">
-          <div class="w-24 h-24 rounded-full border-2 border-barber-gold overflow-hidden">
-            <img src="@/assets/profile_andres.webp" alt="Andres" class="w-full h-full object-cover" />
+      <!-- Brutalist Profile Card Right Column -->
+      <div class="mt-16 lg:mt-0 w-full max-w-sm lg:max-w-md relative animate-fade-in-up opacity-0 z-20" style="animation-delay: 0.6s;">
+        <!-- Brutalist offset border effect -->
+        <div class="absolute inset-0 bg-neon-green rounded-[40px] translate-x-4 translate-y-4 opacity-30 blur-sm"></div>
+        
+        <div class="relative bg-barber-charcoal/90 backdrop-blur-2xl p-8 lg:p-12 rounded-[40px] border border-white/10 flex flex-col items-center gap-6 shadow-2xl">
+          <div class="w-40 h-40 lg:w-48 lg:h-48 rounded-[30px] border-4 border-neon-green p-1.5 overflow-hidden shadow-[0_0_30px_rgba(57,255,20,0.2)] bg-black">
+            <img src="@/assets/profile_andres.webp" alt="Andrés Hernández" class="w-full h-full object-cover rounded-[22px]" />
           </div>
           <div class="text-center">
-            <h2 class="text-xl font-bold text-white">Andrés Hernández</h2>
-            <p class="text-barber-gold text-sm font-semibold tracking-widest uppercase mt-1">Master Barber</p>
+            <h2 class="text-4xl lg:text-5xl font-black italic text-white tracking-wide uppercase">ANDRÉS H.</h2>
+            <p class="text-neon-green text-lg lg:text-xl font-bold tracking-widest uppercase mt-2">Master Barber</p>
           </div>
-          <div class="flex gap-4">
-            <a v-for="social in socials" :key="social.name" :href="social.link" target="_blank" class="w-10 h-10 flex items-center justify-center rounded-full glass hover:text-barber-gold transition-colors focus:outline-none focus:ring-2 focus:ring-barber-gold" :aria-label="social.name">
+          <div class="flex gap-4 w-full justify-center">
+            <a v-for="social in socials" :key="social.name" :href="social.link" target="_blank" class="w-14 h-14 lg:w-16 lg:h-16 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-neon-green hover:border-neon-green text-white hover:text-black font-bold text-2xl lg:text-3xl transition-all duration-300" :aria-label="social.name">
               <i :class="social.icon" aria-hidden="true"></i>
             </a>
           </div>

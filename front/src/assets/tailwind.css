@@ -3,10 +3,18 @@
 @tailwind utilities;
 
 body {
-  @apply bg-black text-white;
+  @apply bg-barber-black text-white bg-texture;
 }
 
 @layer utilities {
+  .bg-texture {
+    background-image: url('./slate_bg.webp');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-color: #0A0A0A;
+    background-blend-mode: multiply;
+  }
   .mask-fade {
     mask-image: radial-gradient(circle at center, black 70%, transparent 95%);
     -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 95%);

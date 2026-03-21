@@ -4,13 +4,13 @@
     <!-- Header con back -->
     <div class="sticky top-0 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
       <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-2">
-        <button @click="$router.back()" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-barber-gold transition-colors">
+        <button @click="$router.back()" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-neon-green transition-colors">
           <i class="fas fa-arrow-left text-xs"></i>
           <span class="text-xs font-semibold hidden sm:inline">Volver</span>
           <span class="text-[10px] font-semibold sm:hidden">Volver</span>
         </button>
         <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1">
-          <span class="text-barber-gold">Personal</span>Barber · Tienda
+          <span class="text-neon-green">Personal</span>Barber · Tienda
         </h1>
         <div class="w-10 sm:w-16 flex-shrink-0"></div>
       </div>
@@ -18,7 +18,7 @@
 
     <!-- Estado de carga -->
     <div v-if="isLoading" class="flex flex-col items-center justify-center min-h-[60vh]">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-barber-gold mb-4"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-neon-green mb-4"></div>
       <p class="text-gray-400 font-medium">Cargando detalles...</p>
     </div>
 
@@ -57,7 +57,7 @@
               v-for="(_, idx) in product.images" 
               :key="idx"
               class="w-1.5 h-1.5 rounded-full transition-all duration-300"
-              :class="activeIdx === idx ? 'bg-barber-gold w-4' : 'bg-white/20'"
+              :class="activeIdx === idx ? 'bg-neon-green w-4' : 'bg-white/20'"
             ></div>
           </div>
           
@@ -68,7 +68,7 @@
               :key="idx"
               @click="scrollToImage(idx)"
               class="w-16 h-16 rounded-xl overflow-hidden border-2 transition-all shrink-0"
-              :class="activeIdx === idx ? 'border-barber-gold scale-105' : 'border-transparent opacity-60 hover:opacity-100'"
+              :class="activeIdx === idx ? 'border-neon-green scale-105' : 'border-transparent opacity-60 hover:opacity-100'"
             >
               <img :src="img" :alt="product.name + ' ' + idx" class="w-full h-full object-cover" />
             </button>
@@ -79,22 +79,22 @@
         <div class="flex flex-col gap-6">
           <!-- Breadcrumb -->
           <div class="flex items-center gap-2 text-xs text-gray-500">
-            <router-link to="/" class="hover:text-barber-gold transition-colors">Inicio</router-link>
+            <router-link to="/" class="hover:text-neon-green transition-colors">Inicio</router-link>
             <span>/</span>
-            <router-link to="/tienda" class="hover:text-barber-gold transition-colors">Tienda</router-link>
+            <router-link to="/tienda" class="hover:text-neon-green transition-colors">Tienda</router-link>
             <span>/</span>
             <span class="text-gray-400">{{ product.name }}</span>
           </div>
 
           <!-- Marca y nombre -->
           <div>
-            <span class="text-barber-gold text-xs font-bold tracking-widest uppercase">{{ product.brand }}</span>
+            <span class="text-neon-green text-xs font-bold tracking-widest uppercase">{{ product.brand }}</span>
             <h1 class="text-3xl font-black text-white mt-1 leading-tight tracking-tight">{{ product.name }}</h1>
           </div>
 
           <!-- Precio -->
           <div class="flex items-baseline gap-3">
-            <span class="text-4xl font-black text-barber-gold">{{ formatPrice(product.price) }}</span>
+            <span class="text-4xl font-black text-neon-green">{{ formatPrice(product.price) }}</span>
           </div>
 
           <!-- Descripción -->
@@ -140,14 +140,14 @@
           <div class="flex flex-col sm:flex-row gap-3">
             <button
               @click="handleAddToCart"
-              class="flex-1 py-4 glass border border-barber-gold/50 hover:border-barber-gold text-barber-gold font-black rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+              class="flex-1 py-4 glass border border-neon-green/50 hover:border-neon-green text-neon-green font-black rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
             >
               <i class="fas fa-shopping-bag"></i>
               Agregar al Carrito
             </button>
             <button
               @click="handleBuyNow"
-              class="flex-1 py-4 bg-barber-gold hover:bg-yellow-400 text-black font-black rounded-xl transition-colors duration-300 flex items-center justify-center gap-2"
+              class="flex-1 py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black rounded-xl transition-colors duration-300 flex items-center justify-center gap-2"
             >
               <i class="fas fa-bolt"></i>
               Comprar Ahora
@@ -168,7 +168,7 @@
           <!-- Garantías -->
           <div class="grid grid-cols-3 gap-2 sm:gap-3 mt-4">
             <div v-for="badge in badges" :key="badge.label" class="flex flex-col items-center gap-1 text-center p-2 sm:p-3 glass rounded-xl border border-white/5">
-              <i :class="badge.icon" class="text-barber-gold text-base sm:text-lg"></i>
+              <i :class="badge.icon" class="text-neon-green text-base sm:text-lg"></i>
               <span class="text-gray-400 text-[9px] sm:text-[10px] leading-tight">{{ badge.label }}</span>
             </div>
           </div>
@@ -183,7 +183,7 @@
             <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Completa tu kit de barbería</p>
           </div>
           <div class="h-px flex-1 bg-white/10 mx-6 hidden sm:block"></div>
-          <router-link to="/tienda" class="text-barber-gold text-sm font-bold hover:underline">Tienda →</router-link>
+          <router-link to="/tienda" class="text-neon-green text-sm font-bold hover:underline">Tienda →</router-link>
         </div>
         
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -191,14 +191,14 @@
             v-for="item in recommendedProducts"
             :key="item.id"
             :to="{ name: 'ProductDetail', params: { id: item.id } }"
-            class="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-barber-gold/50 transition-all duration-300"
+            class="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-neon-green/50 transition-all duration-300"
           >
             <div class="aspect-square overflow-hidden bg-white/5">
               <img :src="item.images && item.images.length > 0 ? item.images[0] : '/placeholder-product.webp'" :alt="item.name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
             </div>
             <div class="p-4">
-              <h4 class="text-xs font-bold text-white group-hover:text-barber-gold transition-colors line-clamp-1">{{ item.name }}</h4>
-              <p class="text-barber-gold font-bold text-xs mt-1">{{ formatPrice(item.price) }}</p>
+              <h4 class="text-xs font-bold text-white group-hover:text-neon-green transition-colors line-clamp-1">{{ item.name }}</h4>
+              <p class="text-neon-green font-bold text-xs mt-1">{{ formatPrice(item.price) }}</p>
             </div>
           </router-link>
         </div>
@@ -212,7 +212,7 @@
             v-for="cat in availableCategories"
             :key="cat.id"
             :to="{ path: '/tienda', query: { cat: cat.id } }"
-            class="px-5 py-3 rounded-2xl glass border border-white/10 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-barber-gold hover:border-barber-gold/50 transition-all duration-300"
+            class="px-5 py-3 rounded-2xl glass border border-white/10 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-neon-green hover:border-neon-green/50 transition-all duration-300"
           >
             {{ cat.label }}
           </router-link>
@@ -224,7 +224,7 @@
     <div v-else class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
       <i class="fas fa-box-open text-4xl text-gray-600"></i>
       <p class="text-gray-500">Producto no encontrado.</p>
-      <router-link to="/tienda" class="text-barber-gold hover:underline text-sm font-bold">← Volver a la tienda</router-link>
+      <router-link to="/tienda" class="text-neon-green hover:underline text-sm font-bold">← Volver a la tienda</router-link>
     </div>
   </div>
 </template>

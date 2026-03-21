@@ -1,14 +1,15 @@
 <!-- Galería de cortes – grid responsivo simple sin huecos -->
 <template>
   <section id="cortes" class="mt-24 w-full scroll-mt-24">
-    <!-- Encabezado -->
-    <div class="text-center mb-12">
-      <h2 class="text-4xl font-bold text-white mb-2 tracking-tighter">
-        NUESTROS <span class="text-barber-gold">CORTES</span>
+    <div class="text-center mb-16 px-4">
+      <h2 class="text-[3.5rem] leading-tight sm:text-[5rem] lg:text-[100px] font-black lg:leading-tight tracking-tighter italic uppercase text-shadow-premium">
+        NUESTROS <span class="text-neon-green block sm:inline drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]">CORTES</span>
       </h2>
-      <p class="text-gray-400 text-sm italic mt-3">El trabajo habla por sí solo</p>
-      <div class="flex justify-center gap-1 opacity-50 mt-3">
-        <span v-for="i in 3" :key="i" class="w-1.5 h-1.5 bg-barber-gold rounded-full"></span>
+      <p class="text-gray-400 text-lg sm:text-2xl mt-4 max-w-xl mx-auto italic font-bold tracking-wide">
+        El trabajo habla por sí solo
+      </p>
+      <div class="flex justify-center gap-2 opacity-80 mt-6 mb-8">
+        <span v-for="i in 3" :key="i" class="w-3 h-3 bg-neon-green rounded-full shadow-[0_0_10px_rgba(57,255,20,0.5)]"></span>
       </div>
     </div>
 

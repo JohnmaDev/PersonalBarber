@@ -57,7 +57,7 @@
             <span v-if="isLoadingSlots" class="text-xs text-zinc-500 animate-pulse">Verificando disponibilidad...</span>
           </div>
           <div v-if="!isLoadingSlots && isDiaAgotado(selectedDate)" class="bg-zinc-800/50 border border-zinc-700 rounded-xl p-4 text-center mt-2">
-            <p class="text-yellow-500 text-sm font-medium">⚠️ No hay turnos disponibles para este día.</p>
+            <p class="text-orange-500 text-sm font-medium">⚠️ No hay turnos disponibles para este día.</p>
             <p class="text-zinc-500 text-xs mt-1">Por favor selecciona otra fecha cercana.</p>
           </div>
           <div v-else class="grid grid-cols-3 gap-3">
@@ -73,8 +73,8 @@
                     : (isSlotOcupado(selectedDate, time) || isSlotPasado(selectedDate, time))
                       ? 'bg-zinc-900 text-zinc-600 border-zinc-800 cursor-not-allowed' + (isSlotOcupado(selectedDate, time) ? ' line-through' : '')
                       : selectedTime === time
-                        ? 'bg-yellow-500 text-black border-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.3)]'
-                        : 'bg-zinc-800 text-white border-zinc-700 hover:bg-zinc-700 hover:border-zinc-500'
+                        ? 'bg-neon-green text-black border-neon-green shadow-[0_0_15px_rgba(57,255,20,0.3)]'
+                        : 'bg-zinc-800 text-white border-zinc-700 hover:bg-zinc-700 hover:border-neon-green hover:text-neon-green'
                 ]"
              >
                {{ time }}
@@ -137,7 +137,7 @@
                 v-if="form.direccion.length > 5"
                 :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(form.direccion)}`"
                 target="_blank"
-                class="absolute right-3 bottom-3 text-[10px] font-bold text-barber-gold hover:underline flex items-center gap-1 bg-zinc-900/80 px-2 py-1 rounded-lg backdrop-blur-sm transition-all"
+                class="absolute right-3 bottom-3 text-[10px] font-bold text-neon-green hover:underline flex items-center gap-1 bg-zinc-900/80 px-2 py-1 rounded-lg backdrop-blur-sm transition-all"
               >
                 <i class="fas fa-map-marker-alt"></i> Verificar mapa
               </a>

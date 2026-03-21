@@ -4,13 +4,13 @@
     <!-- Header -->
     <div class="sticky top-0 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
       <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-2">
-        <router-link to="/tienda" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-barber-gold transition-colors">
+        <router-link to="/tienda" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-neon-green transition-colors">
           <i class="fas fa-arrow-left text-xs"></i>
           <span class="text-xs font-semibold hidden sm:inline">Tienda</span>
           <span class="text-[10px] font-semibold sm:hidden">Tienda</span>
         </router-link>
         <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1">
-          <span class="text-barber-gold">Personal</span>Barber · Checkout
+          <span class="text-neon-green">Personal</span>Barber · Checkout
         </h1>
         <div class="w-10 sm:w-16 flex-shrink-0"></div>
       </div>
@@ -20,7 +20,7 @@
     <div v-if="cartItems.length === 0" class="flex flex-col items-center justify-center min-h-[60vh] gap-4">
       <i class="fas fa-shopping-bag text-5xl text-white/10"></i>
       <p class="text-gray-500">Tu carrito está vacío</p>
-      <router-link to="/tienda" class="text-barber-gold hover:underline text-sm font-bold">← Explorar productos</router-link>
+      <router-link to="/tienda" class="text-neon-green hover:underline text-sm font-bold">← Explorar productos</router-link>
     </div>
 
     <div v-else class="max-w-4xl mx-auto px-4 py-10 pb-40">
@@ -32,7 +32,7 @@
           <!-- Datos del comprador -->
           <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
             <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
-              <span class="w-6 h-6 bg-barber-gold text-black text-xs font-black rounded-full flex items-center justify-center">1</span>
+              <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">1</span>
               Tus datos
             </h2>
             <div class="space-y-4">
@@ -99,7 +99,7 @@
           <!-- Método de pago -->
           <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
             <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
-              <span class="w-6 h-6 bg-barber-gold text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
+              <span class="w-6 h-6 bg-neon-green text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
               Método de pago
             </h2>
 
@@ -110,7 +110,7 @@
                 :key="method.id"
                 class="flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all duration-300"
                 :class="selectedPayment === method.id
-                  ? 'border-barber-gold bg-barber-gold/10'
+                  ? 'border-neon-green bg-neon-green/10'
                   : 'border-white/10 hover:border-white/20 bg-white/3'"
               >
                 <input
@@ -120,9 +120,9 @@
                   class="hidden"
                 />
                 <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors"
-                     :class="selectedPayment === method.id ? 'border-barber-gold' : 'border-gray-600'"
+                     :class="selectedPayment === method.id ? 'border-neon-green' : 'border-gray-600'"
                 >
-                  <div v-if="selectedPayment === method.id" class="w-2.5 h-2.5 rounded-full bg-barber-gold"></div>
+                  <div v-if="selectedPayment === method.id" class="w-2.5 h-2.5 rounded-full bg-neon-green"></div>
                 </div>
                 <div class="flex items-center gap-3 flex-1">
                   <div class="text-2xl">{{ method.emoji }}</div>
@@ -131,7 +131,7 @@
                     <p class="text-gray-500 text-xs">{{ method.desc }}</p>
                   </div>
                 </div>
-                <span v-if="method.badge" class="text-[10px] bg-barber-gold/20 text-barber-gold border border-barber-gold/30 px-2 py-0.5 rounded-full font-bold">{{ method.badge }}</span>
+                <span v-if="method.badge" class="text-[10px] bg-neon-green/20 text-neon-green border border-neon-green/30 px-2 py-0.5 rounded-full font-bold">{{ method.badge }}</span>
               </label>
             </div>
 
@@ -160,7 +160,7 @@
                   <p class="text-white text-xs font-semibold leading-tight truncate">{{ item.name }}</p>
                   <p class="text-gray-500 text-xs">× {{ item.qty }}</p>
                 </div>
-                <span class="text-barber-gold text-xs font-bold flex-shrink-0">
+                <span class="text-neon-green text-xs font-bold flex-shrink-0">
                   {{ formatPrice(parsePrice(item.price) * item.qty) }}
                 </span>
               </div>
@@ -177,7 +177,7 @@
               </div>
               <div class="flex justify-between text-base font-black border-t border-white/10 pt-3 mt-2">
                 <span class="text-white">TOTAL</span>
-                <span class="text-barber-gold">{{ cartTotalFormatted }}</span>
+                <span class="text-neon-green">{{ cartTotalFormatted }}</span>
               </div>
             </div>
 
@@ -187,7 +187,7 @@
               :disabled="!formValid"
               class="mt-5 w-full py-4 font-black text-sm rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
               :class="formValid
-                ? 'bg-barber-gold hover:bg-yellow-400 text-black'
+                ? 'bg-neon-green hover:bg-neon-green-dark text-black'
                 : 'bg-white/10 text-gray-600 cursor-not-allowed'"
             >
               <i class="fas fa-lock text-xs"></i>
@@ -211,18 +211,18 @@
     <transition name="fade">
       <div v-if="showSoonAlert" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
         <div class="bg-barber-black border border-white/10 rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl">
-          <div class="w-20 h-20 bg-barber-gold/10 rounded-full flex items-center justify-center mx-auto mb-6 text-barber-gold">
+          <div class="w-20 h-20 bg-neon-green/10 rounded-full flex items-center justify-center mx-auto mb-6 text-neon-green">
             <i class="fas fa-tools text-3xl"></i>
           </div>
           <h3 class="text-xl font-black text-white mb-2 uppercase tracking-tight">¡Próximamente disponible!</h3>
           <p class="text-gray-400 text-sm leading-relaxed mb-8">
             Estamos integrando los pagos automáticos. Por ahora, selecciona 
-            <span class="text-barber-gold font-bold">"WhatsApp"</span> 
+            <span class="text-neon-green font-bold">"WhatsApp"</span> 
             para coordinar tu pedido directamente con nosotros.
           </p>
           <button 
             @click="showSoonAlert = false"
-            class="w-full py-4 bg-barber-gold hover:bg-yellow-400 text-black font-black rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-barber-gold/20 tracking-wide uppercase text-sm"
+            class="w-full py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-neon-green/20 tracking-wide uppercase text-sm"
           >
             Entendido
           </button>

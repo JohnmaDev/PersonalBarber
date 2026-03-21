@@ -1,14 +1,15 @@
 <!-- Sección de categorías de la tienda para el Home -->
 <template>
   <section id="tienda" class="mt-24 w-full scroll-mt-24">
-    <!-- Encabezado -->
-    <div class="text-center mb-12">
-      <h2 class="text-4xl font-bold text-white mb-2 tracking-tighter">
-        NUESTRA <span class="text-barber-gold">TIENDA</span>
+    <div class="text-center mb-16 px-4">
+      <h2 class="text-[3.5rem] leading-tight sm:text-[6rem] lg:text-[100px] font-black lg:leading-tight tracking-tighter italic uppercase text-shadow-premium">
+        NUESTRA <span class="text-neon-green block sm:inline drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]">TIENDA</span>
       </h2>
-      <p class="text-gray-400 text-sm italic mt-3">Productos de calidad profesional, directo a tus manos</p>
-      <div class="flex justify-center gap-1 opacity-50 mt-3">
-        <span v-for="i in 3" :key="i" class="w-1.5 h-1.5 bg-barber-gold rounded-full"></span>
+      <p class="text-gray-400 text-lg sm:text-2xl mt-4 max-w-xl mx-auto italic font-bold tracking-wide">
+        Productos de calidad profesional, directo a tus manos
+      </p>
+      <div class="flex justify-center gap-2 opacity-80 mt-6 mb-8">
+        <span v-for="i in 3" :key="i" class="w-3 h-3 bg-neon-green rounded-full shadow-[0_0_10px_rgba(57,255,20,0.5)]"></span>
       </div>
     </div>
 
@@ -20,7 +21,7 @@
         v-for="cat in activeCategories"
         :key="cat.id"
         :to="`/tienda?cat=${cat.id}`"
-        class="group relative h-52 sm:h-64 rounded-2xl overflow-hidden border border-white/10 hover:border-barber-gold/60 transition-all duration-500 cursor-pointer block"
+        class="group relative h-52 sm:h-64 rounded-2xl overflow-hidden border border-white/10 hover:border-neon-green/60 transition-all duration-500 cursor-pointer block"
       >
         <!-- Imagen de fondo -->
         <img
@@ -44,12 +45,12 @@
             class="text-[10px] font-bold tracking-widest uppercase mb-1"
             :style="{ color: cat.accent }"
           >{{ cat.subtitle || `${getCategoryCount(cat.id)} productos` }}</span>
-          <h3 class="text-base sm:text-xl font-bold text-white tracking-tight group-hover:text-barber-gold transition-colors duration-300 leading-tight">
+          <h3 class="text-base sm:text-xl font-bold text-white tracking-tight group-hover:text-neon-green transition-colors duration-300 leading-tight">
             {{ cat.label }}
           </h3>
           <div class="flex items-center gap-2 mt-2 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
             <span class="text-xs text-white font-semibold">Ver productos</span>
-            <i class="fas fa-arrow-right text-xs text-barber-gold"></i>
+            <i class="fas fa-arrow-right text-xs text-neon-green"></i>
           </div>
         </div>
       </router-link>
@@ -123,13 +124,27 @@
     </div>
 
     <!-- CTA ver toda la tienda -->
-    <div class="flex justify-center mt-8">
+    <div class="flex justify-center mt-12 mb-20 animate-fade-in-up" style="animation-delay: 0.8s;">
       <router-link
         to="/tienda"
-        class="group flex items-center gap-3 px-8 py-3 glass border border-barber-gold/30 hover:border-barber-gold hover:bg-barber-gold hover:text-black text-white font-bold rounded-full transition-all duration-300"
+        class="group relative inline-flex items-center justify-center px-12 py-5 font-black italic uppercase tracking-[0.2em] text-white transition-all duration-300 ease-out border-2 border-neon-green/40 hover:border-neon-green"
       >
-        <i class="fas fa-store text-barber-gold group-hover:text-black transition-colors duration-300"></i>
-        Ver toda la tienda
+        <!-- Brutalist Offset Shadow -->
+        <div class="absolute inset-0 w-full h-full bg-neon-green/10 translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300 h-full w-full"></div>
+        
+        <!-- Shimmer Effect -->
+        <div class="absolute inset-0 w-full h-full overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-neon-green/20 to-transparent -translate-x-full group-hover:animate-shimmer-fast"></div>
+        </div>
+
+        <div class="relative flex items-center gap-3">
+          <i class="fas fa-store text-neon-green group-hover:scale-125 transition-transform duration-300"></i>
+          <span class="text-xl sm:text-2xl group-hover:text-neon-green transition-colors duration-300">Explorar Toda la Tienda</span>
+        </div>
+        
+        <!-- Corner Accents -->
+        <div class="absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 border-neon-green opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 border-neon-green opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </router-link>
     </div>
   </section>
@@ -169,3 +184,53 @@ function getCategoryCount(catId) {
 
 onMounted(fetchData)
 </script>
+
+<style scoped>
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes shimmer-fast {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite;
+}
+
+.animate-shimmer-fast {
+  animation: shimmer-fast 1.5s infinite;
+}
+
+.italic-heavy {
+  font-style: italic;
+  filter: skewX(-5deg);
+}
+
+.text-shadow-premium {
+  text-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out both;
+}
+
+/* Custom shadow utility if needed */
+.shadow-neon-glow {
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+}
+</style>

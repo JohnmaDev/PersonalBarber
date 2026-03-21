@@ -16,7 +16,7 @@
                 href="https://www.linkedin.com/in/john-mario-echavarria-bermudez/"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-amber-500/80 font-bold hover:text-barber-gold transition duration-500"
+                class="text-amber-500/80 font-bold hover:text-neon-green transition duration-500"
               >
                 JohnmaDev
               </a>

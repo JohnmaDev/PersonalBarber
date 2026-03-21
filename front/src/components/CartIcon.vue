@@ -4,14 +4,14 @@
     <button
       @click="$emit('open')"
       aria-label="Abrir carrito"
-      class="fixed bottom-24 right-5 z-50 w-14 h-14 rounded-full bg-barber-gold text-black flex items-center justify-center shadow-lg shadow-barber-gold/30 hover:bg-yellow-400 transition-all duration-300 hover:scale-110 active:scale-95"
+      class="fixed bottom-24 right-5 z-50 w-14 h-14 rounded-full bg-neon-green text-black flex items-center justify-center shadow-lg shadow-neon-green/30 hover:bg-neon-green-dark transition-all duration-300 hover:scale-110 active:scale-95"
     >
       <i class="fas fa-shopping-bag text-lg"></i>
       <!-- Badge de cantidad -->
       <transition name="badge-pop">
         <span
           v-if="cartCount > 0"
-          class="absolute -top-1 -right-1 bg-black text-barber-gold text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border border-barber-gold/50"
+          class="absolute -top-1 -right-1 bg-black text-neon-green text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border border-neon-green/50"
         >
           {{ cartCount > 9 ? '9+' : cartCount }}
         </span>

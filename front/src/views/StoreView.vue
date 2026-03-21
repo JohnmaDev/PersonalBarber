@@ -3,13 +3,13 @@
     <!-- Header fijo con back -->
     <div class="sticky top-0 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
       <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-2">
-        <router-link to="/" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-barber-gold transition-colors duration-300">
+        <router-link to="/" class="flex-shrink-0 flex items-center gap-1.5 text-gray-400 hover:text-neon-green transition-colors duration-300">
           <i class="fas fa-arrow-left text-xs"></i>
           <span class="text-xs font-semibold hidden sm:inline">Inicio</span>
           <span class="text-[10px] font-semibold sm:hidden">Inicio</span>
         </router-link>
         <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1">
-          <span class="text-barber-gold">Personal</span>Barber · Tienda
+          <span class="text-neon-green">Personal</span>Barber · Tienda
         </h1>
         <div class="w-10 sm:w-16 flex-shrink-0"></div><!-- spacer -->
       </div>
@@ -26,8 +26,8 @@
           :class="[
             'px-5 py-2 rounded-full text-sm font-bold tracking-wide border transition-all duration-300',
             activeFilter === f.id
-              ? 'bg-barber-gold text-black border-barber-gold'
-              : 'glass border-white/20 text-gray-300 hover:border-barber-gold/50 hover:text-white'
+              ? 'bg-neon-green text-black border-neon-green'
+              : 'glass border-white/20 text-gray-300 hover:border-neon-green/50 hover:text-white'
           ]"
         >
           {{ f.label }}
@@ -37,14 +37,14 @@
       <!-- Contador + título -->
       <div class="mb-6 text-center">
         <p class="text-gray-500 text-sm">
-          Mostrando <span class="text-barber-gold font-bold">{{ filteredProducts.length }}</span> productos
+          Mostrando <span class="text-neon-green font-bold">{{ filteredProducts.length }}</span> productos
           <span v-if="activeFilter !== 'all'"> en <span class="text-white">{{ activeFilterLabel }}</span></span>
         </p>
       </div>
 
       <!-- Estado de carga -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-24">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-barber-gold mb-4"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-neon-green mb-4"></div>
         <p class="text-gray-400 font-medium">Cargando productos...</p>
       </div>
 
@@ -54,7 +54,7 @@
           v-for="(product, index) in filteredProducts"
           :key="product.id"
           :style="isFirstVisit ? { '--i': index } : {}"
-          class="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-barber-gold/50 transition-all duration-500"
+          class="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-neon-green/50 transition-all duration-500"
         >
           <!-- Imagen – clic navega al detalle -->
           <div class="aspect-square overflow-hidden bg-white/5 cursor-pointer" @click="goToDetail(product)">
@@ -70,7 +70,7 @@
           <div class="p-4 flex flex-col flex-grow justify-between">
             <div class="cursor-pointer" @click="goToDetail(product)">
               <span class="text-[10px] text-gray-500 uppercase tracking-widest">{{ product.brand }}</span>
-              <h3 class="text-sm font-bold text-white group-hover:text-barber-gold transition-colors duration-300 leading-tight mt-0.5">
+              <h3 class="text-sm font-bold text-white group-hover:text-neon-green transition-colors duration-300 leading-tight mt-0.5">
                 {{ product.name }}
               </h3>
               <p class="text-gray-500 text-xs mt-1.5 leading-relaxed line-clamp-2 italic">
@@ -78,12 +78,12 @@
               </p>
             </div>
             <div class="flex items-center justify-between mt-4">
-              <span class="text-barber-gold font-bold text-sm">{{ formatPrice(product.price) }}</span>
+              <span class="text-neon-green font-bold text-sm">{{ formatPrice(product.price) }}</span>
               <!-- Botón agregar al carrito rápido -->
               <button
                 @click.stop="quickAddToCart(product)"
-                class="w-8 h-8 rounded-full glass flex items-center justify-center hover:bg-barber-gold hover:text-black transition-all duration-300 text-sm"
-                :class="justAdded === product.id ? 'bg-barber-gold text-black' : ''"
+                class="w-8 h-8 rounded-full glass flex items-center justify-center hover:bg-neon-green hover:text-black transition-all duration-300 text-sm"
+                :class="justAdded === product.id ? 'bg-neon-green text-black' : ''"
                 :aria-label="'Agregar ' + product.name + ' al carrito'"
               >
                 <i :class="justAdded === product.id ? 'fas fa-check' : 'fas fa-plus'"></i>

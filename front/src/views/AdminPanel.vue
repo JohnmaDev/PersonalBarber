@@ -10,45 +10,45 @@
         type="password"
         maxlength="6"
         placeholder="••••••"
-        class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-center text-2xl tracking-widest text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 mb-4"
+        class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-center text-2xl tracking-widest text-white focus:outline-none focus:ring-2 focus:ring-neon-green mb-4 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]"
         @keyup.enter="verificarPin"
       >
       <p v-if="pinError" class="text-red-400 text-xs mb-3">PIN incorrecto</p>
-      <button @click="verificarPin" class="w-full py-3 bg-yellow-500 text-black font-bold rounded-xl hover:bg-yellow-400 transition-colors">
+      <button @click="verificarPin" class="w-full py-3 bg-neon-green text-black font-black italic tracking-widest uppercase rounded-xl hover:bg-neon-green-dark transition-all shadow-[0_0_15px_rgba(57,255,20,0.3)] hover:shadow-[0_0_25px_rgba(57,255,20,0.6)]">
         Entrar
       </button>
     </div>
 
     <!-- Panel principal -->
-    <div v-else class="w-full max-w-5xl">
-
-      <!-- Header & Tabs -->
-      <div class="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
-        <div>
-          <h1 class="text-3xl font-black uppercase tracking-tighter">
-            <span class="text-barber-gold">Admin</span> Panel
-          </h1>
-          <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mt-1">Gestión Central de Barbería</p>
-        </div>
+    <div v-else class="max-w-6xl mx-auto px-4 py-12">
+      
+      <!-- Encabezado Brutalista -->
+      <div class="flex flex-col items-center mb-16 text-center">
+        <h1 class="text-[3.5rem] leading-tight sm:text-[5rem] lg:text-[80px] font-black lg:leading-tight tracking-tighter italic uppercase text-shadow-premium">
+          <span class="text-neon-green block sm:inline drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]">ADMIN</span> PANEL
+        </h1>
+        <p class="text-zinc-500 font-bold tracking-[0.3em] text-sm lg:text-base uppercase mt-4">Gestión Central de Barbería</p>
+      </div>
         
+      <div class="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
         <div class="flex bg-zinc-900 p-1 rounded-2xl border border-zinc-800">
           <button 
             @click="activeTab = 'reservas'"
-            :class="activeTab === 'reservas' ? 'bg-barber-gold text-black' : 'text-zinc-400 hover:text-white'"
+            :class="activeTab === 'reservas' ? 'bg-neon-green text-black' : 'text-zinc-400 hover:text-white'"
             class="px-6 py-2 rounded-xl text-xs font-black uppercase transition-all duration-300"
           >
             Reservas
           </button>
           <button 
             @click="activeTab = 'tienda'"
-            :class="activeTab === 'tienda' ? 'bg-barber-gold text-black' : 'text-zinc-400 hover:text-white'"
+            :class="activeTab === 'tienda' ? 'bg-neon-green text-black' : 'text-zinc-400 hover:text-white'"
             class="px-6 py-2 rounded-xl text-xs font-black uppercase transition-all duration-300"
           >
             Tienda
           </button>
           <button 
             @click="activeTab = 'categorias'"
-            :class="activeTab === 'categorias' ? 'bg-barber-gold text-black' : 'text-zinc-400 hover:text-white'"
+            :class="activeTab === 'categorias' ? 'bg-neon-green text-black' : 'text-zinc-400 hover:text-white'"
             class="px-6 py-2 rounded-xl text-xs font-black uppercase transition-all duration-300"
           >
             Categorías
@@ -66,7 +66,7 @@
       <div v-if="activeTab === 'reservas'">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-lg font-bold">Agenda de Citas</h2>
-          <button @click="cargarReservas" :disabled="cargando" class="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold hover:border-barber-gold/50 transition-all">
+          <button @click="cargarReservas" :disabled="cargando" class="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold hover:border-neon-green/50 transition-all">
             <i class="fas fa-sync-alt" :class="{'animate-spin': cargando}"></i>
             {{ cargando ? 'Cargando...' : 'Actualizar' }}
           </button>
@@ -82,14 +82,14 @@
         <div v-if="!cargando && reservas.length > 0">
           <div v-for="(grupo, fecha) in reservasPorFecha" :key="fecha" class="mb-10">
             <div class="flex items-center gap-4 mb-4">
-              <span class="bg-barber-gold text-black text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">{{ fecha }}</span>
+              <span class="bg-neon-green text-black text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">{{ fecha }}</span>
               <div class="flex-1 h-px bg-zinc-800"></div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div v-for="r in grupo" :key="(r.fechaRaw || '') + (r.horaRaw || '') + (r.nombre || '')" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-4 hover:border-zinc-700 transition-all">
                 <div class="w-16 h-16 bg-zinc-800 rounded-xl flex flex-col items-center justify-center border border-zinc-700 shrink-0">
-                  <span class="text-xs font-black text-barber-gold leading-none">{{ (r.horaRaw || '00:00 AM').split(' ')[0] }}</span>
+                  <span class="text-xs font-black text-neon-green leading-none">{{ (r.horaRaw || '00:00 AM').split(' ')[0] }}</span>
                   <span class="text-[8px] font-bold text-zinc-500 uppercase">{{ (r.horaRaw || '00:00 AM').split(' ')[1] }}</span>
                 </div>
                 <div class="flex-1 min-w-0">
@@ -100,7 +100,7 @@
                     <a :href="`https://wa.me/57${cleanPhone(r.telefono)}`" target="_blank" class="text-[10px] font-black text-green-500 hover:text-green-400 flex items-center gap-1.5 uppercase">
                       <i class="fab fa-whatsapp text-xs"></i> WhatsApp
                     </a>
-                    <a v-if="r.direccion" :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.direccion)}`" target="_blank" class="text-[10px] font-black text-barber-gold hover:text-yellow-400 flex items-center gap-1.5 uppercase">
+                    <a v-if="r.direccion" :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.direccion)}`" target="_blank" class="text-[10px] font-black text-neon-green hover:text-neon-green-dark flex items-center gap-1.5 uppercase">
                       <i class="fas fa-map-marker-alt text-xs"></i> Maps
                     </a>
                     <span :class="estadoClase(r.estado)" class="text-[8px] font-black px-2 py-0.5 rounded-md uppercase tracking-tighter">
@@ -125,7 +125,7 @@
             <button @click="cargarProductos" :disabled="cargando" class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-all">
               <i class="fas fa-sync-alt" :class="{'animate-spin': cargando}"></i>
             </button>
-            <button @click="abrirModalProducto()" class="flex items-center gap-2 px-5 py-2.5 bg-barber-gold text-black rounded-xl text-xs font-black uppercase hover:bg-yellow-400 transition-all">
+            <button @click="abrirModalProducto()" class="flex items-center gap-2 px-5 py-2.5 bg-neon-green text-black rounded-xl text-xs font-black uppercase hover:bg-neon-green-dark transition-all">
               <i class="fas fa-plus"></i>
               Nuevo Producto
             </button>
@@ -135,18 +135,18 @@
         <!-- Buscador y Filtro -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           <div class="relative group">
-            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-barber-gold transition-colors"></i>
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors"></i>
             <input 
               v-model="searchQuery" 
               type="text" 
               placeholder="Buscar por nombre o marca..." 
-              class="w-full pl-10 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-barber-gold/50 transition-all"
+              class="w-full pl-10 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 transition-all"
             >
           </div>
           <div class="relative">
             <select 
               v-model="filterCategory" 
-              class="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-barber-gold/50 appearance-none cursor-pointer"
+              class="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 appearance-none cursor-pointer"
             >
               <option value="all">Todas las categorías</option>
               <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
@@ -156,7 +156,7 @@
         </div>
 
         <div v-if="cargando" class="flex flex-col items-center justify-center py-20 bg-zinc-900/50 rounded-3xl border border-zinc-800">
-          <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-barber-gold mb-4"></div>
+          <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-neon-green mb-4"></div>
           <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Cargando catálogo...</p>
         </div>
 
@@ -165,13 +165,13 @@
           <i class="fas fa-exclamation-circle text-4xl text-red-500/50 mb-4"></i>
           <p class="text-red-400 font-medium mb-2">Error de Conexión</p>
           <p class="text-zinc-500 text-xs">{{ errorMessage }}</p>
-          <button @click="cargarProductos" class="mt-4 text-barber-gold text-xs font-bold uppercase hover:underline">Reintentar</button>
+          <button @click="cargarProductos" class="mt-4 text-neon-green text-xs font-bold uppercase hover:underline">Reintentar</button>
         </div>
 
         <div v-else-if="filteredProducts.length === 0 && !cargando" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
           <i class="fas fa-search text-4xl text-zinc-700 mb-4"></i>
           <p class="text-zinc-500 font-medium">No se encontraron productos que coincidan.</p>
-          <button v-if="searchQuery || filterCategory !== 'all'" @click="searchQuery = ''; filterCategory = 'all'" class="mt-4 text-barber-gold text-xs font-bold uppercase hover:underline">Limpiar filtros</button>
+          <button v-if="searchQuery || filterCategory !== 'all'" @click="searchQuery = ''; filterCategory = 'all'" class="mt-4 text-neon-green text-xs font-bold uppercase hover:underline">Limpiar filtros</button>
         </div>
 
         <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
@@ -183,7 +183,7 @@
             <div class="flex-1 min-w-0">
               <p class="font-bold text-sm truncate">{{ p.name }}</p>
               <div class="flex items-center gap-2 mt-0.5">
-                <span class="text-[9px] font-black text-barber-gold uppercase px-1.5 py-0.5 bg-barber-gold/10 rounded border border-barber-gold/20">{{ p.category }}</span>
+                <span class="text-[9px] font-black text-neon-green uppercase px-1.5 py-0.5 bg-neon-green/10 rounded border border-neon-green/20">{{ p.category }}</span>
                 <span class="text-zinc-500 text-[10px] font-bold">{{ formatPrice(p.price) }}</span>
               </div>
             </div>
@@ -238,14 +238,14 @@
                   <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Imágenes (URLs)</label>
                   <div v-for="(img, index) in prodForm.images" :key="index" class="flex gap-2">
                     <input v-model="prodForm.images[index]" type="text" class="input-modern flex-1" placeholder="/products/ejemplo.webp">
-                    <button @click="abrirCloudinaryWidget('product', index)" class="px-3 bg-zinc-800 rounded-xl text-zinc-400 hover:text-barber-gold hover:bg-zinc-700 transition" title="Subir Imagen">
+                    <button @click="abrirCloudinaryWidget('product', index)" class="px-3 bg-zinc-800 rounded-xl text-zinc-400 hover:text-neon-green hover:bg-zinc-700 transition" title="Subir Imagen">
                       <i class="fas fa-cloud-upload-alt"></i>
                     </button>
                     <button @click="prodForm.images.splice(index, 1)" class="p-2 text-zinc-500 hover:text-red-400">
                       <i class="fas fa-minus-circle"></i>
                     </button>
                   </div>
-                  <button @click="prodForm.images.push('')" class="text-xs font-bold text-barber-gold hover:underline flex items-center gap-2 pl-1">
+                  <button @click="prodForm.images.push('')" class="text-xs font-bold text-neon-green hover:underline flex items-center gap-2 pl-1">
                     <i class="fas fa-plus-circle"></i> Añadir otra imagen
                   </button>
                 </div>
@@ -256,7 +256,7 @@
                 </div>
               </div>
 
-              <button @click="guardarProducto" :disabled="guardando" class="w-full mt-8 py-4 bg-barber-gold text-black font-black uppercase rounded-2xl hover:bg-yellow-400 transition-all flex items-center justify-center gap-2">
+              <button @click="guardarProducto" :disabled="guardando" class="w-full mt-8 py-4 bg-neon-green text-black font-black uppercase rounded-2xl hover:bg-neon-green-dark transition-all flex items-center justify-center gap-2">
                 <i v-if="guardando" class="fas fa-spinner animate-spin"></i>
                 {{ guardando ? 'Guardando...' : 'Guardar Producto' }}
               </button>
@@ -272,14 +272,14 @@
             <h2 class="text-lg font-bold">Gestión de Categorías</h2>
             <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Administra las secciones de la tienda</p>
           </div>
-          <button @click="abrirModalCategoria()" class="flex items-center gap-2 px-5 py-2.5 bg-barber-gold text-black rounded-xl text-xs font-black uppercase hover:bg-yellow-400 transition-all">
+          <button @click="abrirModalCategoria()" class="flex items-center gap-2 px-5 py-2.5 bg-neon-green text-black rounded-xl text-xs font-black uppercase hover:bg-neon-green-dark transition-all">
             <i class="fas fa-plus"></i>
             Nueva Categoría
           </button>
         </div>
 
         <div v-if="cargando" class="flex flex-col items-center justify-center py-20 bg-zinc-900/50 rounded-3xl border border-zinc-800">
-          <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-barber-gold mb-4"></div>
+          <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-neon-green mb-4"></div>
           <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Cargando categorías...</p>
         </div>
 
@@ -348,7 +348,7 @@
                   <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Imagen de Portada (URL)</label>
                   <div class="flex gap-2">
                     <input v-model="catForm.cover" type="text" class="input-modern flex-1" placeholder="/products/portada.webp">
-                    <button @click="abrirCloudinaryWidget('category')" class="px-4 bg-zinc-800 rounded-xl text-zinc-400 hover:text-barber-gold hover:bg-zinc-700 transition" title="Subir Imagen">
+                    <button @click="abrirCloudinaryWidget('category')" class="px-4 bg-zinc-800 rounded-xl text-zinc-400 hover:text-neon-green hover:bg-zinc-700 transition" title="Subir Imagen">
                       <i class="fas fa-cloud-upload-alt"></i>
                     </button>
                   </div>
@@ -362,13 +362,13 @@
                 <div class="flex gap-6 pt-2">
                   <label class="flex items-center gap-3 cursor-pointer group">
                     <div class="relative w-12 h-6 bg-zinc-800 rounded-full transition-all duration-300 group-hover:bg-zinc-700 shadow-inner" 
-                         :class="{'bg-yellow-500/20 ring-2 ring-yellow-500/50': catForm.comingSoon}">
+                         :class="{'bg-cyan-500/20 ring-2 ring-cyan-500/50': catForm.comingSoon}">
                       <div class="absolute top-1 left-1 w-4 h-4 bg-zinc-400 rounded-full transition-all duration-300 shadow-md" 
-                           :class="{'translate-x-6 bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]': catForm.comingSoon}"></div>
+                           :class="{'translate-x-6 bg-neon-green-dark shadow-[0_0_10px_rgba(250,204,21,0.5)]': catForm.comingSoon}"></div>
                     </div>
                     <input type="checkbox" v-model="catForm.comingSoon" class="hidden">
                     <span class="text-[10px] font-black uppercase tracking-widest transition-colors duration-300"
-                          :class="catForm.comingSoon ? 'text-yellow-500' : 'text-zinc-500'">Próximamente</span>
+                          :class="catForm.comingSoon ? 'text-cyan-400' : 'text-zinc-500'">Próximamente</span>
                   </label>
 
                   <label class="flex items-center gap-3 cursor-pointer group">
@@ -384,7 +384,7 @@
                 </div>
               </div>
 
-              <button @click="guardarCategoria" :disabled="guardandoCat" class="w-full mt-8 py-4 bg-barber-gold text-black font-black uppercase rounded-2xl hover:bg-yellow-400 transition-all flex items-center justify-center gap-2">
+              <button @click="guardarCategoria" :disabled="guardandoCat" class="w-full mt-8 py-4 bg-neon-green text-black font-black uppercase rounded-2xl hover:bg-neon-green-dark transition-all flex items-center justify-center gap-2">
                 <i v-if="guardandoCat" class="fas fa-spinner animate-spin"></i>
                 {{ guardandoCat ? 'Guardando...' : 'Guardar Categoría' }}
               </button>
@@ -511,9 +511,7 @@ export default {
     async cargarReservas() {
       this.cargando = true;
       try {
-        const url = window.location.hostname === 'localhost' 
-          ? `https://personalbarber.netlify.app/api/list_reservations?token=${this.pinIngresado}`
-          : `/api/list_reservations?token=${this.pinIngresado}`;
+        const url = `/api/list_reservations?token=${this.pinIngresado}`;
         
         const res = await fetch(url);
         const data = await res.json();
@@ -528,9 +526,7 @@ export default {
       this.cargando = true;
       this.errorMessage = null;
       try {
-        const url = window.location.hostname === 'localhost'
-          ? 'https://personalbarber.netlify.app/api/get_products'
-          : '/api/get_products';
+        const url = '/api/get_products';
 
         const res = await fetch(url);
         const contentType = res.headers.get('content-type');
@@ -573,9 +569,7 @@ export default {
     async guardarProducto() {
       this.guardando = true;
       try {
-        const url = window.location.hostname === 'localhost'
-          ? `https://personalbarber.netlify.app/api/manage_products?token=${this.pinIngresado}`
-          : `/api/manage_products?token=${this.pinIngresado}`;
+        const url = `/api/manage_products?token=${this.pinIngresado}`;
 
         const res = await fetch(url, {
           method: 'POST',
@@ -601,9 +595,7 @@ export default {
     async borrarProducto(id) {
       if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
       try {
-        const url = window.location.hostname === 'localhost'
-          ? `https://personalbarber.netlify.app/api/manage_products?id=${id}&token=${this.pinIngresado}`
-          : `/api/manage_products?id=${id}&token=${this.pinIngresado}`;
+        const url = `/api/manage_products?id=${id}&token=${this.pinIngresado}`;
 
         const res = await fetch(url, {
           method: 'DELETE'
@@ -617,9 +609,7 @@ export default {
     async cargarCategorias() {
       this.cargando = true;
       try {
-        const url = window.location.hostname === 'localhost'
-          ? 'https://personalbarber.netlify.app/api/get_categories'
-          : '/api/get_categories';
+        const url = '/api/get_categories';
         const res = await fetch(url);
         const data = await res.json();
         if (data.ok) this.categorias = data.categories;
@@ -661,9 +651,7 @@ export default {
       if (!this.catForm.id || !this.catForm.label) return alert('ID y Etiqueta son obligatorios');
       this.guardandoCat = true;
       try {
-        const url = window.location.hostname === 'localhost'
-          ? `https://personalbarber.netlify.app/api/manage_categories?token=${this.pinIngresado}`
-          : `/api/manage_categories?token=${this.pinIngresado}`;
+        const url = `/api/manage_categories?token=${this.pinIngresado}`;
 
         const res = await fetch(url, {
           method: 'POST',
@@ -686,9 +674,7 @@ export default {
     async borrarCategoria(id) {
       if (!confirm('¿Seguro que quieres eliminar esta categoría? Esto no borrará los productos, pero quedarán sin categoría asignada.')) return;
       try {
-        const url = window.location.hostname === 'localhost'
-          ? `https://personalbarber.netlify.app/api/manage_categories?id=${id}&token=${this.pinIngresado}`
-          : `/api/manage_categories?id=${id}&token=${this.pinIngresado}`;
+        const url = `/api/manage_categories?id=${id}&token=${this.pinIngresado}`;
 
         const res = await fetch(url, { method: 'DELETE' });
         const data = await res.json();
@@ -702,7 +688,7 @@ export default {
     },
     estadoClase(estado) {
       const mapa = {
-        pendiente: 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20',
+        pendiente: 'bg-orange-500/10 text-orange-400 border border-orange-500/20',
         confirmada: 'bg-green-500/10 text-green-500 border border-green-500/20',
         cancelada: 'bg-red-500/10 text-red-500 border border-red-500/20'
       };

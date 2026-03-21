@@ -6,9 +6,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Oswald', 'sans-serif'],
+      },
       colors: {
-        'barber-gold': '#D4AF37',
-        'barber-bronze': '#CD7F32',
+        'neon-green': '#39FF14',
+        'neon-green-dark': '#22c55e',
         'barber-black': '#0A0A0A',
         'barber-charcoal': '#1A1A1A',
       },
