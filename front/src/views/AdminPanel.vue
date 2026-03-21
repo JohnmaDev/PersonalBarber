@@ -237,7 +237,10 @@
                 <div class="space-y-3">
                   <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Imágenes (URLs)</label>
                   <div v-for="(img, index) in prodForm.images" :key="index" class="flex gap-2">
-                    <input v-model="prodForm.images[index]" type="text" class="input-modern" placeholder="/products/ejemplo.webp">
+                    <input v-model="prodForm.images[index]" type="text" class="input-modern flex-1" placeholder="/products/ejemplo.webp">
+                    <button @click="abrirCloudinaryWidget('product', index)" class="px-3 bg-zinc-800 rounded-xl text-zinc-400 hover:text-barber-gold hover:bg-zinc-700 transition" title="Subir Imagen">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                    </button>
                     <button @click="prodForm.images.splice(index, 1)" class="p-2 text-zinc-500 hover:text-red-400">
                       <i class="fas fa-minus-circle"></i>
                     </button>
@@ -343,7 +346,12 @@
 
                 <div class="space-y-1">
                   <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Imagen de Portada (URL)</label>
-                  <input v-model="catForm.cover" type="text" class="input-modern" placeholder="/products/portada.webp">
+                  <div class="flex gap-2">
+                    <input v-model="catForm.cover" type="text" class="input-modern flex-1" placeholder="/products/portada.webp">
+                    <button @click="abrirCloudinaryWidget('category')" class="px-4 bg-zinc-800 rounded-xl text-zinc-400 hover:text-barber-gold hover:bg-zinc-700 transition" title="Subir Imagen">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                    </button>
+                  </div>
                 </div>
 
                 <div class="space-y-1">
@@ -620,6 +628,24 @@ export default {
       } finally {
         this.cargando = false;
       }
+    },
+    abrirCloudinaryWidget(tipo, index = null) {
+      window.cloudinary.createUploadWidget({
+        cloudName: 'dtgjwuclv',
+        uploadPreset: 'imagesPersonalBarber',
+        sources: ['local', 'camera', 'url'],
+        multiple: false,
+        folder: 'personalbarber_assets'
+      }, (error, result) => {
+        if (!error && result && result.event === "success") {
+          const imageUrl = result.info.secure_url;
+          if (tipo === 'product') {
+            this.prodForm.images[index] = imageUrl;
+          } else if (tipo === 'category') {
+            this.catForm.cover = imageUrl;
+          }
+        }
+      }).open();
     },
     abrirModalCategoria(c = null) {
       if (c) {
