@@ -351,21 +351,27 @@
                   <input v-model="catForm.subtitle" type="text" class="input-modern" placeholder="Próximamente">
                 </div>
 
-                <div class="flex gap-4 pt-2">
-                  <label class="flex items-center gap-2 cursor-pointer group">
-                    <div class="relative w-10 h-5 bg-zinc-800 rounded-full transition-colors group-hover:bg-zinc-700" :class="{'bg-barber-gold': catForm.comingSoon}">
-                      <div class="absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-all" :class="{'translate-x-5': catForm.comingSoon}"></div>
+                <div class="flex gap-6 pt-2">
+                  <label class="flex items-center gap-3 cursor-pointer group">
+                    <div class="relative w-12 h-6 bg-zinc-800 rounded-full transition-all duration-300 group-hover:bg-zinc-700 shadow-inner" 
+                         :class="{'bg-yellow-500/20 ring-2 ring-yellow-500/50': catForm.comingSoon}">
+                      <div class="absolute top-1 left-1 w-4 h-4 bg-zinc-400 rounded-full transition-all duration-300 shadow-md" 
+                           :class="{'translate-x-6 bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]': catForm.comingSoon}"></div>
                     </div>
                     <input type="checkbox" v-model="catForm.comingSoon" class="hidden">
-                    <span class="text-[10px] font-bold uppercase text-zinc-400">Próximamente</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest transition-colors duration-300"
+                          :class="catForm.comingSoon ? 'text-yellow-500' : 'text-zinc-500'">Próximamente</span>
                   </label>
 
-                  <label class="flex items-center gap-2 cursor-pointer group">
-                    <div class="relative w-10 h-5 bg-zinc-800 rounded-full transition-colors group-hover:bg-zinc-700" :class="{'bg-pink-500': catForm.style === 'premium'}">
-                      <div class="absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-all" :class="{'translate-x-5': catForm.style === 'premium'}"></div>
+                  <label class="flex items-center gap-3 cursor-pointer group">
+                    <div class="relative w-12 h-6 bg-zinc-800 rounded-full transition-all duration-300 group-hover:bg-zinc-700 shadow-inner" 
+                         :class="{'bg-pink-500/20 ring-2 ring-pink-500/50': catForm.style === 'premium'}">
+                      <div class="absolute top-1 left-1 w-4 h-4 bg-zinc-400 rounded-full transition-all duration-300 shadow-md" 
+                           :class="{'translate-x-6 bg-pink-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]': catForm.style === 'premium'}"></div>
                     </div>
                     <input type="checkbox" :checked="catForm.style === 'premium'" @change="catForm.style = $event.target.checked ? 'premium' : 'default'" class="hidden">
-                    <span class="text-[10px] font-bold uppercase text-zinc-400">Estilo Premium</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest transition-colors duration-300"
+                          :class="catForm.style === 'premium' ? 'text-pink-500' : 'text-zinc-500'">Estilo Premium</span>
                   </label>
                 </div>
               </div>
