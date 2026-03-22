@@ -359,6 +359,15 @@
                   <input v-model="catForm.subtitle" type="text" class="input-modern" placeholder="Próximamente">
                 </div>
 
+                <div class="space-y-1">
+                  <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Departamento</label>
+                  <select v-model="catForm.department" class="input-modern bg-zinc-800 text-white cursor-pointer w-full">
+                    <option value="men">🧔 Para Él</option>
+                    <option value="women">👩 Para Ella</option>
+                    <option value="unisex">⚧️ Unisex / Global</option>
+                  </select>
+                </div>
+
                 <div class="flex gap-6 pt-2">
                   <label class="flex items-center gap-3 cursor-pointer group">
                     <div class="relative w-12 h-6 bg-zinc-800 rounded-full transition-all duration-300 group-hover:bg-zinc-700 shadow-inner" 
@@ -437,10 +446,11 @@ export default {
         label: '',
         subtitle: '',
         cover: '',
-        accent: '#facc15',
+        accent: '#39FF14',
         comingSoon: false,
         icon: 'fas fa-tag',
-        style: 'default'
+        style: 'default',
+        department: 'men'
       }
     }
   },
@@ -643,7 +653,7 @@ export default {
         this.catForm = { ...c };
       } else {
         this.editandoCat = false;
-        this.catForm = { id: '', label: '', subtitle: '', cover: '', accent: '#facc15', comingSoon: false, icon: 'fas fa-tag', style: 'default' };
+        this.catForm = { id: '', label: '', subtitle: '', cover: '', accent: '#39FF14', comingSoon: false, icon: 'fas fa-tag', style: 'default', department: 'men' };
       }
       this.showCatModal = true;
     },

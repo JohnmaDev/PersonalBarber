@@ -3,13 +3,32 @@
   <section id="tienda" class="mt-24 w-full scroll-mt-24">
     <div class="text-center mb-16 px-4">
       <h2 class="text-[3.5rem] leading-tight sm:text-[6rem] lg:text-[100px] font-black lg:leading-tight tracking-tighter italic uppercase text-shadow-premium">
-        NUESTRA <span class="text-neon-green block sm:inline drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]">TIENDA</span>
+        NUESTRA <span class="block sm:inline transition-colors duration-500" :class="activeDepartment === 'men' ? 'text-neon-green drop-shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-pink-500 drop-shadow-[0_0_15px_rgba(236,72,153,0.3)]'">{{ activeDepartment === 'men' ? 'TIENDA' : 'BOUTIQUE' }}</span>
       </h2>
-      <p class="text-gray-400 text-lg sm:text-2xl mt-4 max-w-xl mx-auto italic font-bold tracking-wide">
-        Productos de calidad profesional, directo a tus manos
+      <p class="text-gray-400 text-lg sm:text-2xl mt-4 max-w-xl mx-auto italic font-bold tracking-wide transition-colors duration-500">
+        {{ activeDepartment === 'men' ? 'Productos de calidad profesional, directo a tus manos' : 'Belleza, maquillaje y cuidado integral para ti' }}
       </p>
-      <div class="flex justify-center gap-2 opacity-80 mt-6 mb-8">
-        <span v-for="i in 3" :key="i" class="w-3 h-3 bg-neon-green rounded-full shadow-[0_0_10px_rgba(57,255,20,0.5)]"></span>
+      <div class="flex justify-center mt-8 mb-16 fade-in">
+        <div class="inline-flex bg-zinc-900 rounded-full p-1 border border-zinc-800 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
+          <button 
+            @click="activeDepartment = 'men'"
+            :class="[
+              'px-6 py-3 rounded-full font-black tracking-widest text-xs sm:text-sm uppercase transition-all duration-300 flex items-center gap-2',
+              activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-500 hover:text-white'
+            ]"
+          >
+            <i class="fas fa-cut"></i> Para Él
+          </button>
+          <button 
+            @click="activeDepartment = 'women'"
+            :class="[
+              'px-6 py-3 rounded-full font-black tracking-widest text-xs sm:text-sm uppercase transition-all duration-300 flex items-center gap-2',
+              activeDepartment === 'women' ? 'bg-pink-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-500 hover:text-white'
+            ]"
+          >
+            <i class="fas fa-spa"></i> Para Ella
+          </button>
+        </div>
       </div>
     </div>
 
@@ -127,24 +146,29 @@
     <div class="flex justify-center mt-12 mb-20 animate-fade-in-up" style="animation-delay: 0.8s;">
       <router-link
         to="/tienda"
-        class="group relative inline-flex items-center justify-center px-12 py-5 font-black italic uppercase tracking-[0.2em] text-white transition-all duration-300 ease-out border-2 border-neon-green/40 hover:border-neon-green"
+        :class="[
+          'group relative inline-flex items-center justify-center px-12 py-5 font-black italic uppercase tracking-[0.2em] text-white transition-all duration-300 ease-out border-2',
+          activeDepartment === 'men' ? 'border-neon-green/40 hover:border-neon-green' : 'border-pink-500/40 hover:border-pink-500'
+        ]"
       >
         <!-- Brutalist Offset Shadow -->
-        <div class="absolute inset-0 w-full h-full bg-neon-green/10 translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300 h-full w-full"></div>
+        <div :class="['absolute inset-0 w-full h-full translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300', activeDepartment === 'men' ? 'bg-neon-green/10' : 'bg-pink-500/10']"></div>
         
         <!-- Shimmer Effect -->
         <div class="absolute inset-0 w-full h-full overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-neon-green/20 to-transparent -translate-x-full group-hover:animate-shimmer-fast"></div>
+          <div :class="['absolute inset-0 bg-gradient-to-r from-transparent to-transparent -translate-x-full group-hover:animate-shimmer-fast', activeDepartment === 'men' ? 'via-neon-green/20' : 'via-pink-500/20']"></div>
         </div>
 
         <div class="relative flex items-center gap-3">
-          <i class="fas fa-store text-neon-green group-hover:scale-125 transition-transform duration-300"></i>
-          <span class="text-xl sm:text-2xl group-hover:text-neon-green transition-colors duration-300">Explorar Toda la Tienda</span>
+          <i class="fas fa-store transition-transform duration-300 group-hover:scale-125" :class="activeDepartment === 'men' ? 'text-neon-green' : 'text-pink-500'"></i>
+          <span class="text-xl sm:text-2xl transition-colors duration-300" :class="activeDepartment === 'men' ? 'group-hover:text-neon-green' : 'group-hover:text-pink-500'">
+             {{ activeDepartment === 'men' ? 'Explorar Tienda' : 'Explorar Beauty Hub' }}
+          </span>
         </div>
         
         <!-- Corner Accents -->
-        <div class="absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 border-neon-green opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <div class="absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 border-neon-green opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div :class="['absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 opacity-0 group-hover:opacity-100 transition-opacity', activeDepartment === 'men' ? 'border-neon-green' : 'border-pink-500']"></div>
+        <div :class="['absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 opacity-0 group-hover:opacity-100 transition-opacity', activeDepartment === 'men' ? 'border-neon-green' : 'border-pink-500']"></div>
       </router-link>
     </div>
   </section>
@@ -155,10 +179,11 @@ import { ref, computed, onMounted } from 'vue'
 
 const products = ref([])
 const categories = ref([])
+const activeDepartment = ref('men')
 
-const activeCategories = computed(() => categories.value.filter(c => !c.comingSoon && c.style !== 'premium'))
-const boutiqueCategories = computed(() => categories.value.filter(c => c.style === 'premium'))
-const otherComingSoonCategories = computed(() => categories.value.filter(c => c.comingSoon && c.style !== 'premium'))
+const activeCategories = computed(() => categories.value.filter(c => !c.comingSoon && c.style !== 'premium' && (!c.department || c.department === 'unisex' || c.department === activeDepartment.value)))
+const boutiqueCategories = computed(() => categories.value.filter(c => c.style === 'premium' || c.department === 'unisex'))
+const otherComingSoonCategories = computed(() => categories.value.filter(c => c.comingSoon && c.style !== 'premium' && (!c.department || c.department === 'unisex' || c.department === activeDepartment.value)))
 
 async function fetchData() {
   try {

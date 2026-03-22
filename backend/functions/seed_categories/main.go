@@ -23,6 +23,7 @@ type Category struct {
 	ComingSoon bool   `bson:"comingSoon" json:"comingSoon"`
 	Icon       string `bson:"icon" json:"icon"`
 	Style      string `bson:"style" json:"style"`
+	Department string `bson:"department" json:"department"`
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -44,15 +45,28 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	_, _ = collection.DeleteMany(ctx, bson.M{})
 
 	initialCategories := []Category{
-		{ID: "ceras", Label: "Ceras & Pomadas", Cover: "/products/Reuzel_Blue_Strong_Hold_Water_Soluble_Azul.webp", Accent: "#facc15", Style: "default"},
-		{ID: "tratamientos", Label: "Tratamientos", Cover: "/products/Minoxidil_Kirkland_Remaster.webp", Accent: "#34d399", Style: "default"},
-		{ID: "maquinas", Label: "Equipos & Tecnología", Cover: "/products/Rasuradora_Kemei.webp", Accent: "#a78bfa", Icon: "fas fa-plug", Style: "default"},
-		{ID: "boutique", Label: "Boutique (Merch)", Subtitle: "Próximamente", Accent: "#ec4899", ComingSoon: true, Icon: "fas fa-tshirt", Style: "premium"},
-		{ID: "cepillos", Label: "Cepillos & Peines", Subtitle: "Próximamente", Accent: "#fb923c", ComingSoon: true, Icon: "fas fa-brush", Style: "default"},
-		{ID: "capas", Label: "Capas de Barbería", Subtitle: "Próximamente", Accent: "#f472b6", ComingSoon: true, Icon: "fas fa-tshirt", Style: "default"},
-		{ID: "atomizadores", Label: "Atomizadores", Subtitle: "Próximamente", Accent: "#38bdf8", ComingSoon: true, Icon: "fas fa-spray-can", Style: "default"},
-		{ID: "navajas", Label: "Navajas & Tijeras", Subtitle: "Próximamente", Accent: "#e2e8f0", ComingSoon: true, Icon: "fas fa-scissors", Style: "default"},
-		{ID: "barba", Label: "Cuidado de Barba", Subtitle: "Próximamente", Accent: "#c084fc", ComingSoon: true, Icon: "fas fa-user", Style: "default"},
+		// PARA ÉL (8)
+		{ID: "ceras", Label: "Ceras & Pomadas", Cover: "/products/Reuzel_Blue_Strong_Hold_Water_Soluble_Azul.webp", Accent: "#39FF14", Style: "default", Department: "men"},
+		{ID: "tratamientos", Label: "Tratamientos", Cover: "/products/Minoxidil_Kirkland_Remaster.webp", Accent: "#06B6D4", Style: "default", Department: "men"},
+		{ID: "maquinas", Label: "Equipos & Tecnología", Cover: "/products/Rasuradora_Kemei.webp", Accent: "#8B5CF6", Icon: "fas fa-plug", Style: "default", Department: "men"},
+		{ID: "cepillos", Label: "Cepillos & Peines", Subtitle: "Próximamente", Accent: "#FF4500", ComingSoon: true, Icon: "fas fa-brush", Style: "default", Department: "men"},
+		{ID: "capas", Label: "Capas de Barbería", Subtitle: "Próximamente", Accent: "#71717A", ComingSoon: true, Icon: "fas fa-tshirt", Style: "default", Department: "men"},
+		{ID: "atomizadores", Label: "Atomizadores", Subtitle: "Próximamente", Accent: "#39FFA4", ComingSoon: true, Icon: "fas fa-spray-can", Style: "default", Department: "men"},
+		{ID: "navajas", Label: "Navajas & Tijeras", Subtitle: "Próximamente", Accent: "#E2E8F0", ComingSoon: true, Icon: "fas fa-scissors", Style: "default", Department: "men"},
+		{ID: "barba", Label: "Cuidado de Barba", Subtitle: "Próximamente", Accent: "#F97316", ComingSoon: true, Icon: "fas fa-user", Style: "default", Department: "men"},
+
+		// PARA ELLA (8)
+		{ID: "skincare", Label: "Skincare", Subtitle: "Próximamente", Accent: "#EC4899", ComingSoon: true, Icon: "fas fa-spa", Style: "default", Department: "women"},
+		{ID: "labios", Label: "Labios & Gloss", Subtitle: "Próximamente", Accent: "#FF1493", ComingSoon: true, Icon: "fas fa-kiss-wink-heart", Style: "default", Department: "women"},
+		{ID: "cejas-pestanas", Label: "Cejas & Pestañas", Subtitle: "Próximamente", Accent: "#D946EF", ComingSoon: true, Icon: "fas fa-eye", Style: "default", Department: "women"},
+		{ID: "sombras", Label: "Sombras & Paletas", Subtitle: "Próximamente", Accent: "#8B5CF6", ComingSoon: true, Icon: "fas fa-palette", Style: "default", Department: "women"},
+		{ID: "maquillaje-facial", Label: "Maquillaje Facial", Subtitle: "Próximamente", Accent: "#F472B6", ComingSoon: true, Icon: "fas fa-magic", Style: "default", Department: "women"},
+		{ID: "capilar-mujer", Label: "Cuidado Capilar", Subtitle: "Próximamente", Accent: "#FDA4AF", ComingSoon: true, Icon: "fas fa-pump-soap", Style: "default", Department: "women"},
+		{ID: "brochas", Label: "Brochas & Accesorios", Subtitle: "Próximamente", Accent: "#E2E8F0", ComingSoon: true, Icon: "fas fa-paint-brush", Style: "default", Department: "women"},
+		{ID: "delineadores", Label: "Delineadores", Subtitle: "Próximamente", Accent: "#000000", ComingSoon: true, Icon: "fas fa-pen-nib", Style: "default", Department: "women"},
+
+		// UNISEX / PREMIUM
+		{ID: "boutique", Label: "Boutique (Merch)", Subtitle: "Próximamente", Accent: "#EC4899", ComingSoon: true, Icon: "fas fa-tshirt", Style: "premium", Department: "unisex"},
 	}
 
 	for _, cat := range initialCategories {

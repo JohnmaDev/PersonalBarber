@@ -22,6 +22,7 @@ type Category struct {
 	ComingSoon bool   `bson:"comingSoon" json:"comingSoon"`
 	Icon       string `bson:"icon" json:"icon"`
 	Style      string `bson:"style" json:"style"`
+	Department string `bson:"department" json:"department"`
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
