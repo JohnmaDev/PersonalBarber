@@ -719,6 +719,11 @@ export default {
       if (period === 'PM' && h !== 12) h += 12;
       if (period === 'AM' && h === 12) h = 0;
       return h * 60 + m;
+    },
+    isImageUrl(url) {
+      if (!url) return false;
+      const u = url.toLowerCase();
+      return u.startsWith('/') || u.startsWith('http') || u.endsWith('.svg') || u.endsWith('.png') || u.endsWith('.webp') || u.endsWith('.jpg') || u.endsWith('.jpeg');
     }
   }
 }
