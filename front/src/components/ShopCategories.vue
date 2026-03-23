@@ -119,14 +119,8 @@
                  class="w-6 h-6 sm:w-8 sm:h-8"
                  :style="{ 
                    backgroundColor: cat.accent, 
-                   maskImage: `url(${cat.icon})`, 
-                   maskSize: 'contain', 
-                   maskRepeat: 'no-repeat', 
-                   maskPosition: 'center',
-                   WebkitMaskImage: `url(${cat.icon})`, 
-                   WebkitMaskSize: 'contain', 
-                   WebkitMaskRepeat: 'no-repeat', 
-                   WebkitMaskPosition: 'center'
+                   mask: `url('${cat.icon}') no-repeat center / contain`,
+                   WebkitMask: `url('${cat.icon}') no-repeat center / contain`
                  }">
             </div>
             <i v-else :class="cat.icon" class="text-xl sm:text-2xl transition-all duration-500" :style="{ color: cat.accent }"></i>
