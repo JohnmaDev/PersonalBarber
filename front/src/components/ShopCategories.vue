@@ -145,7 +145,7 @@
     <!-- CTA ver toda la tienda -->
     <div class="flex justify-center mt-12 mb-20 animate-fade-in-up" style="animation-delay: 0.8s;">
       <router-link
-        to="/tienda"
+        :to="{ path: '/tienda', query: { dept: activeDepartment } }"
         :class="[
           'group relative inline-flex items-center justify-center px-12 py-5 font-black italic uppercase tracking-[0.2em] text-white transition-all duration-300 ease-out border-2',
           activeDepartment === 'men' ? 'border-neon-green/40 hover:border-neon-green' : 'border-pink-500/40 hover:border-pink-500'

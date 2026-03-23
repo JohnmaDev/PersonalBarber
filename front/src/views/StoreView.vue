@@ -183,7 +183,14 @@ export default {
 
     function syncFilter() {
       const cat = route.query.cat
-      // Determinamos el departamento del filtro
+      const dept = route.query.dept
+
+      // Sincronizar departamento si viene en la URL
+      if (dept && (dept === 'men' || dept === 'women')) {
+        activeDepartment.value = dept
+      }
+
+      // Determinamos el departamento del filtro por categoría si vino uno
       const categoryObj = categories.value.find(c => c.id === cat)
       if (categoryObj && categoryObj.department) {
         if (categoryObj.department !== 'unisex') {
@@ -254,6 +261,7 @@ export default {
     })
 
     watch(() => route.query.cat, syncFilter)
+    watch(() => route.query.dept, syncFilter)
 
     const filteredProducts = computed(() => {
       // Filtrar el departamento actual
