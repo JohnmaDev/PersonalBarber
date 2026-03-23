@@ -224,16 +224,25 @@ const activeDepartment = ref('men')
 
 const activeCategories = computed(() => {
   if (activeDepartment.value === 'merch') {
+    // En la sección Merch, mostramos todo lo unisex y premium
     return categories.value.filter(c => !c.comingSoon && (c.department === 'unisex' || c.style === 'premium'))
   }
-  return categories.value.filter(c => !c.comingSoon && c.style !== 'premium' && (c.department === activeDepartment.value || !c.department))
+  // En Él/Ella, NO mostramos lo de merch ni lo premium en el grid principal
+  return categories.value.filter(c => !c.comingSoon && c.style !== 'premium' && c.department === activeDepartment.value)
 })
-const boutiqueCategories = computed(() => categories.value.filter(c => c.style === 'premium' || c.department === 'unisex'))
+
+const boutiqueCategories = computed(() => {
+  // Si ya estamos viendo Merch arriba, no duplicamos el destacado abajo
+  if (activeDepartment.value === 'merch') return []
+  // Solo el ítem marcado como 'premium' se muestra como banner destacado abajo
+  return categories.value.filter(c => c.style === 'premium')
+})
+
 const otherComingSoonCategories = computed(() => {
   if (activeDepartment.value === 'merch') {
     return categories.value.filter(c => c.comingSoon && (c.department === 'unisex' || c.style === 'premium'))
   }
-  return categories.value.filter(c => c.comingSoon && c.style !== 'premium' && (c.department === activeDepartment.value || !c.department))
+  return categories.value.filter(c => c.comingSoon && c.style !== 'premium' && c.department === activeDepartment.value)
 })
 
 async function fetchData() {

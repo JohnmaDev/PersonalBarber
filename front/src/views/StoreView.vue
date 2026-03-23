@@ -200,7 +200,7 @@ export default {
         .filter(c => {
           if (c.comingSoon) return false
           if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
-          return c.department === activeDepartment.value || !c.department
+          return c.department === activeDepartment.value
         })
         .map(c => ({ id: c.id, label: c.label }))
     ])
@@ -297,15 +297,15 @@ export default {
     watch(() => route.query.dept, syncFilter)
 
     const filteredProducts = computed(() => {
-      // Filtrar el departamento actual
+      // Filtrar el departamento actual de forma estricta
       const activeDeptCats = categories.value
         .filter(c => {
           if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
-          return !c.department || c.department === 'unisex' || c.department === activeDepartment.value
+          return c.department === activeDepartment.value
         })
         .map(c => c.id)
 
-      let list = products.value.filter(p => !p.category || activeDeptCats.includes(p.category))
+      let list = products.value.filter(p => p.category && activeDeptCats.includes(p.category))
 
       if (activeFilter.value !== 'all') {
         list = list.filter(p => p.category === activeFilter.value)
