@@ -287,17 +287,11 @@
           <div v-for="c in categorias" :key="c.id" class="flex items-center p-4 gap-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/30 transition-colors">
             <div class="w-10 h-10 rounded-lg flex items-center justify-center border border-zinc-800 shrink-0 overflow-hidden" :style="{ background: c.accent + '10', borderColor: c.accent + '30' }">
               <div v-if="isImageUrl(c.icon)" 
-                   class="w-6 h-6"
+                   class="w-10 h-10"
                    :style="{ 
                      backgroundColor: c.accent, 
-                     maskImage: `url(${c.icon})`, 
-                     maskSize: 'contain', 
-                     maskRepeat: 'no-repeat', 
-                     maskPosition: 'center',
-                     WebkitMaskImage: `url(${c.icon})`, 
-                     WebkitMaskSize: 'contain', 
-                     WebkitMaskRepeat: 'no-repeat', 
-                     WebkitMaskPosition: 'center'
+                     mask: `url('${c.icon}') no-repeat center / contain`,
+                     WebkitMask: `url('${c.icon}') no-repeat center / contain`
                    }">
               </div>
               <i v-else :class="c.icon || 'fas fa-tag'" :style="{ color: c.accent }"></i>

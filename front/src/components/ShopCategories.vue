@@ -116,7 +116,7 @@
           <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border flex items-center justify-center transition-all duration-500 group-hover:scale-110"
                :style="{ borderColor: `${cat.accent}40`, background: `${cat.accent}12` }">
             <div v-if="isImageUrl(cat.icon)" 
-                 class="w-6 h-6 sm:w-8 sm:h-8"
+                 class="w-10 h-10 sm:w-12 sm:h-12 transition-all duration-500"
                  :style="{ 
                    backgroundColor: cat.accent, 
                    mask: `url('${cat.icon}') no-repeat center / contain`,
