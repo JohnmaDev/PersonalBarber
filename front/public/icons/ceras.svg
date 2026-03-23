@@ -1,3 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-  <path d="M21 16.5c0 .3-.1.5-.3.7-.2.2-.4.3-.7.3H4c-.3 0-.5-.1-.7-.3-.2-.2-.3-.4-.3-.7v-5c0-.3.1-.5.3-.7.2-.2.4-.3.7-.3h16c.3 0 .5.1.7.3.2.2.3.4.3.7v5zM12 2C8.7 2 6 4.7 6 8v2.5h12V8c0-3.3-2.7-6-6-6z"/>
+  <!-- Cuerpo del tarro de pomada -->
+  <path d="M3 9 v10 c0 1.5 4.03 2.7 9 2.7 s9-1.2 9-2.7 V9 c0 1.5-4.03 2.7-9 2.7 S3 10.5 3 9 Z" />
+  <!-- Tapa flotante / separada -->
+  <ellipse cx="12" cy="5" rx="10" ry="3" />
+  <path d="M2 5 v2.5 c0 1.65 4.48 3 10 3 s10-1.35 10-3 V5 Z" />
 </svg>
