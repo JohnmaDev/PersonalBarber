@@ -1,10 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-  <!-- Bulb -->
-  <path d="M 12 2 C 10.3 2 9.5 3.5 9.5 5 V 6 H 14.5 V 5 C 14.5 3.5 13.7 2 12 2 Z" />
-  <!-- Cap Thread -->
-  <rect x="9" y="6.5" width="6" height="2.5" rx="0.5" />
-  <!-- Neck -->
-  <rect x="10" y="9.5" width="4" height="2" />
-  <!-- Body -->
-  <path d="M 17 13.5 V 20 C 17 21.1 16.1 22 15 22 H 9 C 7.9 22 7 21.1 7 20 V 13.5 C 7 12.4 7.9 11.5 9 11.5 H 15 C 16.1 11.5 17 12.4 17 13.5 Z" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Cap Top with Notch -->
+  <path d="M 42 19 V 12 Q 42 10 44 10 H 46 V 15 H 54 V 10 H 56 Q 58 10 58 12 V 19" />
+  
+  <!-- Cap Base -->
+  <path d="M 36 25 V 19 H 64 V 25" />
+  
+  <!-- Bottle Body -->
+  <rect x="25" y="25" width="50" height="70" rx="8" />
+  
+  <!-- Top Label (Pill shape) -->
+  <path d="M 25 40 H 55 A 5 5 0 0 1 55 50 H 25" />
+  
+  <!-- Bottom Label (Rounded rectangle) -->
+  <path d="M 25 62 H 60 A 4 4 0 0 1 64 66 V 78 A 4 4 0 0 1 60 82 H 25" />
 </svg>
