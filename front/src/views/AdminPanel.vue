@@ -17,6 +17,12 @@
       <button @click="verificarPin" class="w-full py-3 bg-neon-green text-black font-black italic tracking-widest uppercase rounded-xl hover:bg-neon-green-dark transition-all shadow-[0_0_15px_rgba(57,255,20,0.3)] hover:shadow-[0_0_25px_rgba(57,255,20,0.6)]">
         Entrar
       </button>
+
+      <!-- Botón para volver al inicio -->
+      <router-link to="/" class="mt-8 flex items-center justify-center gap-2 text-zinc-500 hover:text-white text-[10px] font-black uppercase tracking-[0.2em] transition-all group">
+        <i class="fas fa-arrow-left text-[8px] group-hover:-translate-x-1 transition-transform"></i>
+        Volver al Inicio
+      </router-link>
     </div>
 
     <!-- Panel principal -->
