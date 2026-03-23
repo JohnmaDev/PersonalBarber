@@ -9,7 +9,11 @@
           <span class="text-[10px] font-semibold sm:hidden">Inicio</span>
         </router-link>
         <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1 transition-colors duration-500">
-          <span :class="activeDepartment === 'men' ? 'text-neon-green' : 'text-pink-500'">Personal</span>Barber · Tienda
+          <span :class="{
+            'text-neon-green': activeDepartment === 'men',
+            'text-cyan-400': activeDepartment === 'merch',
+            'text-pink-500': activeDepartment === 'women'
+          }">Personal</span>Barber · Tienda
         </h1>
         <div class="w-10 sm:w-16 flex-shrink-0"></div><!-- spacer -->
       </div>
@@ -23,20 +27,29 @@
           <button 
             @click="activeDepartment = 'men'; activeFilter = 'all'"
             :class="[
-              'px-6 py-2 rounded-full font-black tracking-widest text-xs sm:text-sm uppercase transition-all duration-300 flex items-center gap-2',
+              'px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
               activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-500 hover:text-white'
             ]"
           >
-            <i class="fas fa-cut"></i> Para Él
+            <i class="fas fa-cut"></i> <span class="hidden xs:inline">Para Él</span><span class="xs:hidden">Él</span>
+          </button>
+          <button 
+            @click="activeDepartment = 'merch'; activeFilter = 'all'"
+            :class="[
+              'px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
+              activeDepartment === 'merch' ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-zinc-500 hover:text-white'
+            ]"
+          >
+            <i class="fas fa-tshirt"></i> <span class="hidden xs:inline">Merch</span><span class="xs:hidden">Ropa</span>
           </button>
           <button 
             @click="activeDepartment = 'women'; activeFilter = 'all'"
             :class="[
-              'px-6 py-2 rounded-full font-black tracking-widest text-xs sm:text-sm uppercase transition-all duration-300 flex items-center gap-2',
+              'px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
               activeDepartment === 'women' ? 'bg-pink-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-500 hover:text-white'
             ]"
           >
-            <i class="fas fa-spa"></i> Para Ella
+            <i class="fas fa-spa"></i> <span class="hidden xs:inline">Para Ella</span><span class="xs:hidden">Ella</span>
           </button>
         </div>
       </div>
@@ -50,8 +63,8 @@
           :class="[
             'px-5 py-2 rounded-full text-sm font-bold tracking-wide border transition-all duration-300',
             activeFilter === f.id
-              ? (activeDepartment === 'men' ? 'bg-neon-green text-black border-neon-green' : 'bg-pink-500 text-white border-pink-500')
-              : (activeDepartment === 'men' ? 'glass border-white/20 text-gray-300 hover:border-neon-green/50 hover:text-white' : 'glass border-white/20 text-gray-300 hover:border-pink-500/50 hover:text-white')
+              ? (activeDepartment === 'men' ? 'bg-neon-green text-black border-neon-green' : (activeDepartment === 'merch' ? 'bg-cyan-400 text-black border-cyan-400' : 'bg-pink-500 text-white border-pink-500'))
+              : (activeDepartment === 'men' ? 'glass border-white/20 text-gray-300 hover:border-neon-green/50 hover:text-white' : (activeDepartment === 'merch' ? 'glass border-white/20 text-gray-300 hover:border-cyan-400/50 hover:text-white' : 'glass border-white/20 text-gray-300 hover:border-pink-500/50 hover:text-white'))
           ]"
         >
           {{ f.label }}
@@ -61,14 +74,22 @@
       <!-- Contador + título -->
       <div class="mb-6 text-center">
         <p class="text-gray-500 text-sm">
-          Mostrando <span class="font-bold transition-colors duration-300" :class="activeDepartment === 'men' ? 'text-neon-green' : 'text-pink-500'">{{ filteredProducts.length }}</span> productos
+          Mostrando <span class="font-bold transition-colors duration-300" :class="{
+            'text-neon-green': activeDepartment === 'men',
+            'text-cyan-400': activeDepartment === 'merch',
+            'text-pink-500': activeDepartment === 'women'
+          }">{{ filteredProducts.length }}</span> productos
           <span v-if="activeFilter !== 'all'"> en <span class="text-white">{{ activeFilterLabel }}</span></span>
         </p>
       </div>
 
       <!-- Estado de carga -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-24">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 transition-colors duration-300" :class="activeDepartment === 'men' ? 'border-neon-green' : 'border-pink-500'"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 transition-colors duration-300" :class="{
+          'border-neon-green': activeDepartment === 'men',
+          'border-cyan-400': activeDepartment === 'merch',
+          'border-pink-500': activeDepartment === 'women'
+        }"></div>
         <p class="text-gray-400 font-medium">Cargando productos...</p>
       </div>
 
@@ -80,7 +101,7 @@
           :style="isFirstVisit ? { '--i': index } : {}"
           :class="[
             'group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all duration-500',
-            activeDepartment === 'men' ? 'hover:border-neon-green/50' : 'hover:border-pink-500/50'
+            activeDepartment === 'men' ? 'hover:border-neon-green/50' : (activeDepartment === 'merch' ? 'hover:border-cyan-400/50' : 'hover:border-pink-500/50')
           ]"
         >
           <!-- Imagen – clic navega al detalle -->
@@ -97,7 +118,11 @@
           <div class="p-4 flex flex-col flex-grow justify-between">
             <div class="cursor-pointer" @click="goToDetail(product)">
               <span class="text-[10px] text-gray-500 uppercase tracking-widest">{{ product.brand }}</span>
-              <h3 class="text-sm font-bold text-white transition-colors duration-300 leading-tight mt-0.5" :class="activeDepartment === 'men' ? 'group-hover:text-neon-green' : 'group-hover:text-pink-500'">
+              <h3 class="text-sm font-bold text-white transition-colors duration-300 leading-tight mt-0.5" :class="{
+                'group-hover:text-neon-green': activeDepartment === 'men',
+                'group-hover:text-cyan-400': activeDepartment === 'merch',
+                'group-hover:text-pink-500': activeDepartment === 'women'
+              }">
                 {{ product.name }}
               </h3>
               <p class="text-gray-500 text-xs mt-1.5 leading-relaxed line-clamp-2 italic">
@@ -105,15 +130,19 @@
               </p>
             </div>
             <div class="flex items-center justify-between mt-4">
-              <span class="font-bold text-sm transition-colors duration-300" :class="activeDepartment === 'men' ? 'text-neon-green' : 'text-pink-500'">{{ formatPrice(product.price) }}</span>
+              <span class="font-bold text-sm transition-colors duration-300" :class="{
+                'text-neon-green': activeDepartment === 'men',
+                'text-cyan-400': activeDepartment === 'merch',
+                'text-pink-500': activeDepartment === 'women'
+              }">{{ formatPrice(product.price) }}</span>
               <!-- Botón agregar al carrito rápido -->
               <button
                 @click.stop="quickAddToCart(product)"
                 :class="[
                   'w-8 h-8 rounded-full glass flex items-center justify-center transition-all duration-300 text-sm text-white hover:text-black',
                   justAdded === product.id 
-                    ? (activeDepartment === 'men' ? 'bg-neon-green text-black' : 'bg-pink-500 text-white') 
-                    : (activeDepartment === 'men' ? 'hover:bg-neon-green' : 'hover:bg-pink-500')
+                    ? (activeDepartment === 'men' ? 'bg-neon-green text-black' : (activeDepartment === 'merch' ? 'bg-cyan-400 text-black' : 'bg-pink-500 text-white')) 
+                    : (activeDepartment === 'men' ? 'hover:bg-neon-green' : (activeDepartment === 'merch' ? 'hover:bg-cyan-400' : 'hover:bg-pink-500'))
                 ]"
                 :aria-label="'Agregar ' + product.name + ' al carrito'"
               >
@@ -168,7 +197,11 @@ export default {
     const filters = computed(() => [
       { id: 'all', label: 'Todos' },
       ...categories.value
-        .filter(c => !c.comingSoon && (c.department === activeDepartment.value || !c.department || c.department === 'unisex'))
+        .filter(c => {
+          if (c.comingSoon) return false
+          if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
+          return c.department === activeDepartment.value || !c.department
+        })
         .map(c => ({ id: c.id, label: c.label }))
     ])
 
@@ -186,7 +219,7 @@ export default {
       const dept = route.query.dept
 
       // Sincronizar departamento si viene en la URL
-      if (dept && (dept === 'men' || dept === 'women')) {
+      if (dept && (dept === 'men' || dept === 'women' || dept === 'merch')) {
         activeDepartment.value = dept
       }
 
@@ -266,7 +299,10 @@ export default {
     const filteredProducts = computed(() => {
       // Filtrar el departamento actual
       const activeDeptCats = categories.value
-        .filter(c => !c.department || c.department === 'unisex' || c.department === activeDepartment.value)
+        .filter(c => {
+          if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
+          return !c.department || c.department === 'unisex' || c.department === activeDepartment.value
+        })
         .map(c => c.id)
 
       let list = products.value.filter(p => !p.category || activeDeptCats.includes(p.category))
