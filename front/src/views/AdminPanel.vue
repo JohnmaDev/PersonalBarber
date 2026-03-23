@@ -1,5 +1,10 @@
 <template>
   <div class="bg-black min-h-screen text-white flex flex-col items-center px-4 py-8">
+    
+    <!-- Barra de carga global discreta -->
+    <div v-if="cargando" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
+      <div class="h-full bg-neon-green/80 animate-progress-bar shadow-[0_0_10px_#39FF14]"></div>
+    </div>
 
     <!-- PIN de acceso -->
     <div v-if="!autenticado" class="w-full max-w-xs mt-20 bg-zinc-900 rounded-2xl p-8 shadow-xl border border-zinc-800 text-center">
@@ -78,40 +83,42 @@
           </button>
         </div>
 
-        <!-- Estado vacío Reservas -->
-        <div v-if="!cargando && reservas.length === 0" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
-          <i class="fas fa-calendar-times text-4xl text-zinc-700 mb-4"></i>
-          <p class="text-zinc-500 font-medium">No hay reservas registradas aún.</p>
-        </div>
+        <div :class="{'opacity-40 pointer-events-none transition-opacity duration-500': cargando}">
+          <!-- Estado vacío Reservas -->
+          <div v-if="reservas.length === 0" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
+            <i class="fas fa-calendar-times text-4xl text-zinc-700 mb-4"></i>
+            <p class="text-zinc-500 font-medium">No hay reservas registradas aún.</p>
+          </div>
 
-        <!-- Lista de Reservas -->
-        <div v-if="!cargando && reservas.length > 0">
-          <div v-for="(grupo, fecha) in reservasPorFecha" :key="fecha" class="mb-10">
-            <div class="flex items-center gap-4 mb-4">
-              <span class="bg-neon-green text-black text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">{{ fecha }}</span>
-              <div class="flex-1 h-px bg-zinc-800"></div>
-            </div>
+          <!-- Lista de Reservas -->
+          <div v-else>
+            <div v-for="(grupo, fecha) in reservasPorFecha" :key="fecha" class="mb-10">
+              <div class="flex items-center gap-4 mb-4">
+                <span class="bg-neon-green text-black text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">{{ fecha }}</span>
+                <div class="flex-1 h-px bg-zinc-800"></div>
+              </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div v-for="r in grupo" :key="(r.fechaRaw || '') + (r.horaRaw || '') + (r.nombre || '')" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-4 hover:border-zinc-700 transition-all">
-                <div class="w-16 h-16 bg-zinc-800 rounded-xl flex flex-col items-center justify-center border border-zinc-700 shrink-0">
-                  <span class="text-xs font-black text-neon-green leading-none">{{ (r.horaRaw || '00:00 AM').split(' ')[0] }}</span>
-                  <span class="text-[8px] font-bold text-zinc-500 uppercase">{{ (r.horaRaw || '00:00 AM').split(' ')[1] }}</span>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="font-bold text-sm truncate">{{ r.nombre }}</p>
-                  <p class="text-[10px] text-zinc-400 uppercase tracking-widest mt-0.5">{{ r.servicio }}</p>
-                  <p v-if="r.direccion" class="text-[9px] text-zinc-500 italic mt-1 line-clamp-1">📍 {{ r.direccion }}</p>
-                  <div class="flex items-center gap-3 mt-3">
-                    <a :href="`https://wa.me/57${cleanPhone(r.telefono)}`" target="_blank" class="text-[10px] font-black text-green-500 hover:text-green-400 flex items-center gap-1.5 uppercase">
-                      <i class="fab fa-whatsapp text-xs"></i> WhatsApp
-                    </a>
-                    <a v-if="r.direccion" :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.direccion)}`" target="_blank" class="text-[10px] font-black text-neon-green hover:text-neon-green-dark flex items-center gap-1.5 uppercase">
-                      <i class="fas fa-map-marker-alt text-xs"></i> Maps
-                    </a>
-                    <span :class="estadoClase(r.estado)" class="text-[8px] font-black px-2 py-0.5 rounded-md uppercase tracking-tighter">
-                      {{ r.estado }}
-                    </span>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div v-for="r in grupo" :key="(r.id || '') + (r.fechaRaw || '') + (r.horaRaw || '')" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex gap-4 hover:border-zinc-700 transition-all">
+                  <div class="w-16 h-16 bg-zinc-800 rounded-xl flex flex-col items-center justify-center border border-zinc-700 shrink-0">
+                    <span class="text-xs font-black text-neon-green leading-none">{{ (r.horaRaw || '00:00 AM').split(' ')[0] }}</span>
+                    <span class="text-[8px] font-bold text-zinc-500 uppercase">{{ (r.horaRaw || '00:00 AM').split(' ')[1] }}</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="font-bold text-sm truncate">{{ r.nombre }}</p>
+                    <p class="text-[10px] text-zinc-400 uppercase tracking-widest mt-0.5">{{ r.servicio }}</p>
+                    <p v-if="r.direccion" class="text-[9px] text-zinc-500 italic mt-1 line-clamp-1">📍 {{ r.direccion }}</p>
+                    <div class="flex items-center gap-3 mt-3">
+                      <a :href="`https://wa.me/57${cleanPhone(r.telefono)}`" target="_blank" class="text-[10px] font-black text-green-500 hover:text-green-400 flex items-center gap-1.5 uppercase">
+                        <i class="fab fa-whatsapp text-xs"></i> WhatsApp
+                      </a>
+                      <a v-if="r.direccion" :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.direccion)}`" target="_blank" class="text-[10px] font-black text-neon-green hover:text-neon-green-dark flex items-center gap-1.5 uppercase">
+                        <i class="fas fa-map-marker-alt text-xs"></i> Maps
+                      </a>
+                      <span :class="estadoClase(r.estado)" class="text-[8px] font-black px-2 py-0.5 rounded-md uppercase tracking-tighter">
+                        {{ r.estado }}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -154,33 +161,28 @@
               v-model="filterCategory" 
               class="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 appearance-none cursor-pointer"
             >
-              <option value="all">Todas las categorías</option>
               <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
             </select>
             <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none text-xs"></i>
           </div>
         </div>
 
-        <div v-if="cargando" class="flex flex-col items-center justify-center py-20 bg-zinc-900/50 rounded-3xl border border-zinc-800">
-          <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-neon-green mb-4"></div>
-          <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Cargando catálogo...</p>
-        </div>
+        <div :class="{'opacity-40 pointer-events-none transition-opacity duration-500': cargando}">
+          <!-- Error State Tienda -->
+          <div v-if="errorMessage" class="text-center py-20 bg-red-500/5 rounded-3xl border border-dashed border-red-500/20">
+            <i class="fas fa-exclamation-circle text-4xl text-red-500/50 mb-4"></i>
+            <p class="text-red-400 font-medium mb-2">Error de Conexión</p>
+            <p class="text-zinc-500 text-xs">{{ errorMessage }}</p>
+            <button @click="cargarProductos" class="mt-4 text-neon-green text-xs font-bold uppercase hover:underline">Reintentar</button>
+          </div>
 
-        <!-- Error State Tienda -->
-        <div v-if="errorMessage && !cargando" class="text-center py-20 bg-red-500/5 rounded-3xl border border-dashed border-red-500/20">
-          <i class="fas fa-exclamation-circle text-4xl text-red-500/50 mb-4"></i>
-          <p class="text-red-400 font-medium mb-2">Error de Conexión</p>
-          <p class="text-zinc-500 text-xs">{{ errorMessage }}</p>
-          <button @click="cargarProductos" class="mt-4 text-neon-green text-xs font-bold uppercase hover:underline">Reintentar</button>
-        </div>
+          <div v-else-if="filteredProducts.length === 0" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
+            <i class="fas fa-search text-4xl text-zinc-700 mb-4"></i>
+            <p class="text-zinc-500 font-medium">No se encontraron productos que coincidan.</p>
+            <button v-if="searchQuery || filterCategory !== 'all'" @click="searchQuery = ''; filterCategory = 'all'" class="mt-4 text-neon-green text-xs font-bold uppercase hover:underline">Limpiar filtros</button>
+          </div>
 
-        <div v-else-if="filteredProducts.length === 0 && !cargando" class="text-center py-20 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
-          <i class="fas fa-search text-4xl text-zinc-700 mb-4"></i>
-          <p class="text-zinc-500 font-medium">No se encontraron productos que coincidan.</p>
-          <button v-if="searchQuery || filterCategory !== 'all'" @click="searchQuery = ''; filterCategory = 'all'" class="mt-4 text-neon-green text-xs font-bold uppercase hover:underline">Limpiar filtros</button>
-        </div>
-
-        <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
+          <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
           <div v-for="p in filteredProducts" :key="p.id" class="flex items-center p-4 gap-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/30 transition-colors">
             <div class="w-12 h-12 bg-black rounded-lg overflow-hidden border border-zinc-800 shrink-0 uppercase flex items-center justify-center text-[8px] font-bold text-zinc-700">
               <img v-if="p.images && p.images.length > 0" :src="p.images[0]" :alt="p.name" class="w-full h-full object-cover">
@@ -201,6 +203,7 @@
                 <i class="fas fa-trash-alt text-xs"></i>
               </button>
             </div>
+          </div>
           </div>
         </div>
 
@@ -284,12 +287,8 @@
           </button>
         </div>
 
-        <div v-if="cargando" class="flex flex-col items-center justify-center py-20 bg-zinc-900/50 rounded-3xl border border-zinc-800">
-          <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-neon-green mb-4"></div>
-          <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Cargando categorías...</p>
-        </div>
-
-        <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
+        <div :class="{'opacity-40 pointer-events-none transition-opacity duration-500': cargando}">
+          <div class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
           <div v-for="c in categorias" :key="c.id" class="flex items-center p-4 gap-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/30 transition-colors">
             <div class="w-10 h-10 rounded-lg flex items-center justify-center border border-zinc-800 shrink-0 overflow-hidden" :style="{ background: c.accent + '10', borderColor: c.accent + '30' }">
               <div v-if="isImageUrl(c.icon)" 
@@ -317,6 +316,7 @@
               <button @click="borrarCategoria(c.id)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-zinc-800 text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-all">
                 <i class="fas fa-trash-alt text-xs"></i>
               </button>
+            </div>
             </div>
           </div>
         </div>
@@ -755,4 +755,14 @@ export default {
 
 .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
+
+@keyframes progress-bar {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+.animate-progress-bar {
+  width: 100%;
+  animation: progress-bar 2s infinite linear;
+}
 </style>
