@@ -48,73 +48,51 @@
       </div>
     </div>
 
-    <!-- Grid de categorías: activas + próximamente -->
+    <!-- Tarjetas de Categorías (Unificadas) -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-
-      <!-- Tarjetas activas (con imagen) -->
-      <router-link
-        v-for="cat in activeCategories"
+      <component
+        :is="cat.comingSoon ? 'div' : 'router-link'"
+        v-for="cat in [...activeCategories, ...otherComingSoonCategories]"
         :key="cat.id"
-        :to="`/tienda?cat=${cat.id}`"
-        class="group relative h-52 sm:h-64 rounded-2xl overflow-hidden border border-white/10 hover:border-neon-green/60 transition-all duration-500 cursor-pointer block"
+        :to="cat.comingSoon ? null : `/tienda?cat=${cat.id}`"
+        class="group relative h-56 sm:h-72 rounded-3xl overflow-hidden border transition-all duration-500 flex flex-col items-center justify-center p-6 text-center"
+        :class="[
+          cat.comingSoon ? 'cursor-default bg-white/3' : 'cursor-pointer hover:scale-[1.02] bg-zinc-900',
+        ]"
+        :style="{ borderColor: `${cat.accent}${cat.comingSoon ? '15' : '30'}` }"
       >
-        <!-- Imagen de fondo -->
-        <img
-          :src="cat.cover"
-          :alt="cat.label"
-          class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          loading="lazy"
-        />
-        <!-- Overlay -->
-        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-
-        <!-- Glow accent on hover -->
-        <div
-          class="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500"
-          :style="{ background: `radial-gradient(circle at 50% 110%, ${cat.accent} 0%, transparent 70%)` }"
-        ></div>
-
-        <!-- Contenido -->
-        <div class="absolute inset-0 flex flex-col justify-end p-4 sm:p-5">
-          <span
-            class="text-[10px] font-bold tracking-widest uppercase mb-1"
-            :style="{ color: cat.accent }"
-          >{{ cat.subtitle || `${getCategoryCount(cat.id)} productos` }}</span>
-          <h3 class="text-base sm:text-xl font-bold text-white tracking-tight transition-colors duration-300 leading-tight" :class="{
-              'group-hover:text-neon-green': activeDepartment === 'men',
-              'group-hover:text-cyan-400': activeDepartment === 'merch',
-              'group-hover:text-pink-500': activeDepartment === 'women'
-            }">
-            {{ cat.label }}
-          </h3>
-          <div class="flex items-center gap-2 mt-2 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-            <span class="text-xs text-white font-semibold">Ver productos</span>
-            <i class="fas fa-arrow-right text-xs" :class="{
-              'text-neon-green': activeDepartment === 'men',
-              'text-cyan-400': activeDepartment === 'merch',
-              'text-pink-500': activeDepartment === 'women'
-            }"></i>
-          </div>
+        <!-- Fondo: Imagen desenfocada para activas, Glow sutil para próximas -->
+        <div v-if="!cat.comingSoon && cat.cover" class="absolute inset-0 z-0">
+          <img
+            :src="cat.cover"
+            :alt="cat.label"
+            class="w-full h-full object-cover opacity-20 blur-sm grayscale group-hover:opacity-40 group-hover:blur-none group-hover:grayscale-0 transition-all duration-700"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
         </div>
-      </router-link>
-
-      <!-- Tarjetas próximamente (sin imagen) -->
-      <div
-        v-for="cat in otherComingSoonCategories"
-        :key="cat.id"
-        class="group relative h-52 sm:h-64 rounded-2xl overflow-hidden border border-white/10 bg-white/3 transition-all duration-300 cursor-default"
-        :style="{ borderColor: `${cat.accent}18` }"
-      >
-        <!-- Glow sutil de fondo -->
         <div
-          class="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500"
+          v-else
+          class="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500 z-0"
           :style="{ background: `radial-gradient(circle at 50% 50%, ${cat.accent} 0%, transparent 70%)` }"
         ></div>
 
-        <!-- Contenido centrado -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center p-5 text-center gap-3">
-          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border flex items-center justify-center transition-all duration-500 group-hover:scale-110"
-               :style="{ borderColor: `${cat.accent}40`, background: `${cat.accent}12` }">
+        <!-- Glow de acento dinámico -->
+        <div 
+          class="absolute -inset-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl z-0"
+          :style="{ background: `radial-gradient(circle at 50% 50%, ${cat.accent}20 0%, transparent 60%)` }"
+        ></div>
+
+        <!-- Contenido Central: Círculo + Icono -->
+        <div class="relative z-10 flex flex-col items-center gap-4">
+          <div 
+            class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 flex items-center justify-center transition-all duration-500 group-hover:scale-110 shadow-lg"
+            :style="{ 
+              borderColor: `${cat.accent}60`, 
+              background: `${cat.accent}15`,
+              boxShadow: `0 0 20px ${cat.accent}20`
+            }"
+          >
+            <!-- Icono Personalizado (Imagen/SVG con Máscara) -->
             <div v-if="isImageUrl(cat.icon)" 
                  class="w-10 h-10 sm:w-12 sm:h-12 transition-all duration-500"
                  :style="{ 
@@ -123,15 +101,34 @@
                    WebkitMask: `url('${cat.icon}') no-repeat center / contain`
                  }">
             </div>
-            <i v-else :class="cat.icon" class="text-xl sm:text-2xl transition-all duration-500" :style="{ color: cat.accent }"></i>
+            <!-- Icono FontAwesome -->
+            <i v-else :class="cat.icon || 'fas fa-tag'" class="text-2xl sm:text-3xl transition-all duration-500" :style="{ color: cat.accent }"></i>
           </div>
-          <h3 class="text-sm sm:text-base font-bold text-white/70 leading-tight">{{ cat.label }}</h3>
-          <span
-            class="text-xs px-3 py-1 rounded-full font-bold tracking-widest uppercase border"
-            :style="{ color: cat.accent, borderColor: `${cat.accent}40`, background: `${cat.accent}12` }"
-          >Próximamente</span>
+
+          <!-- Textos -->
+          <div class="flex flex-col items-center">
+            <span v-if="!cat.comingSoon" class="text-[10px] font-black tracking-[0.2em] uppercase mb-1 opacity-60 group-hover:opacity-100 transition-opacity" :style="{ color: cat.accent }">
+              {{ getCategoryCount(cat.id) }} PRODUCTOS
+            </span>
+            <h3 class="text-lg sm:text-xl font-black text-white tracking-tighter uppercase italic italic-heavy drop-shadow-md">
+              {{ cat.label }}
+            </h3>
+            
+            <!-- Badge Estado -->
+            <div class="mt-2">
+              <span v-if="cat.comingSoon" 
+                    class="text-[9px] px-3 py-1 rounded-full font-black tracking-widest uppercase border border-white/10 bg-white/5 text-white/40">
+                Próximamente
+              </span>
+              <span v-else 
+                    class="text-[9px] px-3 py-1 rounded-full font-black tracking-widest uppercase border transition-all duration-300"
+                    :style="{ color: cat.accent, borderColor: `${cat.accent}40`, background: `${cat.accent}10` }">
+                Disponible
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
+      </component>
     </div>
 
     <!-- SECCIÓN BOUTIQUE (DESTACADO CENTRAL) -->
