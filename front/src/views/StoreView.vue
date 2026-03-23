@@ -265,7 +265,13 @@ export default {
 
         const dataProd = await resProd.json()
         if (dataProd.ok) {
-          products.value = dataProd.products
+          // Barajado Aleatorio (Algoritmo Fisher-Yates) para "Fresh View"
+          const shuffled = [...dataProd.products]
+          for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+          }
+          products.value = shuffled
           syncFilter() // Re-sincronizar después de cargar categorías
         } else {
           errorMessage.value = dataProd.error || 'Error desconocido'
