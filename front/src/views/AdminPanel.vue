@@ -285,8 +285,9 @@
 
         <div v-else class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
           <div v-for="c in categorias" :key="c.id" class="flex items-center p-4 gap-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/30 transition-colors">
-            <div class="w-10 h-10 rounded-lg flex items-center justify-center border border-zinc-800 shrink-0" :style="{ background: c.accent + '10', borderColor: c.accent + '30' }">
-              <i :class="c.icon || 'fas fa-tag'" :style="{ color: c.accent }"></i>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center border border-zinc-800 shrink-0 overflow-hidden" :style="{ background: c.accent + '10', borderColor: c.accent + '30' }">
+              <img v-if="isImageUrl(c.icon)" :src="c.icon" class="w-7 h-7 object-contain" />
+              <i v-else :class="c.icon || 'fas fa-tag'" :style="{ color: c.accent }"></i>
             </div>
             <div class="flex-1 min-w-0">
               <p class="font-bold text-sm">{{ c.label }}</p>

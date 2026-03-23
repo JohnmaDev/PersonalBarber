@@ -113,11 +113,10 @@
 
         <!-- Contenido centrado -->
         <div class="absolute inset-0 flex flex-col items-center justify-center p-5 text-center gap-3">
-          <div
-            class="w-12 h-12 rounded-full flex items-center justify-center border"
-            :style="{ borderColor: `${cat.accent}40`, background: `${cat.accent}12` }"
-          >
-            <i :class="cat.icon" class="text-lg" :style="{ color: cat.accent }"></i>
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border flex items-center justify-center transition-all duration-500 group-hover:scale-110"
+               :style="{ borderColor: `${cat.accent}40`, background: `${cat.accent}12` }">
+            <img v-if="isImageUrl(cat.icon)" :src="cat.icon" class="w-6 h-6 sm:w-8 sm:h-8 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
+            <i v-else :class="cat.icon" class="text-xl sm:text-2xl transition-all duration-500" :style="{ color: cat.accent }"></i>
           </div>
           <h3 class="text-sm sm:text-base font-bold text-white/70 leading-tight">{{ cat.label }}</h3>
           <span
@@ -266,6 +265,11 @@ async function fetchData() {
 
 function getCategoryCount(catId) {
   return products.value.filter(p => p.category === catId).length
+}
+
+function isImageUrl(icon) {
+  if (!icon) return false
+  return icon.startsWith('/') || icon.startsWith('http')
 }
 
 onMounted(fetchData)
