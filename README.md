@@ -72,6 +72,8 @@ Installation & Initialization
 
 Directory Structure
 -------------------
+
+```text
 .
 ├── backend/                            # Go Serverless API
 │   ├── functions/                      # Netlify Cloud Functions
@@ -95,6 +97,7 @@ Directory Structure
 │       └── views/                      # Main route entrypoints (App, StoreView, AdminPanel)
 ├── netlify.toml                        # Server and build proxy routing instructions
 └── README.md                           # This document
+```
 
 Security Notice
 ---------------
