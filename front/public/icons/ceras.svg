@@ -1,7 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-  <!-- Cuerpo del tarro de pomada -->
-  <path d="M3 9 v10 c0 1.5 4.03 2.7 9 2.7 s9-1.2 9-2.7 V9 c0 1.5-4.03 2.7-9 2.7 S3 10.5 3 9 Z" />
-  <!-- Tapa flotante / separada -->
-  <ellipse cx="12" cy="5" rx="10" ry="3" />
-  <path d="M2 5 v2.5 c0 1.65 4.48 3 10 3 s10-1.35 10-3 V5 Z" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Tilted Lid -->
+  <polygon points="12,28 68,12 74,28 18,44" />
+  
+  <!-- Neck sides -->
+  <line x1="24" y1="42.3" x2="24" y2="48" />
+  <line x1="70" y1="29.1" x2="70" y2="48" />
+  
+  <!-- Neck threads (dashes) -->
+  <line x1="40" y1="40" x2="50" y2="40" />
+  <line x1="56" y1="40" x2="66" y2="40" />
+  
+  <!-- Jar Body shoulder and sides -->
+  <line x1="12" y1="48" x2="82" y2="48" />
+  <path d="M 12 48 V 78 Q 12 88 22 88 H 35" />
+  <path d="M 82 48 V 63" />
+  
+  <!-- Inner Label Line -->
+  <path d="M 32 66 V 56 H 72" />
+  
+  <!-- Cream outline -->
+  <path d="M 35 88 
+           H 84 
+           C 92 88 92 76 84 74 
+           C 88 64 76 54 68 60 
+           C 62 46 52 55 58 64 
+           C 48 58 44 65 48 72 
+           C 38 68 28 80 35 88 Z" />
+           
+  <!-- Cream Inner Swirls -->
+  <path d="M 48 72 Q 55 78 68 60" />
+  <path d="M 42 82 Q 54 78 66 84" />
 </svg>
