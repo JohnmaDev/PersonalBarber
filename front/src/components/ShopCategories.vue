@@ -1,6 +1,18 @@
-<!-- Sección de categorías de la tienda para el Home -->
 <template>
-  <section id="tienda" class="mt-24 w-full scroll-mt-24">
+  <section id="tienda" class="mt-24 w-full scroll-mt-24 relative">
+    <!-- Barra de carga global discreta -->
+    <transition name="fade">
+      <div v-if="loading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
+        <div 
+          class="h-full animate-progress-bar transition-colors duration-500"
+          :class="{
+            'bg-neon-green shadow-[0_0_10px_#39FF14]': activeDepartment === 'men',
+            'bg-cyan-400 shadow-[0_0_10px_#22d3ee]': activeDepartment === 'merch',
+            'bg-pink-500 shadow-[0_0_10px_#ec4899]': activeDepartment === 'women'
+          }"
+        ></div>
+      </div>
+    </transition>
     <div class="text-center mb-16 px-4">
       <h2 class="text-[3.5rem] leading-tight sm:text-[6rem] lg:text-[100px] font-black lg:leading-tight tracking-tighter italic uppercase text-shadow-premium">
         NUESTRA <span class="block sm:inline transition-colors duration-500" :class="{
@@ -49,7 +61,7 @@
     </div>
 
     <!-- Tarjetas de Categorías (Unificadas) -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 transition-opacity duration-500" :class="{'opacity-40 pointer-events-none': loading}">
       <component
         :is="cat.comingSoon ? 'div' : 'router-link'"
         v-for="cat in [...activeCategories, ...otherComingSoonCategories]"
@@ -224,6 +236,7 @@ import { ref, computed, onMounted } from 'vue'
 const products = ref([])
 const categories = ref([])
 const activeDepartment = ref('men')
+const loading = ref(false)
 
 const activeCategories = computed(() => {
   if (activeDepartment.value === 'merch') {
@@ -250,6 +263,7 @@ const otherComingSoonCategories = computed(() => {
 })
 
 async function fetchData() {
+  loading.value = true
   try {
     // Cargar Productos (para conteos)
     const resProd = await fetch('/api/get_products')
@@ -264,6 +278,8 @@ async function fetchData() {
     }
   } catch (err) {
     console.error('Error cargando datos de la tienda:', err)
+  } finally {
+    loading.value = false
   }
 }
 

@@ -1,5 +1,18 @@
 <template>
-  <div class="bg-barber-black min-h-screen text-white">
+  <div class="bg-barber-black min-h-screen text-white relative">
+    <!-- Barra de carga global discreta -->
+    <transition name="fade">
+      <div v-if="isLoading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
+        <div 
+          class="h-full animate-progress-bar transition-colors duration-500"
+          :class="{
+            'bg-neon-green shadow-[0_0_10px_#39FF14]': activeDepartment === 'men',
+            'bg-cyan-400 shadow-[0_0_10px_#22d3ee]': activeDepartment === 'merch',
+            'bg-pink-500 shadow-[0_0_10px_#ec4899]': activeDepartment === 'women'
+          }"
+        ></div>
+      </div>
+    </transition>
     <!-- Header fijo con back -->
     <div class="sticky top-0 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
       <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-2">
@@ -94,7 +107,13 @@
       </div>
 
       <!-- Grid de productos -->
-      <transition-group v-else name="products-grid" tag="div" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      <transition-group 
+        v-else 
+        name="products-grid" 
+        tag="div" 
+        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 transition-opacity duration-500"
+        :class="{'opacity-40 pointer-events-none': isLoading}"
+      >
         <div
           v-for="(product, index) in filteredProducts"
           :key="product.id"
