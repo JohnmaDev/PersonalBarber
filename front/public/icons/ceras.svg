@@ -10,24 +10,10 @@
   <line x1="40" y1="40" x2="50" y2="40" />
   <line x1="56" y1="40" x2="66" y2="40" />
   
-  <!-- Jar Body shoulder and sides -->
+  <!-- Jar Body shoulder, sides and base -->
   <line x1="12" y1="48" x2="82" y2="48" />
-  <path d="M 12 48 V 78 Q 12 88 22 88 H 35" />
-  <path d="M 82 48 V 63" />
+  <path d="M 12 48 V 78 Q 12 88 22 88 H 72 Q 82 88 82 78 V 48" />
   
-  <!-- Inner Label Line -->
-  <path d="M 32 66 V 56 H 72" />
-  
-  <!-- Cream outline -->
-  <path d="M 35 88 
-           H 84 
-           C 92 88 92 76 84 74 
-           C 88 64 76 54 68 60 
-           C 62 46 52 55 58 64 
-           C 48 58 44 65 48 72 
-           C 38 68 28 80 35 88 Z" />
-           
-  <!-- Cream Inner Swirls -->
-  <path d="M 48 72 Q 55 78 68 60" />
-  <path d="M 42 82 Q 54 78 66 84" />
+  <!-- Inner Label Line (Balanced and symmetric) -->
+  <path d="M 28 80 V 60 H 66 V 80" />
 </svg>
