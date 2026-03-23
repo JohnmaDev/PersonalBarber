@@ -224,10 +224,11 @@ const activeDepartment = ref('men')
 
 const activeCategories = computed(() => {
   if (activeDepartment.value === 'merch') {
-    // En la sección Merch, mostramos todo lo unisex y premium
-    return categories.value.filter(c => !c.comingSoon && (c.department === 'unisex' || c.style === 'premium'))
+    // En Merch, mostramos solo las 4 categorías estándar (Gorras, Camisetas, etc.)
+    // Excluimos la 'premium' para que no ensucie el grid si queremos dejarla aparte
+    return categories.value.filter(c => !c.comingSoon && c.department === 'unisex' && c.style !== 'premium')
   }
-  // En Él/Ella, NO mostramos lo de merch ni lo premium en el grid principal
+  // En Él/Ella, grid normal de 8
   return categories.value.filter(c => !c.comingSoon && c.style !== 'premium' && c.department === activeDepartment.value)
 })
 

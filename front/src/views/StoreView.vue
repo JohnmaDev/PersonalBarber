@@ -199,7 +199,10 @@ export default {
       ...categories.value
         .filter(c => {
           if (c.comingSoon) return false
-          if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
+          if (activeDepartment.value === 'merch') {
+            // En la tienda, mostramos las 4 de ropa + la boutique para filtrar productos
+            return c.department === 'unisex' || c.style === 'premium'
+          }
           return c.department === activeDepartment.value
         })
         .map(c => ({ id: c.id, label: c.label }))
