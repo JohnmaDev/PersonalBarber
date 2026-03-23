@@ -62,16 +62,16 @@
           </div>
           <div v-else class="grid grid-cols-3 gap-3">
              <button 
-                v-for="(time, index) in availableTimeSlots" :key="index"
+                v-for="(time, index) in visibleTimeSlots" :key="index"
                 type="button"
-                :disabled="isLoadingSlots || isSlotOcupado(selectedDate, time) || isSlotPasado(selectedDate, time)"
-                @click="!isLoadingSlots && !isSlotOcupado(selectedDate, time) && !isSlotPasado(selectedDate, time) && (selectedTime = time)"
+                :disabled="isLoadingSlots || isSlotOcupado(selectedDate, time)"
+                @click="!isLoadingSlots && !isSlotOcupado(selectedDate, time) && (selectedTime = time)"
                 :class="[
                   'py-3 rounded-xl font-semibold text-sm transition-all border relative',
                   isLoadingSlots
                     ? 'bg-zinc-900 text-zinc-700 border-zinc-800 cursor-wait animate-pulse'
-                    : (isSlotOcupado(selectedDate, time) || isSlotPasado(selectedDate, time))
-                      ? 'bg-zinc-900 text-zinc-600 border-zinc-800 cursor-not-allowed' + (isSlotOcupado(selectedDate, time) ? ' line-through' : '')
+                    : isSlotOcupado(selectedDate, time)
+                      ? 'bg-zinc-900 text-zinc-600 border-zinc-800 cursor-not-allowed line-through'
                       : selectedTime === time
                         ? 'bg-neon-green text-black border-neon-green shadow-[0_0_15px_rgba(57,255,20,0.3)]'
                         : 'bg-zinc-800 text-white border-zinc-700 hover:bg-zinc-700 hover:border-neon-green hover:text-neon-green'
@@ -79,7 +79,6 @@
              >
                {{ time }}
                <span v-if="isSlotOcupado(selectedDate, time) && !isLoadingSlots" class="block text-[9px] font-normal no-underline text-zinc-600">Ocupado</span>
-               <span v-else-if="isSlotPasado(selectedDate, time) && !isLoadingSlots" class="block text-[9px] font-normal no-underline text-zinc-700">Pasado</span>
              </button>
           </div>
         </div>
@@ -194,6 +193,11 @@ export default {
       const soloDigitos = this.form.telefono.replace(/[\s\-+]/g, '');
       // Número colombiano: empieza en 3 y tiene 10 dígitos, o 57 + 10 dígitos
       return /^(57)?3\d{9}$/.test(soloDigitos);
+    },
+    visibleTimeSlots() {
+      if (!this.selectedDate) return this.availableTimeSlots;
+      // Filtramos dinámicamente: solo mostramos si NO ha pasado (o si no es hoy)
+      return this.availableTimeSlots.filter(time => !this.isSlotPasado(this.selectedDate, time));
     }
   },
   mounted() {
