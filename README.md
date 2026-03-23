@@ -1,90 +1,108 @@
-# 💈 BarberCol - Premium Landing & Booking System
+PersonalBarber - Beauty Hub & Barber Shop Management System
+=========================================================
 
-[![Vue.js](https://img.shields.io/badge/Vue.js-3.2+-4fc08d?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4+-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+PersonalBarber is a full-stack, dual-aesthetic web platform designed to manage 
+a hybrid barbershop and cosmetics boutique. It features a complete reservation 
+system, an integrated e-commerce store, and a comprehensive administration panel.
 
-**BarberCol** is a high-end landing page and automated booking system for professional barbers. Built with a focus on **Visual Excellence**, **Security**, and **Efficiency**, it connects a modern Vue.js frontend with a flexible Google Sheets backend.
+The user interface dynamically switches between two distinct visual contexts:
+- "Nuestra Tienda" (For Him): A brutalist, neon-green aesthetic.
+- "Beauty Hub" (For Her): An elegant, rose-gold aesthetic.
 
----
+Architecture
+------------
+The project is decoupled into two primary layers:
 
-### 🌐 Live Demo
-Visit the live site: [https://personalbarber.netlify.app/](https://personalbarber.netlify.app/)
+1. Frontend (front/):
+   - Framework: Vue 3 (Composition API, Vue Router).
+   - Styling: Tailwind CSS (Custom extensions for animations and themes).
+   - Core Views: Landing Page, Dual-Gender Store, Reservation Flow, 
+     Admin Dashboard, Dynamic Product Toggles (Boutique, Coming Soon).
 
----
+2. Backend (backend/functions/):
+   - Runtime: Go 1.25.5 (AWS Lambda signature, Netlify Functions environment).
+   - Endpoints: Reservation management, Category CRUD, Product CRUD.
+   - Database: MongoDB Atlas (via go.mongodb.org/mongo-driver/v2).
+   - Security: Route-level PIN verification via environment variables.
 
-## 🌟 Key Features
+Features
+--------
+- Real-time Reservation Engine: Slot calculation, overlap prevention, 
+  and direct integration with Google Maps deep-linking.
+- Dual-Aesthetic E-Commerce: Dynamic UI filtering and styling based on user 
+  selection ("Men", "Women", "Unisex").
+- Headless CMS (Admin Panel): Full CRUD operations for Products and Categories.
+- Image Handling: Support for multiple product images (Gallery view) and 
+  placeholder fallbacks.
+- Webhook Automation: Sends operational alerts using Make.com hooks.
 
-### 🛡️ Enhanced Security
-- **Secure PIN Authorization**: Admin panel access and data retrieval are protected via backend-side verification.
-- **Environment Safety**: Sensitive keys and PINs are managed through `.env` files (ignored by Git) and Google Script Properties.
-- **Data Privacy**: Public availability views only show date and time status, keeping customer information private.
+Requirements
+------------
+- Node.js (v18 or higher recommended)
+- Go (1.21 or higher)
+- Netlify CLI (For local API development and backend routing)
+- A MongoDB Atlas Cluster (URI)
 
-### 📅 Smart Reservations
-- **Real-time Availability**: Direct synchronization with Google Sheets.
-- **Past-time Blocking**: Automatically disables time slots that have already passed for the current day.
-- **Automated Webhooks**: Integration with **Make.com** for instant notifications and CRM updates.
+Installation & Initialization
+-----------------------------
+1. Environment Variables:
+   Inside the `front/` directory, create a `.env.local` file with the following:
+   
+   VUE_APP_MAKE_WEBHOOK=your_make_webhook_url
+   VUE_APP_ADMIN_PIN=your_secure_pin
+   MONGODB_URI=your_mongodb_atlas_connection_string
 
-### 💎 Premium UX/UI
-- **Dark Mode Aesthetic**: Sleek, modern interface using Tailwind CSS.
-- **Responsive Layout**: Designed for seamless booking on both mobile and desktop.
-- **Session Persistence**: Stay logged in to the admin panel while the tab is open.
+2. Install Frontend Dependencies:
+   $ cd front/
+   $ npm install
 
----
+3. Populate Database Categories:
+   Run the initial category seeder to construct the 16-department layout.
+   $ cd backend/functions/
+   $ go run /tmp/seed_atlas.go "YOUR_MONGODB_URI"
 
-## 🏗️ Project Architecture
+4. Start Local Development:
+   We recommend using the Netlify CLI to proxy the backend functions correctly.
+   From the root of the project:
+   $ netlify dev
 
-```mermaid
-graph LR
-    User[Client/Admin] --> Frontend(Vue.js Landing)
-    Frontend -->|POST JSON| Make(Make.com Webhook)
-    Make -->|Insert Row| Spreadsheet(Google Sheets)
-    Frontend -->|GET Data| GAS(Google Apps Script API)
-    GAS -->|Query Availability| Spreadsheet
-    GAS -->|Authorize/Verify| Props(Script Properties)
-```
+   (Alternatively, if you only need frontend development without API resolution):
+   $ cd front/
+   $ npm run serve
 
----
+Directory Structure
+-------------------
+.
+├── backend/                            # Go Serverless API
+│   ├── functions/                      # Netlify Cloud Functions
+│   │   ├── get_categories/             # Fetches shop categories
+│   │   ├── get_products/               # Fetches active product list
+│   │   ├── list_reservations/          # Admin reservation readout
+│   │   ├── manage_categories/          # Create, Update, Delete categories
+│   │   ├── manage_products/            # Create, Update, Delete products
+│   │   ├── reserve/                    # Slot booking logic
+│   │   └── seed_categories/            # Initial DB structural seed
+│   ├── go.mod                          # Go module dependencies
+│   └── go.sum                          
+├── front/                              # Vue 3 Single Page Application
+│   ├── public/                 
+│   └── src/                    
+│       ├── assets/                     # Tailwind directives and static files
+│       ├── components/                 # Reusable Vue components (Hero, ShopCategories, etc.)
+│       ├── composables/                # State management (useCart)
+│       ├── router/                     # Application routes
+│       ├── utils/                      # Formatting helpers
+│       └── views/                      # Main route entrypoints (App, StoreView, AdminPanel)
+├── netlify.toml                        # Server and build proxy routing instructions
+└── README.md                           # This document
 
-## ⚙️ Setup & Installation
+Security Notice
+---------------
+Ensure that the `MONGODB_URI` and `VUE_APP_ADMIN_PIN` are never committed to 
+version control. The `.env.local` is git-ignored by default. Use server-side 
+environment variables when deploying to production infrastructure.
 
-### 1. Frontend Setup
-```bash
-# Clone the repository
-git clone https://github.com/JohnmaDev/P-Rose.git
-
-# Navigate to the project
-cd P-Rose/front
-
-# Configure Environment Variables
-# Copy the example file and fill in your keys
-cp .env.example .env.local
-
-# Install dependencies
-npm install
-
-# Run the development server
-npm run serve
-```
-
-### 2. Backend Setup (Google Apps Script)
-1. Create a Google Sheet to store appointments.
-2. In the Sheet, go to **Extensions > Apps Script**.
-3. Copy the content of `api_slots.gs` into the script editor.
-4. Set your `ADMIN_PIN` in **Project Settings > Script Properties**.
-5. **Deploy** as a Web App (Access: Anyone).
-6. Copy the Deployment URL to your `.env.local`.
-
----
-
-## 📦 Deployment
-This project is configured for easy deployment on platforms like **Netlify** or **Vercel**. Simply connect your GitHub repository and set the environment variables in the platform's dashboard.
-
-## 🤝 Contributions
-Contributions are welcome! If you have ideas for new features or improvements, feel free to fork the repository and open a Pull Request.
-
-## 📄 License
-This project is licensed under the **MIT License**. Free for personal and commercial use.
-
----
-Built with ❤️ by [JohnmaDev](https://github.com/JohnmaDev)
+License
+-------
+PersonalBarber is licensed under the MIT License.
+Written by JohnmaDev.
