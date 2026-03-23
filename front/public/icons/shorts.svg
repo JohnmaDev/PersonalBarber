@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Outer Shape (Shorts silhouette) -->
+  <path d="M 28 20 
+           H 72 
+           L 80 78 
+           Q 67.5 88 55 78 
+           L 51.5 58
+           Q 50 50 48.5 58
+           L 45 78
+           Q 32.5 88 20 78
+           Z" />
+  
+  <!-- Waistband Line -->
+  <line x1="26.5" y1="30" x2="73.5" y2="30" />
+  
+  <!-- Curved Pockets -->
+  <path d="M 38 30 Q 38 48 24.2 48" />
+  <path d="M 62 30 Q 62 48 75.8 48" />
+  
+  <!-- Fly / Zipper details -->
+  <path d="M 50 30 V 52 A 5 5 0 0 0 55 47" />
+  
+  <!-- Small leg detail (pill shape) -->
+  <line x1="28" y1="70" x2="36" y2="72" stroke-width="6" />
+</svg>
