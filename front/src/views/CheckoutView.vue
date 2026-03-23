@@ -81,9 +81,10 @@
                   inputmode="numeric"
                   placeholder="+57 300 123 4567" 
                   class="input-field"
-                  :class="{ 'border-red-500/50': touched.phone && !form.phone.trim() }"
+                  :class="{ 'border-red-500/50': touched.phone && !isPhoneValid }"
                 />
-                <p v-if="touched.phone && !form.phone.trim()" class="text-[10px] text-red-400">El teléfono es necesario para coordinar</p>
+                <p v-if="touched.phone && !form.phone.trim()" class="text-[10px] text-red-400 mt-1">El teléfono es necesario para coordinar</p>
+                <p v-else-if="touched.phone && !isPhoneValid" class="text-[10px] text-red-400 mt-1">Ingresa un número colombiano válido (Ej: 301 123 4567)</p>
               </div>
               <div class="space-y-1">
                 <label class="text-xs text-gray-400 font-semibold block mb-1">Ciudad</label>
@@ -269,11 +270,16 @@ const isEmailValid = computed(() => {
   return re.test(form.value.email)
 })
 
+const isPhoneValid = computed(() => {
+  const soloDigitos = form.value.phone.replace(/[\s\-+]/g, '');
+  return /^(57)?3\d{9}$/.test(soloDigitos);
+})
+
 const formValid = computed(() =>
   form.value.firstName.trim() &&
   form.value.lastName.trim() &&
   isEmailValid.value &&
-  form.value.phone.trim()
+  isPhoneValid.value
 )
 
 function handleCheckout() {
