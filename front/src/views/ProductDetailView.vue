@@ -1,5 +1,18 @@
 <template>
-  <div class="bg-barber-black min-h-screen text-white">
+  <div class="bg-barber-black min-h-screen text-white relative">
+    <!-- Barra de carga global discreta -->
+    <transition name="fade">
+      <div v-if="isLoading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
+        <div 
+          class="h-full animate-progress-bar transition-colors duration-500"
+          :class="{
+            'bg-neon-green shadow-[0_0_10px_#39FF14]': activeDepartment === 'men',
+            'bg-cyan-400 shadow-[0_0_10px_#22d3ee]': activeDepartment === 'merch',
+            'bg-pink-500 shadow-[0_0_10px_#ec4899]': activeDepartment === 'women'
+          }"
+        ></div>
+      </div>
+    </transition>
 
     <!-- Header con back -->
     <div class="sticky top-0 z-30 bg-barber-black/80 backdrop-blur-md border-b border-white/10">
@@ -16,14 +29,18 @@
       </div>
     </div>
 
-    <!-- Estado de carga -->
-    <div v-if="isLoading" class="flex flex-col items-center justify-center min-h-[60vh]">
+    <!-- Estado de carga (Spinner legacy removido, ahora usa Neon Bar + Opacidad) -->
+    <div v-if="isLoading && !product" class="flex flex-col items-center justify-center min-h-[60vh]">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-neon-green mb-4"></div>
       <p class="text-gray-400 font-medium">Cargando detalles...</p>
     </div>
 
     <!-- Contenido principal -->
-    <div v-else-if="product" class="max-w-5xl mx-auto px-4 py-6 md:py-10 pb-56">
+    <div 
+      v-else-if="product" 
+      class="max-w-5xl mx-auto px-4 py-6 md:py-10 pb-56 transition-opacity duration-500"
+      :class="{'opacity-40 pointer-events-none': isLoading}"
+    >
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-start">
 
         <!-- Galería de imágenes (Modo Carrusel para móvil) -->
@@ -240,6 +257,7 @@ const route = useRoute()
 const router = useRouter()
 const { addToCart } = useCart()
 const products = ref([])
+const apiCategories = ref([])
 const isLoading = ref(true)
 
 async function fetchProducts() {
@@ -249,6 +267,12 @@ async function fetchProducts() {
     const data = await res.json()
     if (data.ok) {
       products.value = data.products
+    }
+
+    const resCat = await fetch('/api/get_categories')
+    const dataCat = await resCat.json()
+    if (dataCat.ok) {
+      apiCategories.value = dataCat.categories
     }
   } catch (err) {
     console.error('Error cargando detalles del producto:', err)
@@ -264,6 +288,12 @@ onMounted(() => {
 
 // Producto reactivo basado en el ID de la URL
 const product = computed(() => products.value.find(p => p.id === Number(route.params.id)))
+
+const activeDepartment = computed(() => {
+  if (!product.value || apiCategories.value.length === 0) return 'men'
+  const cat = apiCategories.value.find(c => c.id === product.value.category)
+  return cat ? cat.department : 'men'
+})
 
 // SEO: Actualizar título dinámicamente
 watch(product, (newProd) => {
