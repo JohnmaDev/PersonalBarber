@@ -773,12 +773,17 @@ export default {
       }
     },
     abrirCloudinaryWidget(tipo, index = null) {
+      let folderPath = 'personalbarber_assets';
+      if (tipo === 'product') folderPath = 'personalbarber_assets/products';
+      else if (tipo === 'category') folderPath = 'personalbarber_assets/categories';
+      else if (tipo === 'cut') folderPath = 'personalbarber_assets/customers';
+
       window.cloudinary.createUploadWidget({
         cloudName: 'dtgjwuclv',
         uploadPreset: 'imagesPersonalBarber',
         sources: ['local', 'camera', 'url'],
         multiple: false,
-        folder: 'personalbarber_assets'
+        folder: folderPath
       }, (error, result) => {
         if (!error && result && result.event === "success") {
           const imageUrl = result.info.secure_url;
