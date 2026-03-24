@@ -57,7 +57,7 @@
             <!-- Info -->
             <div class="flex-1 min-w-0">
               <p class="text-white text-xs font-bold leading-tight truncate">{{ item.name }}</p>
-              <p class="text-neon-green text-xs font-bold mt-1">{{ item.price }}</p>
+              <p class="text-neon-green text-xs font-bold mt-1">{{ formatPrice(item.price) }}</p>
               <!-- Selector de cantidad -->
               <div class="flex items-center gap-2 mt-2">
                 <button
