@@ -52,7 +52,7 @@
           >
             <!-- Imagen -->
             <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-white/5">
-              <img :src="item.image" :alt="item.name" class="w-full h-full object-cover" loading="lazy" />
+              <img :src="optimizeImage(item.image)" :alt="item.name" class="w-full h-full object-cover" loading="lazy" />
             </div>
             <!-- Info -->
             <div class="flex-1 min-w-0">
@@ -116,6 +116,7 @@
 <script setup>
 /* global defineProps, defineEmits */
 import { useCart } from '@/composables/useCart.js'
+import { optimizeImage } from '@/utils/image.js'
 
 defineProps({ isOpen: Boolean })
 defineEmits(['close'])

@@ -56,7 +56,7 @@
               class="w-full h-full flex-shrink-0 snap-center flex items-center justify-center p-2"
             >
               <img
-                :src="img"
+                :src="optimizeImage(img)"
                 :alt="product.name + ' ' + idx"
                 class="w-full h-full object-contain sm:object-cover rounded-2xl"
                 loading="lazy"
@@ -87,7 +87,7 @@
               class="w-16 h-16 rounded-xl overflow-hidden border-2 transition-all shrink-0"
               :class="activeIdx === idx ? 'border-neon-green scale-105' : 'border-transparent opacity-60 hover:opacity-100'"
             >
-              <img :src="img" :alt="product.name + ' ' + idx" class="w-full h-full object-cover" />
+              <img :src="optimizeImage(img)" :alt="product.name + ' ' + idx" class="w-full h-full object-cover" />
             </button>
           </div>
         </div>
@@ -211,7 +211,7 @@
             class="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-neon-green/50 transition-all duration-300"
           >
             <div class="aspect-square overflow-hidden bg-white/5">
-              <img :src="item.images && item.images.length > 0 ? item.images[0] : '/placeholder-product.webp'" :alt="item.name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              <img :src="optimizeImage(item.images && item.images.length > 0 ? item.images[0] : '/placeholder-product.webp')" :alt="item.name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
             </div>
             <div class="p-4">
               <h4 class="text-xs font-bold text-white group-hover:text-neon-green transition-colors line-clamp-1">{{ item.name }}</h4>
@@ -252,6 +252,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { categories } from '@/data/products.js'
 import { useCart } from '@/composables/useCart.js'
 import { formatPrice } from '@/utils/format.js'
+import { optimizeImage } from '@/utils/image.js'
 
 const route = useRoute()
 const router = useRouter()

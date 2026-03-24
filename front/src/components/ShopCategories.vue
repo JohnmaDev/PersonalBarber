@@ -76,7 +76,7 @@
         <!-- Fondo: Imagen desenfocada para activas, Glow sutil para próximas -->
         <div v-if="!cat.comingSoon && cat.cover" class="absolute inset-0 z-0">
           <img
-            :src="cat.cover"
+            :src="optimizeImage(cat.cover)"
             :alt="cat.label"
             class="w-full h-full object-cover opacity-20 blur-sm grayscale group-hover:opacity-40 group-hover:blur-none group-hover:grayscale-0 transition-all duration-700"
           />
@@ -232,6 +232,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { optimizeImage } from '@/utils/image.js'
 
 const products = ref([])
 const categories = ref([])

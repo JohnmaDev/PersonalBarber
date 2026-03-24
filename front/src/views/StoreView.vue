@@ -124,14 +124,14 @@
           ]"
         >
           <!-- Imagen – clic navega al detalle -->
-          <div class="aspect-square overflow-hidden bg-white/5 cursor-pointer" @click="goToDetail(product)">
-            <img
-              :src="product.images && product.images.length > 0 ? product.images[0] : '/placeholder-product.webp'"
-              :alt="product.name"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              loading="lazy"
-            />
-          </div>
+            <div class="aspect-square overflow-hidden bg-white/5 relative">
+              <img 
+                :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image)" 
+                :alt="product.name" 
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                loading="lazy" 
+              />
+            </div>
 
           <!-- Info -->
           <div class="p-4 flex flex-col flex-grow justify-between">
@@ -195,9 +195,9 @@
 
 <script>
 import { ref, computed, onMounted, watch, onActivated } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import { useCart } from '@/composables/useCart.js'
 import { formatPrice } from '@/utils/format.js'
+import { optimizeImage } from '@/utils/image.js'
 
 export default {
   name: 'StoreView',
@@ -355,10 +355,22 @@ export default {
       setTimeout(() => { justAdded.value = null }, 1500)
     }
 
+    // Hacemos el setup retornando todo
     return {
-      products, categories, isLoading, errorMessage, filters, activeFilter, activeDepartment,
-      justAdded, isFirstVisit, filteredProducts, activeFilterLabel,
-      goToDetail, quickAddToCart, formatPrice, fetchData
+      products,
+      categories,
+      isLoading,
+      errorMessage,
+      activeFilter,
+      activeDepartment,
+      filters,
+      filteredProducts,
+      activeFilterLabel,
+      formatPrice,
+      optimizeImage,
+      quickAddToCart,
+      justAdded,
+      fetchData
     }
   }
 }
