@@ -14,38 +14,64 @@
     </div>
 
     <!-- Grid: 2 cols en móvil, 4 en desktop -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full">
+    <div v-if="!loading" class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full px-2 sm:px-0">
       <div
         v-for="cut in cuts"
         :key="cut.id"
-        class="group relative overflow-hidden rounded-2xl border border-white/10 transition-colors duration-700"
+        class="group relative overflow-hidden rounded-2xl border border-white/10 transition-colors duration-700 bg-zinc-900/50"
       >
         <!-- Imagen con aspect-ratio fijo -->
         <div class="aspect-[3/4] w-full overflow-hidden">
           <img
-            :src="cut.image"
-            :alt="cut.alt"
+            :src="optimizeImage(cut.image)"
+            :alt="cut.alt || cut.style"
             class="w-full h-full object-cover object-top transition-transform duration-1000 group-hover:scale-110"
             loading="lazy"
           />
         </div>
 
         <!-- Overlay - Unificado en una sola transición de opacidad -->
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
-          <span class="text-white font-bold tracking-widest text-[10px] uppercase bg-white/20 px-3 py-1.5 rounded-full border border-white/10">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-3 sm:p-4">
+          <span class="text-white font-bold tracking-widest text-[9px] sm:text-[10px] uppercase bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
             {{ cut.style }}
           </span>
         </div>
       </div>
     </div>
+
+    <!-- Skeleton / Loading State -->
+    <div v-else class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full">
+      <div v-for="i in 4" :key="i" class="aspect-[3/4] w-full rounded-2xl bg-zinc-900 animate-pulse border border-white/5"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div v-if="!loading && cuts.length === 0" class="text-center py-20 bg-zinc-900/30 rounded-3xl border border-dashed border-white/10">
+      <i class="fas fa-camera-retro text-3xl text-zinc-700 mb-4"></i>
+      <p class="text-zinc-500 font-bold italic">Próximamente más trabajos...</p>
+    </div>
   </section>
 </template>
 
 <script setup>
-const cuts = [
-  { id: 1, image: '/customers/BuzzCut_HighFade_Limpio_01.webp',      alt: 'Buzz Cut High Fade limpio',          style: 'Buzz Cut · High Fade' },
-  { id: 2, image: '/customers/CropTop_MidFade_Lineas_01.webp',       alt: 'Crop Top con Mid Fade y líneas',     style: 'Crop Top · Mid Fade' },
-  { id: 3, image: '/customers/SidePart_LowFade_Barba_Spa_01.webp',   alt: 'Side Part Low Fade con barba',       style: 'Side Part · Barba' },
-  { id: 4, image: '/customers/SlickBack_TaperBajo_Brillo_01.webp',   alt: 'Slick Back Taper bajo con brillo',   style: 'Slick Back · Taper' },
-]
+import { ref, onMounted } from 'vue'
+import { optimizeImage } from '@/utils/image.js'
+
+const cuts = ref([])
+const loading = ref(true)
+
+const fetchCuts = async () => {
+  try {
+    const res = await fetch('/api/get_cuts')
+    const data = await res.json()
+    if (data.ok) {
+      cuts.value = data.cuts
+    }
+  } catch (e) {
+    console.error('Error fetching cuts:', e)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(fetchCuts)
 </script>
