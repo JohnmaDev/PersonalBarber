@@ -195,6 +195,7 @@
 
 <script>
 import { ref, computed, onMounted, watch, onActivated } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useCart } from '@/composables/useCart.js'
 import { formatPrice } from '@/utils/format.js'
 import { optimizeImage } from '@/utils/image.js'
@@ -368,6 +369,7 @@ export default {
       activeFilterLabel,
       formatPrice,
       optimizeImage,
+      goToDetail,
       quickAddToCart,
       justAdded,
       fetchData

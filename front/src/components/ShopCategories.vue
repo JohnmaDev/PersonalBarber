@@ -232,7 +232,6 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { optimizeImage } from '@/utils/image.js'
 
 const products = ref([])
