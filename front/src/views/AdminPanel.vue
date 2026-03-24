@@ -245,14 +245,20 @@
 
                 <div class="space-y-3">
                   <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Imágenes (URLs)</label>
-                  <div v-for="(img, index) in prodForm.images" :key="index" class="flex gap-2">
-                    <input v-model="prodForm.images[index]" type="text" class="input-modern flex-1" placeholder="/products/ejemplo.webp">
-                    <button @click="abrirCloudinaryWidget('product', index)" class="px-3 bg-zinc-800 rounded-xl text-zinc-400 hover:text-neon-green hover:bg-zinc-700 transition" title="Subir Imagen">
-                      <i class="fas fa-cloud-upload-alt"></i>
-                    </button>
-                    <button @click="prodForm.images.splice(index, 1)" class="p-2 text-zinc-500 hover:text-red-400">
-                      <i class="fas fa-minus-circle"></i>
-                    </button>
+                  <div v-for="(img, index) in prodForm.images" :key="index" class="space-y-2">
+                    <div class="flex gap-2">
+                      <input v-model="prodForm.images[index]" type="text" class="input-modern flex-1" placeholder="/products/ejemplo.webp">
+                      <button @click="abrirCloudinaryWidget('product', index)" class="px-3 bg-zinc-800 rounded-xl text-zinc-400 hover:text-neon-green hover:bg-zinc-700 transition" title="Subir Imagen">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                      </button>
+                      <button v-if="prodForm.images.length > 1" @click="prodForm.images.splice(index, 1)" class="p-2 text-zinc-500 hover:text-red-400">
+                        <i class="fas fa-minus-circle"></i>
+                      </button>
+                    </div>
+                    <!-- Preview de imagen del producto -->
+                    <div v-if="img && isImageUrl(img)" class="mt-1 pl-1 fade-in">
+                      <img :src="optimizeImage(img)" class="w-20 h-20 object-cover rounded-xl border border-zinc-800 shadow-lg" alt="Preview">
+                    </div>
                   </div>
                   <button @click="prodForm.images.push('')" class="text-xs font-bold text-neon-green hover:underline flex items-center gap-2 pl-1">
                     <i class="fas fa-plus-circle"></i> Añadir otra imagen
@@ -366,6 +372,10 @@
                       <i class="fas fa-cloud-upload-alt"></i>
                     </button>
                   </div>
+                  <!-- Preview de portada de categoría -->
+                  <div v-if="catForm.cover && isImageUrl(catForm.cover)" class="mt-2 pl-1 fade-in">
+                    <img :src="optimizeImage(catForm.cover)" class="w-full h-32 object-cover rounded-2xl border border-zinc-800 shadow-lg mt-1" alt="Preview">
+                  </div>
                 </div>
 
                 <div class="space-y-1">
@@ -422,6 +432,7 @@
 
 <script>
 import { formatPrice } from '@/utils/format.js'
+import { optimizeImage } from '@/utils/image.js'
 
 // El PIN ahora se maneja vía variables de entorno VUE_APP_ADMIN_PIN
 
@@ -510,6 +521,7 @@ export default {
   },
   methods: {
     formatPrice,
+    optimizeImage,
     verificarPin() {
       if (this.pinIngresado === process.env.VUE_APP_ADMIN_PIN) {
         this.autenticado = true;
