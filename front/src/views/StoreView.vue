@@ -124,7 +124,10 @@
           ]"
         >
           <!-- Imagen – clic navega al detalle -->
-            <div class="aspect-square overflow-hidden bg-white/5 relative">
+          <div 
+            class="aspect-square overflow-hidden bg-white/5 relative cursor-pointer"
+            @click="goToDetail(product)"
+          >
               <img 
                 :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image)" 
                 :alt="product.name" 
