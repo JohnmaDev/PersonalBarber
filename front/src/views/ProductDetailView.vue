@@ -249,7 +249,6 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { categories } from '@/data/products.js'
 import { useCart } from '@/composables/useCart.js'
 import { formatPrice } from '@/utils/format.js'
 import { optimizeImage } from '@/utils/image.js'
@@ -354,10 +353,10 @@ const recommendedProducts = computed(() => {
   return [...sameCategory, ...otherCategories]
 })
 
-const availableCategories = computed(() => categories.filter(c => c.id !== 'all'))
+const availableCategories = computed(() => apiCategories.value.filter(c => c.id !== 'all'))
 
 function getCategoryLabel(catId) {
-  return categories.find(c => c.id === catId)?.label ?? catId
+  return apiCategories.value.find(c => c.id === catId)?.label ?? catId
 }
 
 function handleAddToCart() {
