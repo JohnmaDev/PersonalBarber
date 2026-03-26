@@ -132,8 +132,16 @@
                 :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image)" 
                 :alt="product.name" 
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                :class="{'grayscale opacity-50': product.stock <= 0}"
                 loading="lazy" 
               />
+              <!-- Stock Badges -->
+              <div v-if="product.stock <= 0" class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                <span class="bg-red-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">Agotado</span>
+              </div>
+              <div v-else-if="product.stock <= 3" class="absolute top-2 right-2">
+                <span class="bg-yellow-400 text-black text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter shadow-lg animate-pulse">¡Últimas {{ product.stock }}!</span>
+              </div>
             </div>
 
           <!-- Info -->
@@ -159,6 +167,7 @@
               }">{{ formatPrice(product.price) }}</span>
               <!-- Botón agregar al carrito rápido -->
               <button
+                v-if="product.stock > 0"
                 @click.stop="quickAddToCart(product)"
                 :class="[
                   'w-8 h-8 rounded-full glass flex items-center justify-center transition-all duration-300 text-sm text-white hover:text-black',
@@ -169,6 +178,13 @@
                 :aria-label="'Agregar ' + product.name + ' al carrito'"
               >
                 <i :class="justAdded === product.id ? 'fas fa-check' : 'fas fa-plus'"></i>
+              </button>
+              <button
+                v-else
+                disabled
+                class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-700 cursor-not-allowed"
+              >
+                <i class="fas fa-times"></i>
               </button>
             </div>
           </div>

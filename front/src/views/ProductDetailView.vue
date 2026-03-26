@@ -133,7 +133,9 @@
             </div>
             <div class="flex justify-between text-sm">
               <span class="text-gray-500">Disponibilidad</span>
-              <span class="text-green-400 font-semibold">✓ En stock</span>
+              <span v-if="product.stock > 3" class="text-green-400 font-semibold italic">✓ En stock</span>
+              <span v-else-if="product.stock > 0" class="text-yellow-400 font-semibold animate-pulse italic">⚡ ¡Solo quedan {{ product.stock }} disponibles!</span>
+              <span v-else class="text-red-500 font-bold uppercase tracking-tight">✗ Agotado</span>
             </div>
           </div>
 
@@ -157,14 +159,16 @@
           <div class="flex flex-col sm:flex-row gap-3">
             <button
               @click="handleAddToCart"
-              class="flex-1 py-4 glass border border-neon-green/50 hover:border-neon-green text-neon-green font-black rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+              :disabled="product.stock <= 0"
+              class="flex-1 py-4 glass border border-neon-green/50 hover:border-neon-green text-neon-green font-black rounded-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-30 disabled:border-white/10 disabled:text-gray-500 disabled:cursor-not-allowed"
             >
               <i class="fas fa-shopping-bag"></i>
-              Agregar al Carrito
+              {{ product.stock <= 0 ? 'Sin Stock' : 'Agregar al Carrito' }}
             </button>
             <button
               @click="handleBuyNow"
-              class="flex-1 py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black rounded-xl transition-colors duration-300 flex items-center justify-center gap-2"
+              :disabled="product.stock <= 0"
+              class="flex-1 py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 disabled:bg-zinc-800 disabled:text-zinc-600 disabled:cursor-not-allowed"
             >
               <i class="fas fa-bolt"></i>
               Comprar Ahora
