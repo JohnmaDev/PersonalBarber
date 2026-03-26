@@ -369,7 +369,7 @@ export default {
       router.push({ name: 'ProductDetail', params: { id: product.id } })
     }
 
-    const handleAddToCart = (product) => {
+    const quickAddToCart = (product) => {
       const res = addToCart(product)
       if (res.success) {
         justAdded.value = product.id
