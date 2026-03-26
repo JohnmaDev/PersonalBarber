@@ -210,22 +210,26 @@ export default {
     }
   },
   methods: {
-    async cargarSlotsOcupados() {
+    async cargarSlotsOcupados(fecha = null) {
       this.isLoadingSlots = true;
+      const targetDate = fecha || this.selectedDate;
+      if (!targetDate) {
+        this.isLoadingSlots = false;
+        return;
+      }
       try {
-        // Consultamos nuestra propia API en Go que lee de MongoDB
-        const res = await fetch('/.netlify/functions/list_reservations');
+        // Usamos el nuevo endpoint público get_slots: devuelve solo horas, sin datos privados
+        const res = await fetch(`/api/get_slots?date=${targetDate}`);
         const data = await res.json();
-        
         if (data.ok) {
-          // Adaptamos los nombres de campos si es necesario (ya coinciden en el nuevo backend)
-          this.bookedSlots = data.reservas.map(r => ({ 
-            fecha: r.fechaRaw, 
-            hora: r.horaRaw 
-          }));
+          // Merge: mantener slots de otras fechas ya cargadas, reemplazar los de targetDate
+          this.bookedSlots = [
+            ...this.bookedSlots.filter(s => s.fecha !== targetDate),
+            ...(data.horas || []).map(h => ({ fecha: targetDate, hora: h }))
+          ];
         }
       } catch (e) {
-        console.warn('No se pudo cargar disponibilidad de MongoDB:', e);
+        console.warn('No se pudo cargar disponibilidad:', e);
       } finally {
         this.isLoadingSlots = false;
       }
@@ -291,8 +295,9 @@ export default {
     },
     selectDate(date) {
       this.selectedDate = date;
-      // Al cambiar de fecha, reseteamos la hora para que el usuario elija de nuevo
       this.selectedTime = null;
+      // Cargar slots ocupados para la fecha seleccionada
+      this.cargarSlotsOcupados(date);
     },
     async submitForm() {
       if(this.isSubmitting || !this.isFormValid) return;
@@ -326,11 +331,15 @@ export default {
         });
 
         if (response.ok) {
-          // Si la función en Go responde bien, mostramos éxito y redirigimos en 3 seg
           this.success = true;
           setTimeout(() => {
             this.goToProducts();
           }, 3000);
+        } else if (response.status === 409) {
+          // Turno ya reservado: recargar slots y mostrar alerta amigable
+          await this.cargarSlotsOcupados(this.selectedDate);
+          this.selectedTime = null;
+          alert('⚠️ Este turno ya fue reservado mientras completabas el formulario. Por favor elige otro horario.');
         } else {
           const errorData = await response.json();
           throw new Error(errorData.error || 'Error en el servidor');
