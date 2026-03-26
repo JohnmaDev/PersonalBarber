@@ -22,6 +22,7 @@ type Product struct {
 	Description string   `json:"description" bson:"description"`
 	Price       int64    `json:"price" bson:"price"`
 	Images      []string `json:"images" bson:"images"`
+	Stock       int      `json:"stock" bson:"stock"`
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -38,7 +39,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	if adminPin == "" || providedToken != adminPin {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusUnauthorized,
-			Body:       fmt.Sprintf(`{"error": "Unauthorized", "details": "Token mismatch or PIN not set"}`),
+			Body:       `{"error": "Unauthorized", "details": "Token mismatch or PIN not set"}`,
 		}, nil
 	}
 

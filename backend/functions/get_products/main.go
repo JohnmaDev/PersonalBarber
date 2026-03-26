@@ -25,7 +25,8 @@ type Product struct {
 	Description string   `json:"description" bson:"description"`
 	Price       int64    `json:"price" bson:"price"`
 	Images      []string `json:"images" bson:"images"`
-	Image       string   `json:"image,omitempty" bson:"image,omitempty"` // For backward compatibility
+	Image       string   `json:"image,omitempty" bson:"image,omitempty"`
+	Stock       int      `json:"stock" bson:"stock"`
 }
 
 // Para manejar la migración de datos viejos (strings) a nuevos (ints)
@@ -38,6 +39,7 @@ type flexibleProduct struct {
 	Price       interface{} `bson:"price"`
 	Images      []string    `bson:"images"`
 	Image       string      `bson:"image,omitempty"`
+	Stock       int         `bson:"stock"`
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -89,6 +91,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 			Description: rp.Description,
 			Images:      rp.Images,
 			Image:       rp.Image,
+			Stock:       rp.Stock,
 		}
 
 		// Parse de precio flexible

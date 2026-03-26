@@ -200,6 +200,10 @@
               <div class="flex items-center gap-2 mt-0.5">
                 <span class="text-[9px] font-black text-neon-green uppercase px-1.5 py-0.5 bg-neon-green/10 rounded border border-neon-green/20">{{ p.category }}</span>
                 <span class="text-zinc-500 text-[10px] font-bold">{{ formatPrice(p.price) }}</span>
+                <span 
+                  class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded border"
+                  :class="p.stock > 3 ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20' : p.stock > 0 ? 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20' : 'text-red-400 bg-red-400/10 border-red-400/20'"
+                >{{ p.stock > 0 ? `Stock: ${p.stock}` : 'Agotado' }}</span>
               </div>
             </div>
             <div class="flex gap-2">
@@ -275,6 +279,11 @@
                 <div class="space-y-1">
                   <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Descripción</label>
                   <textarea v-model="prodForm.description" rows="3" class="input-modern resize-none" placeholder="Breve descripción del producto..."></textarea>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Stock disponible</label>
+                  <input v-model.number="prodForm.stock" type="number" min="0" class="input-modern" placeholder="10">
                 </div>
               </div>
 
