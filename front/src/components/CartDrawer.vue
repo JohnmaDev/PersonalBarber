@@ -120,7 +120,7 @@ import { optimizeImage } from '@/utils/image.js'
 defineProps({ isOpen: Boolean })
 defineEmits(['close'])
 
-const { cartItems, cartCount, cartTotalFormatted, removeFromCart, formatPrice, parsePrice } = useCart()
+const { cartItems, cartCount, cartTotalFormatted, removeFromCart, updateQuantity, formatPrice, parsePrice } = useCart()
 
 const handleUpdateQuantity = (productId, newQty) => {
   const res = updateQuantity(productId, newQty)
