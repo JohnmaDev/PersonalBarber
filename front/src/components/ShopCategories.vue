@@ -76,7 +76,7 @@
         <!-- Fondo: Imagen desenfocada para activas, Glow sutil para próximas -->
         <div v-if="!cat.comingSoon && cat.cover" class="absolute inset-0 z-0">
           <img
-            :src="optimizeImage(cat.cover)"
+            :src="optimizeImage(cat.cover, 600)"
             :alt="cat.label"
             class="w-full h-full object-cover opacity-20 blur-sm grayscale group-hover:opacity-40 group-hover:blur-none group-hover:grayscale-0 transition-all duration-700"
           />

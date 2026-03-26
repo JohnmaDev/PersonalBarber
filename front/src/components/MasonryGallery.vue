@@ -23,7 +23,7 @@
         <!-- Imagen con aspect-ratio fijo -->
         <div class="aspect-[3/4] w-full overflow-hidden">
           <img
-            :src="optimizeImage(cut.image)"
+            :src="optimizeImage(cut.image, 400)"
             :alt="cut.alt || cut.style"
             class="w-full h-full object-cover object-top transition-transform duration-1000 group-hover:scale-110"
             loading="lazy"

@@ -129,7 +129,7 @@
             @click="goToDetail(product)"
           >
               <img 
-                :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image)" 
+                :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image, 400)" 
                 :alt="product.name" 
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                 :class="{'grayscale opacity-50': product.stock <= 0}"

@@ -51,7 +51,7 @@
             class="flex gap-3 bg-white/5 rounded-2xl p-3 border border-white/10"
           >
             <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-white/5">
-              <img :src="optimizeImage(item.images?.[0] || item.image)" :alt="item.name" class="w-full h-full object-cover" loading="lazy" />
+              <img :src="optimizeImage(item.images?.[0] || item.image, 100)" :alt="item.name" class="w-full h-full object-cover" loading="lazy" />
             </div>
             <!-- Info -->
             <div class="flex-1 min-w-0">

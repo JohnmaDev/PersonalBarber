@@ -155,7 +155,7 @@
             <div class="space-y-3 mb-5">
               <div v-for="item in cartItems" :key="item.id" class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
-                  <img :src="optimizeImage(item.images?.[0] || item.image)" :alt="item.name" class="w-full h-full object-cover" />
+                  <img :src="optimizeImage(item.images?.[0] || item.image, 100)" :alt="item.name" class="w-full h-full object-cover" />
                 </div>
                 <div class="flex-1 min-w-0">
                   <p class="text-white text-xs font-semibold leading-tight truncate">{{ item.name }}</p>
