@@ -109,8 +109,8 @@
                  class="w-10 h-10 sm:w-12 sm:h-12 transition-all duration-500"
                  :style="{ 
                    backgroundColor: cat.accent, 
-                   mask: `url('${cat.icon}') no-repeat center / contain`,
-                   WebkitMask: `url('${cat.icon}') no-repeat center / contain`
+                   mask: `url('${cat.icon.replace('.png', '.webp')}') no-repeat center / contain`,
+                   WebkitMask: `url('${cat.icon.replace('.png', '.webp')}') no-repeat center / contain`
                  }">
             </div>
             <!-- Icono FontAwesome -->

@@ -3,14 +3,32 @@ import { reactive, computed } from 'vue'
 // Estado global del carrito — reactivo y compartido entre todos los componentes
 const cartItems = reactive([])
 
-// Agregar producto (si ya existe, incrementa cantidad)
+// Agregar producto (si ya existe, incrementa cantidad validando stock)
 function addToCart(product, qty = 1) {
+  const stock = Number(product.stock) || 0
   const existing = cartItems.find(i => i.id === product.id)
+  
   if (existing) {
+    if (existing.qty + qty > stock) {
+      return { 
+        success: false, 
+        message: `Solo quedan ${stock} unidades disponibles de este producto.`,
+        currentQty: existing.qty
+      }
+    }
     existing.qty += qty
   } else {
-    cartItems.push({ ...product, qty })
+    if (qty > stock) {
+      return { 
+        success: false, 
+        message: `Solo quedan ${stock} unidades disponibles de este producto.`,
+        currentQty: 0
+      }
+    }
+    // Guardamos el stock en el item para validaciones posteriores
+    cartItems.push({ ...product, qty, stock })
   }
+  return { success: true }
 }
 
 // Eliminar un producto del carrito
@@ -19,15 +37,27 @@ function removeFromCart(productId) {
   if (idx !== -1) cartItems.splice(idx, 1)
 }
 
-// Actualizar cantidad directamente
+// Actualizar cantidad directamente (validando stock)
 function updateQuantity(productId, qty) {
   const item = cartItems.find(i => i.id === productId)
   if (!item) return
+  
   if (qty <= 0) {
     removeFromCart(productId)
-  } else {
-    item.qty = qty
+    return { success: true }
   }
+
+  const stock = Number(item.stock) || 0
+  if (qty > stock) {
+    return { 
+      success: false, 
+      message: `El stock máximo disponible es ${stock}.`,
+      maxStock: stock
+    }
+  }
+
+  item.qty = qty
+  return { success: true }
 }
 
 // Vaciar el carrito

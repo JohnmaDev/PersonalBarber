@@ -369,10 +369,14 @@ export default {
       router.push({ name: 'ProductDetail', params: { id: product.id } })
     }
 
-    function quickAddToCart(product) {
-      addToCart(product, 1)
-      justAdded.value = product.id
-      setTimeout(() => { justAdded.value = null }, 1500)
+    const handleAddToCart = (product) => {
+      const res = addToCart(product)
+      if (res.success) {
+        justAdded.value = product.id
+        setTimeout(() => { justAdded.value = null }, 2000)
+      } else {
+        alert(res.message)
+      }
     }
 
     // Hacemos el setup retornando todo

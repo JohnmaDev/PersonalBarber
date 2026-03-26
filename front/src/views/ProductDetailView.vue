@@ -132,10 +132,10 @@
               <span class="text-white font-semibold capitalize">{{ getCategoryLabel(product.category) }}</span>
             </div>
             <div class="flex justify-between text-sm">
-              <span class="text-gray-500">Disponibilidad</span>
-              <span v-if="product.stock > 3" class="text-green-400 font-semibold italic">✓ En stock</span>
-              <span v-else-if="product.stock > 0" class="text-yellow-400 font-semibold animate-pulse italic">⚡ ¡Solo quedan {{ product.stock }} disponibles!</span>
-              <span v-else class="text-red-500 font-bold uppercase tracking-tight">✗ Agotado</span>
+              <span class="text-gray-500 font-bold">Estado</span>
+              <span v-if="product.stock > 3" class="text-neon-green font-black italic uppercase tracking-tighter">✓ Disponible</span>
+              <span v-else-if="product.stock > 0" class="text-amber-500 font-black animate-pulse italic uppercase tracking-tighter">⚡ Solo quedan {{ product.stock }} en stock</span>
+              <span v-else class="text-red-500 font-black uppercase tracking-widest bg-red-500/10 px-2 rounded">✗ Agotado</span>
             </div>
           </div>
 
@@ -149,8 +149,9 @@
               >−</button>
               <span class="text-white font-bold w-6 text-center">{{ qty }}</span>
               <button
-                @click="qty++"
-                class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors text-white font-bold"
+                @click="qty < product.stock ? qty++ : null"
+                :disabled="qty >= product.stock"
+                class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors text-white font-bold disabled:opacity-30 disabled:cursor-not-allowed"
               >+</button>
             </div>
           </div>
@@ -363,12 +364,15 @@ function getCategoryLabel(catId) {
   return apiCategories.value.find(c => c.id === catId)?.label ?? catId
 }
 
-function handleAddToCart() {
-  if (!product.value) return
-  addToCart(product.value, qty.value)
-  showConfirm.value = true
-  setTimeout(() => { showConfirm.value = false }, 2500)
-}
+const handleAddToCart = () => {
+      const result = addToCart(product.value, qty.value)
+      if (result.success) {
+        showConfirm.value = true
+        setTimeout(() => showConfirm.value = false, 3000)
+      } else {
+        alert(result.message)
+      }
+    }
 
 function handleBuyNow() {
   if (!product.value) return
