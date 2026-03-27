@@ -333,7 +333,7 @@ export default {
     // SEO: Título dinámico por categoría
     watch(activeFilter, (newFilter) => {
       const label = filters.value.find(f => f.id === newFilter)?.label || 'Tienda';
-      document.title = `${label} | PersonalBarber`;
+      document.title = `${label} | PersonalBarber Medellín`;
     }, { immediate: true })
 
     onActivated(() => {

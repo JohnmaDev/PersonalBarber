@@ -201,7 +201,7 @@ export default {
     }
   },
   mounted() {
-    document.title = 'Reservar Cita | PersonalBarber'
+    document.title = 'Reservar Cita | PersonalBarber Medellín'
     this.generateDays();
     this.cargarSlotsOcupados();
 

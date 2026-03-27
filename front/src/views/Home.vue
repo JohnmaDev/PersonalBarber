@@ -12,7 +12,7 @@
 <script setup>
 import { onMounted } from 'vue'
 onMounted(() => {
-  document.title = 'PersonalBarber | Barbería Premium & Reservas'
+  document.title = 'PersonalBarber — Barbería Premium en Medellín | Reserva tu Cita Online'
 })
 </script>
 
