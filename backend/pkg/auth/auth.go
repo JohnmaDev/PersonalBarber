@@ -40,10 +40,17 @@ func VerifyTokenWithRateLimit(ctx context.Context, request events.APIGatewayProx
 
 	err := collection.FindOne(ctx, bson.M{"ip": ip}).Decode(&record)
 
-	// Si tiene 5 o más intentos, bloquear permanentemente. El bot se queda colgado 5 seg.
+	// Si tiene 5 o más intentos fallidos
 	if err == nil && record.Attempts >= 5 {
-		time.Sleep(5 * time.Second)
-		return false, fmt.Errorf("IP bloqueada permanentemente por seguridad")
+		// Calcular si ya pasaron 30 minutos desde el bloqueo
+		if !record.BlockedAt.IsZero() && time.Since(record.BlockedAt) < 30*time.Minute {
+			time.Sleep(5 * time.Second) // Tarpit para desesperar bots
+			return false, fmt.Errorf("IP bloqueada temporalmente por seguridad. Inténtalo de nuevo en unos minutos.")
+		}
+		
+		// Si ya pasó el tiempo, reseteamos el contador para permitir nuevos intentos
+		collection.DeleteOne(ctx, bson.M{"ip": ip})
+		record.Attempts = 0
 	}
 
 	providedToken := request.Headers["Authorization"]
