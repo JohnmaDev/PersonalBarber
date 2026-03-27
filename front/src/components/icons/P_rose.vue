@@ -1,13 +1,17 @@
 <template>
     <div class="flex flex-col items-center w-full">
-        <!-- Logo con un hover más suave y tamaño consistente -->
         <img 
             src="./PersonalBarber.svg" 
             class="w-24 h-24 sm:w-32 sm:h-32 opacity-75 hover:opacity-100 transition-all duration-700 hover:scale-110" 
-            alt="P_Rose"
+            alt="PersonalBarber — Barbería Premium Medellín"
         />
         
         <footer class="text-center text-[10px] sm:text-xs text-gray-500 py-10 tracking-widest uppercase">
+            <!-- NAP: Name + Address + Phone — señal de SEO local -->
+            <address class="not-italic flex flex-col items-center gap-1 mb-4 text-gray-600 text-[10px]">
+              <span>📍 La 4 Sur · Medellín, Antioquia, Colombia</span>
+              <a href="tel:+573045840264" class="hover:text-neon-green transition duration-300">📞 +57 304 584 0264</a>
+            </address>
             <p class="flex flex-col sm:flex-row items-center justify-center gap-2">
               <span class="opacity-50">
                 &lt;/&gt; 2026 — Built with ❤️ by

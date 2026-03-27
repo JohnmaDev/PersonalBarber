@@ -57,8 +57,10 @@
             <img src="@/assets/profile_andres.webp" alt="Andrés Hernández" class="w-full h-full object-cover rounded-[22px]" />
           </div>
           <div class="text-center">
-            <h2 class="text-4xl lg:text-5xl font-black italic text-white tracking-wide uppercase">ANDRÉS H.</h2>
-            <p class="text-neon-green text-lg lg:text-xl font-bold tracking-widest uppercase mt-2">Master Barber</p>
+            <!-- H2 oculto visualmente para SEO — refuerza la relevancia para "barbería en Medellín" -->
+            <h2 class="sr-only">Barbería Premium en Medellín — Cortes Exclusivos y Reservas Online</h2>
+            <p class="text-4xl lg:text-5xl font-black italic text-white tracking-wide uppercase" aria-hidden="true">ANDRÉS H.</p>
+            <p class="text-neon-green text-lg lg:text-xl font-bold tracking-widest uppercase mt-2">Master Barber · Medellín</p>
           </div>
           <div class="flex gap-4 w-full justify-center">
             <a v-for="social in socials" :key="social.name" :href="social.link" target="_blank" class="w-14 h-14 lg:w-16 lg:h-16 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-neon-green hover:border-neon-green text-white hover:text-black font-bold text-2xl lg:text-3xl transition-all duration-300" :aria-label="social.name">

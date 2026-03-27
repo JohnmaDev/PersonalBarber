@@ -878,24 +878,39 @@ export default {
       else if (tipo === 'category') folderPath = 'personalbarber_assets/categories';
       else if (tipo === 'cut') folderPath = 'personalbarber_assets/customers';
 
-      window.cloudinary.createUploadWidget({
-        cloudName: 'dtgjwuclv',
-        uploadPreset: 'imagesPersonalBarber',
-        sources: ['local', 'camera', 'url'],
-        multiple: false,
-        folder: folderPath
-      }, (error, result) => {
-        if (!error && result && result.event === "success") {
-          const imageUrl = result.info.secure_url;
-          if (tipo === 'product') {
-            this.prodForm.images[index] = imageUrl;
-          } else if (tipo === 'category') {
-            this.catForm.cover = imageUrl;
-          } else if (tipo === 'cut') {
-            this.cutForm.image = imageUrl;
+      const openWidget = () => {
+        window.cloudinary.createUploadWidget({
+          cloudName: 'dtgjwuclv',
+          uploadPreset: 'imagesPersonalBarber',
+          sources: ['local', 'camera', 'url'],
+          multiple: false,
+          folder: folderPath
+        }, (error, result) => {
+          if (!error && result && result.event === "success") {
+            const imageUrl = result.info.secure_url;
+            if (tipo === 'product') {
+              this.prodForm.images[index] = imageUrl;
+            } else if (tipo === 'category') {
+              this.catForm.cover = imageUrl;
+            } else if (tipo === 'cut') {
+              this.cutForm.image = imageUrl;
+            }
           }
-        }
-      }).open();
+        }).open();
+      };
+
+      // Cargar el widget de Cloudinary de forma lazy (solo cuando se necesita)
+      if (window.cloudinary) {
+        openWidget();
+      } else {
+        window.loadCloudinaryWidget && window.loadCloudinaryWidget();
+        const poll = setInterval(() => {
+          if (window.cloudinary) {
+            clearInterval(poll);
+            openWidget();
+          }
+        }, 200);
+      }
     },
     cargarCortes() {
       this.cargando = true;
