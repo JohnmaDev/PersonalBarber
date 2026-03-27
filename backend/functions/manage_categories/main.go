@@ -12,6 +12,8 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
+
+	"github.com/JohnmaDev/PersonalBarber/backend/pkg/auth"
 )
 
 type Category struct {
@@ -27,22 +29,25 @@ type Category struct {
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	adminPin := os.Getenv("VUE_APP_ADMIN_PIN")
-	providedPin := request.QueryStringParameters["token"]
-	if providedPin == "" {
-		providedPin = request.Headers["Authorization"]
-	}
-
-	if adminPin == "" || providedPin != adminPin {
-		return events.APIGatewayProxyResponse{StatusCode: http.StatusUnauthorized, Body: `{"error": "Unauthorized"}`}, nil
-	}
-
+	// 1. Conexión a DB
 	uri := os.Getenv("MONGODB_URI")
+	if uri == "" {
+		return events.APIGatewayProxyResponse{StatusCode: 500, Body: `{"error": "Missing URI"}`}, nil
+	}
 	client, err := mongo.Connect(options.Client().ApplyURI(uri))
 	if err != nil {
 		return events.APIGatewayProxyResponse{StatusCode: 500, Body: fmt.Sprintf(`{"error": "%v"}`, err)}, nil
 	}
 	defer client.Disconnect(ctx)
+
+	// 2. Verificación de Seguridad Anti-Fuerza Bruta
+	ok, _ := auth.VerifyTokenWithRateLimit(ctx, request, client)
+	if !ok {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusUnauthorized,
+			Body:       `{"error": "Unauthorized or IP Blocked"}`,
+		}, nil
+	}
 
 	collection := client.Database("personalbarber").Collection("categories")
 

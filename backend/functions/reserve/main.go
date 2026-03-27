@@ -43,6 +43,16 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 			Body:       `{"error": "Invalid request body"}`,
 		}, nil
 	}
+
+	// Sanitización y Validación de Longitud Estricta (Anti Spam/Dos Data)
+	if len(res.Nombre) > 100 || len(res.Telefono) > 30 || len(res.Servicio) > 100 || 
+	   len(res.Direccion) > 200 || len(res.FechaRaw) > 50 || len(res.HoraRaw) > 50 {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusBadRequest, // 400 Bad Request
+			Body:       `{"error": "Payload excedió longitud máxima permitida por seguridad"}`,
+		}, nil
+	}
+
 	res.CreatedAt = time.Now()
 
 	// Conectar a MongoDB
