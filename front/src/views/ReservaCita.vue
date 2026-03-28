@@ -18,8 +18,8 @@
         </div>
         <h2 class="text-xl font-bold text-white mb-2">¡Cita Reservada con Éxito!</h2>
         <p class="text-zinc-300 text-sm">El barbero ha sido notificado. Nos pondremos en contacto contigo pronto.</p>
-        <button @click="goToProducts" class="mt-6 w-full py-3 bg-white text-black font-semibold rounded-xl hover:bg-zinc-200 transition-colors">
-          Volver al Inicio y ver Productos
+        <button @click="goToProducts" class="mt-6 w-full py-3 bg-neon-green text-black font-bold rounded-xl hover:bg-neon-green-dark transition-all shadow-[0_0_15px_rgba(57,255,20,0.3)]">
+          Ver Productos y Gorras Medellín
         </button>
       </div>
 
@@ -367,7 +367,7 @@ export default {
       this.$router.replace({ query: {} });
     },
     goToProducts() {
-      this.$router.push('/#productos');
+      this.$router.push('/tienda');
     }
   }
 }

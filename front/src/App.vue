@@ -6,14 +6,14 @@
       </keep-alive>
     </router-view>
 
-    <!-- Carrito Drawer + Ícono flotante (Solo si no estamos en el Home) -->
-    <template v-if="showCart && $route.name !== 'AdminPanel'">
+    <!-- Carrito Drawer + Ícono flotante (Solo si no estamos en el Home ni en Agendar ni en Admin) -->
+    <template v-if="showCart && $route.name !== 'AdminPanel' && $route.name !== 'ReservaCita'">
       <CartDrawer :isOpen="cartOpen" @close="cartOpen = false" />
       <CartIcon v-if="!cartOpen" @open="cartOpen = true" />
     </template>
 
     <button
-      v-if="showScrollTop && $route.name !== 'AdminPanel' && !cartOpen"
+      v-if="showScrollTop && $route.name !== 'AdminPanel' && $route.name !== 'ReservaCita' && !cartOpen"
       @click="scrollToTop"
       aria-label="Volver arriba"
       class="fixed bottom-10 sm:bottom-6 right-6 z-50 bg-neon-green text-black px-4 py-2 rounded-full shadow-[0_0_15px_rgba(57,255,20,0.4)] hover:bg-neon-green-dark transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-neon-green hover:scale-110"
