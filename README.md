@@ -62,6 +62,11 @@ The `netlify.toml` file proxies all `/api/*` requests to `/.netlify/functions/*`
 - Shopping cart with persistent state across navigation (reactive composable).
 - Checkout flow with WhatsApp order coordination (payment gateway integration prepared for Wompi).
 
+### Performance & Optimization
+- **Global API Cache**: Custom `useCatalog.js` composable that caches catalog and category data in memory, preventing redundant MongoDB queries during client-side navigation.
+- **Asset Tree-Shaking**: Font Awesome SVG Core implementation that imports only strictly used icons, eliminating massive global CSS files and reducing build size.
+- **Dynamic Assets**: Pre-generated WebP fallback images (`placeholder-product.webp` and `hero_barber.webp`) for robust SEO OpenGraph tags and graceful error handling.
+
 ### Gallery
 - Masonry-style grid of completed haircuts loaded from the database.
 - Cloudinary image optimization with lazy loading.
@@ -105,6 +110,11 @@ The `netlify.toml` file proxies all `/api/*` requests to `/.netlify/functions/*`
 │   └── src/
 │       ├── assets/                 # Background images, Tailwind base styles
 │       ├── components/
+│       │   ├── admin/              # Modularized Admin dashboard pieces
+│       │   │   ├── AdminCategories.vue
+│       │   │   ├── AdminCuts.vue
+│       │   │   ├── AdminProducts.vue
+│       │   │   └── AdminReservations.vue
 │       │   ├── CartDrawer.vue      # Sliding cart panel
 │       │   ├── CartIcon.vue        # Floating cart button with badge
 │       │   ├── HeroSection.vue     # Landing page hero with profile card
@@ -112,7 +122,8 @@ The `netlify.toml` file proxies all `/api/*` requests to `/.netlify/functions/*`
 │       │   ├── ShopCategories.vue  # Category cards on the landing page
 │       │   └── icons/              # Logo component (P_rose.vue) and SVG assets
 │       ├── composables/
-│       │   └── useCart.js          # Global reactive cart state
+│       │   ├── useCart.js          # Global reactive cart state
+│       │   └── useCatalog.js       # Global API cache for layout data
 │       ├── router/
 │       │   └── index.js            # Route definitions with lazy loading
 │       ├── utils/
