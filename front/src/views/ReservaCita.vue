@@ -277,16 +277,16 @@ export default {
       const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
       const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
-      for (let i = 0; i < 14; i++) {
+      for (let i = 1; i <= 14; i++) {
         const nextDate = new Date(today);
         nextDate.setDate(today.getDate() + i);
         
-        // Evitar domingos (0) si la barbería no abre, de ser así descomentar la siguiente línea:
+        // Evitar domingos (0) si la barbería no abre:
         // if (nextDate.getDay() === 0) continue;
 
         days.push({
           rawDate: nextDate.toISOString().split('T')[0], // YYYY-MM-DD
-          name: i === 0 ? 'Hoy' : dayNames[nextDate.getDay()],
+          name: i === 1 ? 'Mañana' : dayNames[nextDate.getDay()],
           number: nextDate.getDate(),
           month: monthNames[nextDate.getMonth()]
         });
