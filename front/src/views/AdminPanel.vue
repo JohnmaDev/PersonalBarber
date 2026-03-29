@@ -369,16 +369,20 @@
         <div :class="{'opacity-40 pointer-events-none transition-opacity duration-500': cargando}">
           <div class="grid grid-cols-1 overflow-hidden border border-zinc-800 rounded-2xl bg-zinc-900/50">
           <div v-for="c in categorias" :key="c.id" class="flex items-center p-4 gap-4 border-b border-zinc-800 last:border-0 hover:bg-zinc-800/30 transition-colors">
-            <div class="w-10 h-10 rounded-lg flex items-center justify-center border border-zinc-800 shrink-0 overflow-hidden" :style="{ background: c.accent + '10', borderColor: c.accent + '30' }">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center border border-zinc-800 shrink-0 overflow-hidden relative" :style="{ background: c.accent + '10', borderColor: c.accent + '30' }">
               <div v-if="isImageUrl(c.icon)" 
-                   class="w-10 h-10"
+                   class="w-full h-full"
                    :style="{ 
                      backgroundColor: c.accent, 
-                     mask: `url('${c.icon}') no-repeat center / contain`,
-                     WebkitMask: `url('${c.icon}') no-repeat center / contain`
+                     mask: `url('${c.icon.replace('.png', '.webp')}') no-repeat center / contain`,
+                     WebkitMask: `url('${c.icon.replace('.png', '.webp')}') no-repeat center / contain`
                    }">
               </div>
               <i v-else :class="c.icon || 'fas fa-tag'" :style="{ color: c.accent }"></i>
+              <!-- Fallback si la máscara falla o no hay nada -->
+              <div v-if="isImageUrl(c.icon)" class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+                 <i class="fas fa-image text-[8px]"></i>
+              </div>
             </div>
             <div class="flex-1 min-w-0">
               <p class="font-bold text-sm">{{ c.label }}</p>
@@ -432,8 +436,21 @@
                     </div>
                   </div>
                   <div class="space-y-1">
-                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Icono (FontAwesome)</label>
-                    <input v-model="catForm.icon" type="text" class="input-modern" placeholder="fas fa-tag">
+                    <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Icono (FA o URL)</label>
+                    <div class="flex gap-2">
+                       <input v-model="catForm.icon" type="text" class="input-modern" placeholder="fas fa-tag o /icons/gorra.webp">
+                       <div v-if="catForm.icon" class="w-10 h-10 rounded-lg border border-zinc-800 flex items-center justify-center shrink-0 overflow-hidden bg-black">
+                          <div v-if="isImageUrl(catForm.icon)" 
+                               class="w-6 h-6"
+                               :style="{ 
+                                 backgroundColor: catForm.accent, 
+                                 mask: `url('${catForm.icon.replace('.png', '.webp')}') no-repeat center / contain`,
+                                 WebkitMask: `url('${catForm.icon.replace('.png', '.webp')}') no-repeat center / contain`
+                               }">
+                          </div>
+                          <i v-else :class="catForm.icon" :style="{ color: catForm.accent }"></i>
+                       </div>
+                    </div>
                   </div>
                 </div>
 
