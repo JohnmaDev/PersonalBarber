@@ -219,16 +219,14 @@
 import { ref, computed, onMounted, watch, onActivated } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCart } from '@/composables/useCart.js'
+import { useCatalog } from '@/composables/useCatalog.js'
 import { formatPrice } from '@/utils/format.js'
 import { optimizeImage } from '@/utils/image.js'
 
 export default {
   name: 'StoreView',
   setup() {
-    const products = ref([])
-    const categories = ref([])
-    const isLoading = ref(true)
-    const errorMessage = ref(null)
+    const { products, categories, isLoading, error: errorMessage, fetchCatalog } = useCatalog()
 
     const route = useRoute()
     const router = useRouter()
@@ -279,51 +277,8 @@ export default {
     }
 
     async function fetchData() {
-      isLoading.value = true
-      errorMessage.value = null
-      try {
-        // Cargar Categorías Primero
-        const resCat = await fetch('/api/get_categories')
-        const dataCat = await resCat.json()
-        if (dataCat.ok) {
-          categories.value = dataCat.categories
-        }
-
-        // Cargar Productos
-        const resProd = await fetch('/api/get_products')
-        const contentType = resProd.headers.get('content-type')
-        
-        if (!resProd.ok) {
-          const text = await resProd.text()
-          errorMessage.value = `Error ${resProd.status}: ${text.substring(0, 50)}...`
-          return
-        }
-
-        if (!contentType || !contentType.includes('application/json')) {
-          const text = await resProd.text()
-          errorMessage.value = `Respuesta no válida (no es JSON): ${text.substring(0, 50)}...`
-          return
-        }
-
-        const dataProd = await resProd.json()
-        if (dataProd.ok) {
-          // Barajado Aleatorio (Algoritmo Fisher-Yates) para "Fresh View"
-          const shuffled = [...dataProd.products]
-          for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-          }
-          products.value = shuffled
-          syncFilter() // Re-sincronizar después de cargar categorías
-        } else {
-          errorMessage.value = dataProd.error || 'Error desconocido'
-        }
-      } catch (err) {
-        errorMessage.value = 'Fallo la conexión o error de red'
-        console.error('Error:', err)
-      } finally {
-        isLoading.value = false
-      }
+      await fetchCatalog()
+      syncFilter()
       setTimeout(() => {
         isFirstVisit.value = false
       }, 1000)

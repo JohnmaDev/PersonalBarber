@@ -233,11 +233,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { optimizeImage } from '@/utils/image.js'
+import { useCatalog } from '@/composables/useCatalog.js'
 
-const products = ref([])
-const categories = ref([])
+const { products, categories, isLoading: loading, fetchCatalog } = useCatalog()
 const activeDepartment = ref('men')
-const loading = ref(false)
 
 const activeCategories = computed(() => {
   if (activeDepartment.value === 'merch') {
@@ -264,24 +263,7 @@ const otherComingSoonCategories = computed(() => {
 })
 
 async function fetchData() {
-  loading.value = true
-  try {
-    // Cargar Productos (para conteos)
-    const resProd = await fetch('/api/get_products')
-    const dataProd = await resProd.json()
-    if (dataProd.ok) products.value = dataProd.products
-
-    // Cargar Categorías
-    const resCat = await fetch('/api/get_categories')
-    const dataCat = await resCat.json()
-    if (dataCat.ok) {
-      categories.value = dataCat.categories
-    }
-  } catch (err) {
-    console.error('Error cargando datos de la tienda:', err)
-  } finally {
-    loading.value = false
-  }
+  await fetchCatalog()
 }
 
 function getCategoryCount(catId) {
@@ -340,8 +322,4 @@ onMounted(fetchData)
   animation: fade-in-up 0.8s ease-out both;
 }
 
-/* Custom shadow utility if needed */
-.shadow-neon-glow {
-  box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
-}
 </style>

@@ -15,21 +15,9 @@ body {
     background-color: #0A0A0A;
     background-blend-mode: multiply;
   }
-  .mask-fade {
-    mask-image: radial-gradient(circle at center, black 70%, transparent 95%);
-    -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 95%);
-    mask-repeat: no-repeat;
-    mask-size: cover;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-size: cover;
-  }
 
   .glass {
     @apply bg-white/10 backdrop-blur-md border border-white/20;
-  }
-
-  .glass-dark {
-    @apply bg-black/40 backdrop-blur-lg border border-white/10;
   }
 
   .text-shadow-premium {

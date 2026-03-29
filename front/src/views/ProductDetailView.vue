@@ -255,35 +255,17 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCart } from '@/composables/useCart.js'
+import { useCatalog } from '@/composables/useCatalog.js'
 import { formatPrice } from '@/utils/format.js'
 import { optimizeImage } from '@/utils/image.js'
 
 const route = useRoute()
 const router = useRouter()
 const { addToCart, getProductQty, isStockFull } = useCart()
-const products = ref([])
-const apiCategories = ref([])
-const isLoading = ref(true)
+const { products, categories, isLoading, fetchCatalog } = useCatalog()
 
 async function fetchProducts() {
-  isLoading.value = true
-  try {
-    const res = await fetch('/api/get_products')
-    const data = await res.json()
-    if (data.ok) {
-      products.value = data.products
-    }
-
-    const resCat = await fetch('/api/get_categories')
-    const dataCat = await resCat.json()
-    if (dataCat.ok) {
-      apiCategories.value = dataCat.categories
-    }
-  } catch (err) {
-    console.error('Error cargando detalles del producto:', err)
-  } finally {
-    isLoading.value = false
-  }
+  await fetchCatalog()
 }
 
 onMounted(() => {
@@ -295,8 +277,8 @@ onMounted(() => {
 const product = computed(() => products.value.find(p => p.id === Number(route.params.id)))
 
 const activeDepartment = computed(() => {
-  if (!product.value || apiCategories.value.length === 0) return 'men'
-  const cat = apiCategories.value.find(c => c.id === product.value.category)
+  if (!product.value || categories.value.length === 0) return 'men'
+  const cat = categories.value.find(c => c.id === product.value.category)
   return cat ? cat.department : 'men'
 })
 
@@ -358,10 +340,10 @@ const recommendedProducts = computed(() => {
   return [...sameCategory, ...otherCategories]
 })
 
-const availableCategories = computed(() => apiCategories.value.filter(c => c.id !== 'all'))
+const availableCategories = computed(() => categories.value.filter(c => c.id !== 'all'))
 
 function getCategoryLabel(catId) {
-  return apiCategories.value.find(c => c.id === catId)?.label ?? catId
+  return categories.value.find(c => c.id === catId)?.label ?? catId
 }
 
 const handleAddToCart = () => {

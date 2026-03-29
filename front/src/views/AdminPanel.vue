@@ -722,7 +722,7 @@ export default {
       const hoy = new Date().toISOString().split('T')[0];
       const grupos = {};
       const ordenadas = [...this.reservas]
-        .filter(r => (r.fechaRaw || '') < hoy)
+        .filter(r => (r.fechaRaw || '') < hoy) 
         .sort((a, b) => {
           // Descendente: las más recientes primero
           if (a.fechaRaw > b.fechaRaw) return -1;
