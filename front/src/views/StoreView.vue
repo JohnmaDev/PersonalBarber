@@ -169,15 +169,18 @@
               <button
                 v-if="product.stock > 0"
                 @click.stop="quickAddToCart(product)"
+                :disabled="isStockFull(product)"
                 :class="[
                   'w-8 h-8 rounded-full glass flex items-center justify-center transition-all duration-300 text-sm text-white hover:text-black',
-                  justAdded === product.id 
-                    ? (activeDepartment === 'men' ? 'bg-neon-green text-black' : (activeDepartment === 'merch' ? 'bg-cyan-400 text-black' : 'bg-pink-500 text-white')) 
-                    : (activeDepartment === 'men' ? 'hover:bg-neon-green' : (activeDepartment === 'merch' ? 'hover:bg-cyan-400' : 'hover:bg-pink-500'))
+                  isStockFull(product)
+                    ? 'opacity-20 cursor-not-allowed border-transparent'
+                    : (justAdded === product.id 
+                      ? (activeDepartment === 'men' ? 'bg-neon-green text-black' : (activeDepartment === 'merch' ? 'bg-cyan-400 text-black' : 'bg-pink-500 text-white')) 
+                      : (activeDepartment === 'men' ? 'hover:bg-neon-green' : (activeDepartment === 'merch' ? 'hover:bg-cyan-400' : 'hover:bg-pink-500')))
                 ]"
-                :aria-label="'Agregar ' + product.name + ' al carrito'"
+                :aria-label="isStockFull(product) ? 'Stock máximo alcanzado' : 'Agregar ' + product.name + ' al carrito'"
               >
-                <i :class="justAdded === product.id ? 'fas fa-check' : 'fas fa-plus'"></i>
+                <i :class="isStockFull(product) ? 'fas fa-lock text-[10px]' : (justAdded === product.id ? 'fas fa-check' : 'fas fa-plus')"></i>
               </button>
               <button
                 v-else
@@ -229,7 +232,7 @@ export default {
 
     const route = useRoute()
     const router = useRouter()
-    const { addToCart } = useCart()
+    const { addToCart, isStockFull } = useCart()
 
     const activeDepartment = ref('men')
 
@@ -370,12 +373,11 @@ export default {
     }
 
     const quickAddToCart = (product) => {
+      if (isStockFull(product)) return;
       const res = addToCart(product)
       if (res.success) {
         justAdded.value = product.id
         setTimeout(() => { justAdded.value = null }, 2000)
-      } else {
-        alert(res.message)
       }
     }
 
@@ -394,6 +396,7 @@ export default {
       optimizeImage,
       goToDetail,
       quickAddToCart,
+      isStockFull,
       justAdded,
       fetchData
     }

@@ -149,8 +149,8 @@
               >−</button>
               <span class="text-white font-bold w-6 text-center">{{ qty }}</span>
               <button
-                @click="qty < product.stock ? qty++ : null"
-                :disabled="qty >= product.stock"
+                @click="qty < (product.stock - getProductQty(product.id)) ? qty++ : null"
+                :disabled="qty >= (product.stock - getProductQty(product.id))"
                 class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors text-white font-bold disabled:opacity-30 disabled:cursor-not-allowed"
               >+</button>
             </div>
@@ -160,19 +160,19 @@
           <div class="flex flex-col sm:flex-row gap-3">
             <button
               @click="handleAddToCart"
-              :disabled="product.stock <= 0"
+              :disabled="product.stock <= 0 || isStockFull(product)"
               class="flex-1 py-4 glass border border-neon-green/50 hover:border-neon-green text-neon-green font-black rounded-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-30 disabled:border-white/10 disabled:text-gray-500 disabled:cursor-not-allowed"
             >
               <i class="fas fa-shopping-bag"></i>
-              {{ product.stock <= 0 ? 'Sin Stock' : 'Agregar al Carrito' }}
+              {{ product.stock <= 0 ? 'Sin Stock' : (isStockFull(product) ? 'Límite en Carrito' : 'Agregar al Carrito') }}
             </button>
             <button
               @click="handleBuyNow"
-              :disabled="product.stock <= 0"
+              :disabled="product.stock <= 0 || isStockFull(product)"
               class="flex-1 py-4 bg-neon-green hover:bg-neon-green-dark text-black font-black rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 disabled:bg-zinc-800 disabled:text-zinc-600 disabled:cursor-not-allowed"
             >
               <i class="fas fa-bolt"></i>
-              Comprar Ahora
+              {{ isStockFull(product) ? 'Límite Alcanzado' : 'Comprar Ahora' }}
             </button>
           </div>
 
@@ -260,7 +260,7 @@ import { optimizeImage } from '@/utils/image.js'
 
 const route = useRoute()
 const router = useRouter()
-const { addToCart } = useCart()
+const { addToCart, getProductQty, isStockFull } = useCart()
 const products = ref([])
 const apiCategories = ref([])
 const isLoading = ref(true)
@@ -368,9 +368,8 @@ const handleAddToCart = () => {
       const result = addToCart(product.value, qty.value)
       if (result.success) {
         showConfirm.value = true
+        qty.value = 1 // Reseteamos cantidad tras agregar
         setTimeout(() => showConfirm.value = false, 3000)
-      } else {
-        alert(result.message)
       }
     }
 

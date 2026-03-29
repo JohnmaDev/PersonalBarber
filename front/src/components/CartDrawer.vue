@@ -65,8 +65,9 @@
                 >−</button>
                 <span class="text-white text-xs font-bold w-4 text-center">{{ item.qty }}</span>
                 <button
-                  @click="handleUpdateQuantity(item.id, item.qty + 1)"
-                  class="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors text-white text-xs"
+                  @click="item.qty < item.stock ? handleUpdateQuantity(item.id, item.qty + 1) : null"
+                  :disabled="item.qty >= item.stock"
+                  class="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors text-white text-xs disabled:opacity-20 disabled:cursor-not-allowed"
                 >+</button>
               </div>
             </div>
@@ -123,10 +124,7 @@ defineEmits(['close'])
 const { cartItems, cartCount, cartTotalFormatted, removeFromCart, updateQuantity, formatPrice, parsePrice } = useCart()
 
 const handleUpdateQuantity = (productId, newQty) => {
-  const res = updateQuantity(productId, newQty)
-  if (!res.success) {
-    alert(res.message)
-  }
+  updateQuantity(productId, newQty)
 }
 </script>
 

@@ -75,6 +75,19 @@ function formatPrice(num) {
   return `$${num.toLocaleString('es-CO')} COP`
 }
 
+// Obtener cantidad actual de un producto en el carrito
+function getProductQty(productId) {
+  const item = cartItems.find(i => i.id === productId)
+  return item ? item.qty : 0
+}
+
+// Verificar si el stock de un producto ya está lleno en el carrito
+function isStockFull(product) {
+  const currentQty = getProductQty(product.id)
+  const stock = Number(product.stock) || 0
+  return currentQty >= stock
+}
+
 // Totales computados
 const cartCount = computed(() => cartItems.reduce((sum, i) => sum + i.qty, 0))
 const cartTotal = computed(() => cartItems.reduce((sum, i) => sum + parsePrice(i.price) * i.qty, 0))
@@ -92,5 +105,7 @@ export function useCart() {
     clearCart,
     formatPrice,
     parsePrice,
+    getProductQty,
+    isStockFull
   }
 }
