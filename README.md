@@ -1,7 +1,5 @@
 # PersonalBarber
 
-![Vistas](https://hits.dwyl.com/JohnmaDev/PersonalBarber.svg?style=flat-square&color=39FF14)
-
 Full-stack web platform for a barbershop in Medellin, Colombia. Includes an online reservation system, an e-commerce store with multi-department catalog, a gallery of completed work, and a comprehensive administration panel.
 
 Built with Vue 3 on the frontend and Go serverless functions on the backend, deployed on Netlify with MongoDB Atlas as the database.
@@ -254,3 +252,5 @@ Each subdirectory inside `backend/functions/` is automatically compiled and depl
 PersonalBarber is licensed under the MIT License.
 
 Written by [JohnmaDev](https://www.linkedin.com/in/john-mario-echavarria-bermudez/).
+
+![Vistas](https://hits.dwyl.com/JohnmaDev/PersonalBarber.svg?style=flat-square&color=39FF14)
