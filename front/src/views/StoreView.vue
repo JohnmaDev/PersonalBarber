@@ -220,7 +220,7 @@ import { ref, computed, onMounted, watch, onActivated } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCart } from '@/composables/useCart.js'
 import { useCatalog } from '@/composables/useCatalog.js'
-import { formatPrice } from '@/utils/format.js'
+import { formatPrice, generateProductSlug } from '@/utils/format.js'
 import { optimizeImage } from '@/utils/image.js'
 
 export default {
@@ -324,7 +324,7 @@ export default {
     })
 
     function goToDetail(product) {
-      router.push({ name: 'ProductDetail', params: { id: product.id } })
+      router.push({ name: 'ProductDetail', params: { slug: generateProductSlug(product.id, product.name) } })
     }
 
     const quickAddToCart = (product) => {

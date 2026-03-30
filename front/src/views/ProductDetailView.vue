@@ -212,7 +212,7 @@
           <router-link
             v-for="item in recommendedProducts"
             :key="item.id"
-            :to="{ name: 'ProductDetail', params: { id: item.id } }"
+            :to="{ name: 'ProductDetail', params: { slug: generateProductSlug(item.id, item.name) } }"
             class="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-neon-green/50 transition-all duration-300"
           >
             <div class="aspect-square overflow-hidden bg-white/5">
@@ -256,7 +256,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCart } from '@/composables/useCart.js'
 import { useCatalog } from '@/composables/useCatalog.js'
-import { formatPrice } from '@/utils/format.js'
+import { formatPrice, generateProductSlug } from '@/utils/format.js'
 import { optimizeImage } from '@/utils/image.js'
 
 const route = useRoute()
@@ -273,8 +273,8 @@ onMounted(() => {
 })
 
 
-// Producto reactivo basado en el ID de la URL
-const product = computed(() => products.value.find(p => p.id === Number(route.params.id)))
+// Producto reactivo basado en el slug de la URL
+const product = computed(() => products.value.find(p => p.id === parseInt(route.params.slug, 10)))
 
 const activeDepartment = computed(() => {
   if (!product.value || categories.value.length === 0) return 'men'
@@ -315,7 +315,7 @@ function scrollToImage(idx) {
 }
 
 // Resetear cantidad e imagen cuando cambia el producto
-watch(() => route.params.id, () => {
+watch(() => route.params.slug, () => {
   qty.value = 1
   activeIdx.value = 0
   if (carouselRef.value) carouselRef.value.scrollLeft = 0
