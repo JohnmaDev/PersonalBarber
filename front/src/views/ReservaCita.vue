@@ -28,7 +28,7 @@
         <!-- CALENDARIO VISUAL -->
         <div>
           <label class="block text-sm font-medium text-zinc-400 mb-3">1. Selecciona el Día</label>
-        <div class="flex overflow-x-auto space-x-3 pb-4 snap-x custom-scrollbar">
+        <div class="flex overflow-x-auto space-x-3 py-4 snap-x custom-scrollbar">
             <div 
               v-for="(day, index) in availableDays" :key="index"
               @click="!isDiaLleno(day.rawDate) && selectDate(day.rawDate)"
@@ -37,13 +37,13 @@
                 isDiaLleno(day.rawDate)
                   ? 'bg-zinc-900 text-zinc-600 border-zinc-800 cursor-not-allowed opacity-60'
                   : selectedDate === day.rawDate 
-                    ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.4)] scale-105 cursor-pointer' 
+                    ? 'bg-neon-green text-black border-neon-green shadow-[0_0_20px_rgba(57,255,20,0.5)] scale-110 cursor-pointer z-10' 
                     : 'bg-zinc-800 text-white border-zinc-700 hover:border-zinc-500 hover:bg-zinc-700 cursor-pointer'
               ]"
             >
-              <span class="text-xs font-bold uppercase" :class="selectedDate === day.rawDate ? 'text-zinc-600' : isDiaLleno(day.rawDate) ? 'text-zinc-700' : 'text-zinc-400'">{{ day.name }}</span>
+              <span class="text-xs font-bold uppercase" :class="selectedDate === day.rawDate ? 'text-black' : isDiaLleno(day.rawDate) ? 'text-zinc-700' : 'text-zinc-400'">{{ day.name }}</span>
               <span class="text-xl font-bold mt-1">{{ day.number }}</span>
-              <span class="text-[10px]" :class="selectedDate === day.rawDate ? 'text-zinc-600' : isDiaLleno(day.rawDate) ? 'text-zinc-700' : 'text-zinc-500'">{{ day.month }}</span>
+              <span class="text-[10px]" :class="selectedDate === day.rawDate ? 'text-black/70' : isDiaLleno(day.rawDate) ? 'text-zinc-700' : 'text-zinc-500'">{{ day.month }}</span>
               <!-- Indicador de lleno -->
               <span v-if="isDiaLleno(day.rawDate)" class="absolute -top-1 -right-1 w-4 h-4 bg-red-600 rounded-full text-[8px] flex items-center justify-center font-bold">✕</span>
             </div>
@@ -92,7 +92,7 @@
               v-model="form.nombre"
               placeholder="Nombre Completo"
               required
-              class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl focus:ring-2 focus:ring-white focus:border-transparent outline-none transition-all text-white placeholder-zinc-500"
+              class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl focus:ring-2 focus:ring-neon-green focus:border-transparent outline-none transition-all text-white placeholder-zinc-500"
             >
             
             <input 
@@ -102,7 +102,7 @@
               required
               maxlength="15"
               :class="[
-                'w-full px-4 py-3 bg-zinc-800 border rounded-xl focus:ring-2 focus:ring-white focus:border-transparent outline-none transition-all text-white placeholder-zinc-500',
+                'w-full px-4 py-3 bg-zinc-800 border rounded-xl focus:ring-2 focus:ring-neon-green focus:border-transparent outline-none transition-all text-white placeholder-zinc-500',
                 form.telefono && !isTelefonoValido ? 'border-red-500 ring-1 ring-red-500' : 'border-zinc-700'
               ]"
             >
@@ -114,7 +114,7 @@
             <select 
               v-model="form.servicio" 
               required
-              class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl focus:ring-2 focus:ring-white focus:border-transparent outline-none transition-all text-white"
+              class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl focus:ring-2 focus:ring-neon-green focus:border-transparent outline-none transition-all text-white"
             >
               <option value="" disabled>Selecciona un servicio</option>
               <option value="Corte Sencillo">Corte Sencillo</option>
@@ -130,7 +130,7 @@
                 placeholder="Dirección Domicilar (Ej. Calle 45 # 12-34, Piso 2, Apto 201)"
                 rows="2"
                 required
-                class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl focus:ring-2 focus:ring-white focus:border-transparent outline-none transition-all text-white placeholder-zinc-500 resize-none"
+                class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl focus:ring-2 focus:ring-neon-green focus:border-transparent outline-none transition-all text-white placeholder-zinc-500 resize-none"
               ></textarea>
               <a 
                 v-if="form.direccion.length > 5"
@@ -145,7 +145,7 @@
             <button 
               type="submit" 
               :disabled="isSubmitting || !isFormValid"
-              class="w-full mt-4 py-4 bg-white text-black font-bold text-lg rounded-xl hover:bg-zinc-200 transition-colors flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+              class="w-full mt-4 py-4 bg-neon-green text-black font-black text-lg rounded-xl hover:bg-neon-green-dark hover:scale-[1.02] transition-all flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(57,255,20,0.3)] hover:shadow-[0_0_35px_rgba(57,255,20,0.6)]"
             >
               <span v-if="isSubmitting">Procesando...</span>
               <span v-else>Confirmar Reserva</span>
