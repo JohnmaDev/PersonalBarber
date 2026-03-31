@@ -27,15 +27,23 @@
           class="w-full pl-10 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 transition-all"
         >
       </div>
-      <div class="relative">
-        <select 
-          v-model="filterCategory" 
-          class="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 appearance-none cursor-pointer"
+      <div class="flex flex-wrap gap-2 items-center">
+        <button 
+          @click="filterCategory = 'all'" 
+          :class="filterCategory === 'all' ? 'bg-neon-green text-black border-neon-green' : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:border-zinc-700'"
+          class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all"
         >
-          <option value="all">Todas las categorías</option>
-          <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
-        </select>
-        <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none text-xs"></i>
+          Todos
+        </button>
+        <button 
+          v-for="cat in categorias" 
+          :key="cat.id" 
+          @click="filterCategory = cat.id"
+          :class="filterCategory === cat.id ? 'bg-neon-green text-black border-neon-green' : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:border-zinc-700'"
+          class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all"
+        >
+          {{ cat.label }}
+        </button>
       </div>
     </div>
 

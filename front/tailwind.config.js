@@ -11,7 +11,7 @@ module.exports = {
       },
       colors: {
         'neon-green': '#39FF14',
-        'neon-green-dark': '#00e676',
+        'neon-green-dark': '#2eff2e',
         'barber-black': '#0A0A0A',
         'barber-charcoal': '#1A1A1A',
       },

@@ -34,13 +34,13 @@
         <div class="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start animate-fade-in-up opacity-0" style="animation-delay: 0.4s;">
           <button 
             @click="$emit('reserve')"
-            class="px-10 py-5 bg-neon-green hover:bg-neon-green-dark text-black text-xl lg:text-2xl font-black italic tracking-wider rounded-2xl transition-all duration-300 shadow-[0_0_30px_rgba(57,255,20,0.3)] hover:shadow-[0_0_50px_rgba(57,255,20,0.6)] hover:-translate-y-1 uppercase flex items-center justify-center gap-3"
+            class="px-10 py-5 bg-neon-green hover:bg-neon-green-dark text-black text-xl lg:text-2xl font-black italic tracking-wider rounded-2xl transition-all duration-300 shadow-[0_0_30px_rgba(57,255,20,0.3)] hover:shadow-[0_0_60px_rgba(46,255,46,0.8)] hover:-translate-y-1 hover:scale-105 uppercase flex items-center justify-center gap-3"
           >
             RESERVAR AHORA <i class="fas fa-calendar-check"></i>
           </button>
           <button 
             @click="scrollToProducts"
-            class="px-10 py-5 bg-transparent border-4 border-white/20 hover:border-white text-white text-xl lg:text-2xl font-black italic tracking-wider rounded-2xl transition-all duration-300 hover:bg-white hover:text-black uppercase flex items-center justify-center gap-3"
+            class="px-10 py-5 bg-transparent border-4 border-white/20 hover:border-white text-white text-xl lg:text-2xl font-black italic tracking-wider rounded-2xl transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] uppercase flex items-center justify-center gap-3"
           >
             LA TIENDA <i class="fas fa-shopping-bag"></i>
           </button>

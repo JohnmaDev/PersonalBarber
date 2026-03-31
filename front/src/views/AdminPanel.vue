@@ -14,7 +14,7 @@
         @keyup.enter="verificarPin"
       >
       <p v-if="pinError" class="text-red-400 text-xs mb-3">PIN incorrecto</p>
-      <button @click="verificarPin" class="w-full py-3 bg-neon-green text-black font-black italic tracking-widest uppercase rounded-xl hover:bg-neon-green-dark transition-all shadow-[0_0_15px_rgba(57,255,20,0.3)] hover:shadow-[0_0_25px_rgba(57,255,20,0.6)]">
+      <button @click="verificarPin" class="w-full py-3 bg-neon-green text-black font-black italic tracking-widest uppercase rounded-xl hover:bg-neon-green-dark hover:scale-105 transition-all shadow-[0_0_15px_rgba(57,255,20,0.3)] hover:shadow-[0_0_25px_rgba(46,255,46,0.6)]">
         Entrar
       </button>
 
