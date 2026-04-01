@@ -6,8 +6,8 @@
         <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Gestiona el catálogo de la tienda</p>
       </div>
       <div class="flex gap-2">
-        <button @click="cargarProductos" :disabled="cargando" class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-all">
-          <i class="fas fa-sync-alt" :class="{'animate-spin': cargando}"></i>
+        <button @click="cargarProductos" :disabled="cargando" class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-all group">
+          <i class="fas fa-sync-alt transition-all duration-700" :class="{'animate-spin text-neon-green': cargando}"></i>
         </button>
         <button @click="abrirModalProducto()" class="flex items-center gap-2 px-5 py-2.5 bg-neon-green text-black rounded-xl text-xs font-black uppercase hover:bg-neon-green-dark transition-all">
           <i class="fas fa-plus"></i>

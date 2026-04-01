@@ -7,8 +7,8 @@
           {{ proximasCount }} próxima{{ proximasCount !== 1 ? 's' : '' }} · {{ historialCount }} en historial
         </p>
       </div>
-      <button @click="cargarReservas" :disabled="cargando" class="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold hover:border-neon-green/50 transition-all">
-        <i class="fas fa-sync-alt" :class="{'animate-spin': cargando}"></i>
+      <button @click="cargarReservas" :disabled="cargando" class="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold hover:border-neon-green/50 transition-all group">
+        <i class="fas fa-sync-alt transition-all duration-700" :class="{'animate-spin text-neon-green': cargando}"></i>
         {{ cargando ? 'Cargando...' : 'Actualizar' }}
       </button>
     </div>

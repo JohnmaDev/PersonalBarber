@@ -6,8 +6,8 @@
         <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Muestra tus mejores trabajos a los clientes</p>
       </div>
       <div class="flex gap-2">
-        <button @click="cargarCortes" :disabled="cargando" class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-all">
-          <i class="fas fa-sync-alt" :class="{'animate-spin': cargando}"></i>
+        <button @click="cargarCortes" :disabled="cargando" class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-all group">
+          <i class="fas fa-sync-alt transition-all duration-700" :class="{'animate-spin text-neon-green': cargando}"></i>
         </button>
         <button @click="abrirModalCorte()" class="flex items-center gap-2 px-5 py-2.5 bg-neon-green text-black rounded-xl text-xs font-black uppercase hover:bg-neon-green-dark transition-all shadow-[0_5px_15px_rgba(57,255,20,0.2)]">
           <i class="fas fa-plus"></i>
