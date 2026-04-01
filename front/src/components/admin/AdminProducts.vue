@@ -17,33 +17,30 @@
     </div>
 
     <!-- Buscador y Filtro -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
       <div class="relative group">
-        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors"></i>
+        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none"></i>
         <input 
           v-model="searchQuery" 
           type="text" 
-          placeholder="Buscar por nombre o marca..." 
-          class="w-full pl-10 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 transition-all"
+          placeholder="Buscar productos..." 
+          class="w-full pl-11 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 transition-all placeholder:text-zinc-600"
         >
       </div>
-      <div class="flex flex-wrap gap-2 items-center">
-        <button 
-          @click="filterCategory = 'all'" 
-          :class="filterCategory === 'all' ? 'bg-neon-green text-black border-neon-green' : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:border-zinc-700'"
-          class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all"
+      
+      <!-- Selector de Categorías Desplegable -->
+      <div class="relative group">
+        <i class="fas fa-layer-group absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-neon-green transition-colors pointer-events-none"></i>
+        <select 
+          v-model="filterCategory" 
+          class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
         >
-          Todos
-        </button>
-        <button 
-          v-for="cat in categorias" 
-          :key="cat.id" 
-          @click="filterCategory = cat.id"
-          :class="filterCategory === cat.id ? 'bg-neon-green text-black border-neon-green' : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:border-zinc-700'"
-          class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all"
-        >
-          {{ cat.label }}
-        </button>
+          <option value="all">Todas las Secciones</option>
+          <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
+        </select>
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+          <i class="fas fa-chevron-down text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors"></i>
+        </div>
       </div>
     </div>
 
