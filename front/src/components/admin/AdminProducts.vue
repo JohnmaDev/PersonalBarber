@@ -6,11 +6,13 @@
         <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Gestiona el catálogo de la tienda</p>
       </div>
       <div class="flex gap-2">
-        <button @click="cargarProductos" :disabled="cargando" class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-all group px-3">
-          <i :class="[
-            'fas', 
-            cargando ? 'fa-sync-alt animate-spin text-neon-green' : 'fa-redo-alt text-zinc-500 group-hover:text-white'
-          ]" class="transition-colors duration-300"></i>
+        <button @click="cargarProductos" :disabled="cargando" class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-all group">
+          <span v-if="cargando" key="prod-load" class="flex items-center justify-center">
+            <i class="fas fa-sync-alt fa-spin text-neon-green"></i>
+          </span>
+          <span v-else key="prod-static" class="flex items-center justify-center">
+            <i class="fas fa-sync-alt text-zinc-500 group-hover:text-white transition-colors"></i>
+          </span>
         </button>
         <button @click="abrirModalProducto()" class="flex items-center gap-2 px-5 py-2.5 bg-neon-green text-black rounded-xl text-xs font-black uppercase hover:bg-neon-green-dark transition-all">
           <i class="fas fa-plus"></i>
