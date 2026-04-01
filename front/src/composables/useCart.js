@@ -1,7 +1,25 @@
-import { reactive, computed } from 'vue'
+import { reactive, computed, watch } from 'vue'
+
+const CART_STORAGE_KEY = 'barbelcol_guest_cart'
+
+// Intentar cargar el carrito desde localStorage
+const loadCartFromStorage = () => {
+  try {
+    const saved = localStorage.getItem(CART_STORAGE_KEY)
+    return saved ? JSON.parse(saved) : []
+  } catch (e) {
+    console.error('Error loading cart from LocalStorage:', e)
+    return []
+  }
+}
 
 // Estado global del carrito — reactivo y compartido entre todos los componentes
-const cartItems = reactive([])
+const cartItems = reactive(loadCartFromStorage())
+
+// Sincronizar automáticamente cualquier cambio (agregar, borrar, cantidad)
+watch(cartItems, (newCart) => {
+  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(newCart))
+}, { deep: true })
 
 // Agregar producto (si ya existe, incrementa cantidad validando stock)
 function addToCart(product, qty = 1) {

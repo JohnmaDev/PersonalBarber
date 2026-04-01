@@ -61,7 +61,9 @@
                 </div>
               </div>
               <div class="space-y-1">
-                <label class="text-xs text-gray-400 font-semibold block mb-1">Email</label>
+                <label class="text-xs text-gray-400 font-semibold block mb-1">
+                  Email <span class="text-neon-green ml-1" title="Obligatorio">*</span>
+                </label>
                 <input 
                   v-model="form.email" 
                   @blur="touched.email = true"
@@ -70,6 +72,7 @@
                   :class="{ 'border-red-500/50': touched.email && !isEmailValid }"
                 />
                 <p v-if="touched.email && !isEmailValid" class="text-[10px] text-red-400">Ingresa un correo válido</p>
+                <p v-else class="text-[10px] text-gray-500 mt-1"><i class="fas fa-info-circle"></i> Obligatorio para tu recibo de compra</p>
               </div>
               <div class="space-y-1">
                 <label class="text-xs text-gray-400 font-semibold block mb-1">Teléfono / WhatsApp</label>
@@ -185,14 +188,18 @@
             <!-- Botón de pago final -->
             <button
               @click="handleCheckout"
-              :disabled="!formValid"
+              :disabled="!formValid || isProcessing"
               class="mt-5 w-full py-4 font-black text-sm rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
-              :class="formValid
+              :class="formValid && !isProcessing
                 ? 'bg-neon-green hover:bg-neon-green-dark text-black'
                 : 'bg-white/10 text-gray-600 cursor-not-allowed'"
             >
-              <i class="fas fa-lock text-xs"></i>
-              PAGAR {{ cartTotalFormatted }}
+              <template v-if="isProcessing">
+                <i class="fas fa-spinner fa-spin"></i> CREANDO ORDEN SECRETA...
+              </template>
+              <template v-else>
+                <i class="fas fa-lock text-xs"></i> PAGAR {{ cartTotalFormatted }}
+              </template>
             </button>
 
             <p class="text-center text-gray-600 text-[10px] mt-3">
@@ -256,6 +263,7 @@ const touched = ref({
 
 const selectedPayment = ref('wompi')
 const showSoonAlert = ref(false)
+const isProcessing = ref(false)
 
 const paymentMethods = [
   { id: 'wompi', emoji: '💳', label: 'Wompi', desc: 'Nequi, PSE, tarjetas débito/crédito', badge: 'Recomendado' },
@@ -283,7 +291,7 @@ const formValid = computed(() =>
   isPhoneValid.value
 )
 
-function handleCheckout() {
+async function handleCheckout() {
   if (!formValid.value) {
     // Marcar todo como tocado para mostrar errores
     Object.keys(touched.value).forEach(k => touched.value[k] = true)
@@ -291,12 +299,45 @@ function handleCheckout() {
   }
 
   if (selectedPayment.value === 'whatsapp') {
-    const phone = '573045840264'
-    const items = cartItems.map(i => `• ${i.name} x${i.qty} = ${formatPrice(parsePrice(i.price) * i.qty)}`).join('\n')
-    const msg = `Hola Andrés, quiero hacer un pedido:\n\n${items}\n\nTOTAL: ${cartTotalFormatted.value}\n\nNombre: ${form.value.firstName} ${form.value.lastName}\nCiudad: ${form.value.city}\nDirección: ${form.value.address}`
-    window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank')
-    clearCart()
-    router.push('/tienda')
+    isProcessing.value = true
+    try {
+      const payload = {
+        customer: {
+          firstName: form.value.firstName,
+          lastName: form.value.lastName,
+          email: form.value.email,
+          phone: form.value.phone,
+          city: form.value.city,
+          address: form.value.address
+        },
+        items: cartItems.map(i => ({ id: i.id, qty: i.qty })),
+        paymentMethod: 'whatsapp'
+      }
+
+      const API_URL = import.meta.env.VITE_API_URL || ''
+      const res = await fetch(`${API_URL}/api/create_order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+
+      const data = await res.json()
+      
+      if (!data.ok) throw new Error(data.error || 'Error procesando orden')
+
+      const phone = '573045840264'
+      const itemsList = cartItems.map(i => `• ${i.name} x${i.qty}`).join('\n')
+      const msg = `Hola Andrés, acabo de realizar un pedido:\n\n*ID Orden:* ${data.order.id}\n\n${itemsList}\n\n*TOTAL VERIFICADO:* $${data.order.total_format} COP\n\nNombre: ${form.value.firstName} ${form.value.lastName}\nCiudad: ${form.value.city}\nDirección: ${form.value.address}`
+      
+      window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank')
+      clearCart()
+      router.push('/tienda')
+    } catch (e) {
+      console.error(e)
+      alert('Error: ' + e.message)
+    } finally {
+      isProcessing.value = false
+    }
   } else {
     showSoonAlert.value = true
   }
