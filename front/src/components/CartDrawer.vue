@@ -114,6 +114,7 @@
 </template>
 
 <script setup>
+/* global defineProps, defineEmits */
 import { onMounted, onUnmounted } from 'vue'
 import { useCart } from '@/composables/useCart.js'
 import { optimizeImage } from '@/utils/image.js'
