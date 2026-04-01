@@ -8,11 +8,11 @@
         </p>
       </div>
       <button @click="cargarReservas" :disabled="cargando" class="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold hover:border-neon-green/50 transition-all group">
-        <span class="flex items-center justify-center w-4 h-4">
-          <i v-show="cargando" class="fas fa-sync-alt animate-spin text-neon-green"></i>
-          <i v-show="!cargando" class="fas fa-sync-alt text-zinc-500 group-hover:text-white transition-colors"></i>
-        </span>
-        {{ cargando ? 'Cargando...' : 'Actualizar' }}
+        <i :class="[
+          'fas', 
+          cargando ? 'fa-sync-alt animate-spin text-neon-green' : 'fa-redo-alt text-zinc-500 group-hover:text-white'
+        ]" class="transition-colors duration-300"></i>
+        <span>{{ cargando ? 'Cargando...' : 'Actualizar' }}</span>
       </button>
     </div>
 
