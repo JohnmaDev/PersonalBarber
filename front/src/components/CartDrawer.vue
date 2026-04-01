@@ -114,14 +114,29 @@
 </template>
 
 <script setup>
-/* global defineProps, defineEmits */
+import { onMounted, onUnmounted } from 'vue'
 import { useCart } from '@/composables/useCart.js'
 import { optimizeImage } from '@/utils/image.js'
 
-defineProps({ isOpen: Boolean })
-defineEmits(['close'])
+const props = defineProps({ isOpen: Boolean })
+const emits = defineEmits(['close'])
 
 const { cartItems, cartCount, cartTotalFormatted, removeFromCart, updateQuantity, formatPrice, parsePrice } = useCart()
+
+// Atajo de teclado: Cerrar con ESC
+const handleKeydown = (e) => {
+  if (e.key === 'Escape' && props.isOpen) {
+    emits('close')
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
+})
 
 const handleUpdateQuantity = (productId, newQty) => {
   updateQuantity(productId, newQty)
