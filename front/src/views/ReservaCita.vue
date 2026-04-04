@@ -111,18 +111,55 @@
               Ingresa un número colombiano válido (Ej: 301 123 4567)
             </p>
 
-            <select 
-              v-model="form.servicio" 
-              required
-              class="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl focus:ring-2 focus:ring-white focus:border-transparent outline-none transition-all text-white"
-            >
-              <option value="" disabled>Selecciona un servicio</option>
-              <option value="Corte Sencillo">Corte Sencillo</option>
-              <option value="Corte + Barba">Corte + Barba</option>
-              <option value="Solo Barba">Solo Barba</option>
-              <option value="Depilación Nariz">Depilación Nariz</option>
-              <option value="Depilación Oídos">Depilación Oídos</option>
-            </select>
+            <!-- SELECTOR DE SERVICIOS - CAROUSEL INTERACTIVO -->
+            <div class="service-selector-wrapper">
+              <label class="block text-sm font-medium text-zinc-400 mb-3">Selecciona el Servicio</label>
+              
+              <!-- Track del carousel -->
+              <div class="service-carousel" ref="serviceCarousel">
+                <div 
+                  v-for="srv in servicios" 
+                  :key="srv.value"
+                  @click="selectServicio(srv.value)"
+                  :class="['service-card', form.servicio === srv.value ? 'service-card--active' : '']" 
+                >
+                  <!-- Icono SVG animado -->
+                  <div class="service-icon-wrapper">
+                    <div class="service-icon" v-html="srv.icon"></div>
+                  </div>
+                  <!-- Info -->
+                  <div class="service-info">
+                    <h3 class="service-name">{{ srv.label }}</h3>
+                    <p class="service-desc">{{ srv.desc }}</p>
+                  </div>
+                  <!-- Check seleccionado -->
+                  <div v-if="form.servicio === srv.value" class="service-check">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Indicador de puntos -->
+              <div class="service-dots">
+                <span 
+                  v-for="(srv, idx) in servicios" :key="idx"
+                  :class="['service-dot', form.servicio === srv.value ? 'service-dot--active' : '']"
+                  @click="scrollToService(idx)"
+                ></span>
+              </div>
+
+              <!-- Badge de servicio seleccionado -->
+              <transition name="badge-fade">
+                <div v-if="form.servicio" class="service-selected-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="badge-icon">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span>{{ servicios.find(s => s.value === form.servicio)?.label }}</span>
+                </div>
+              </transition>
+            </div>
 
             <div class="relative group">
               <textarea 
@@ -164,7 +201,7 @@ export default {
     return {
       success: false,
       isSubmitting: false,
-      isLoadingSlots: true,  // Arranca en true hasta que el API responda
+      isLoadingSlots: true,
       bookedSlots: [],
       availableDays: [],
       availableTimeSlots: [
@@ -179,7 +216,80 @@ export default {
         telefono: '',
         servicio: '',
         direccion: ''
-      }
+      },
+      servicios: [
+        {
+          value: 'Corte Sencillo',
+          label: 'Corte Sencillo',
+          desc: 'Corte profesional con cualquier estilo del menú.',
+          icon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-scissors">
+            <circle cx="18" cy="46" r="6" stroke="currentColor" stroke-width="2.5"/>
+            <circle cx="18" cy="18" r="6" stroke="currentColor" stroke-width="2.5"/>
+            <line x1="22.5" y1="21.5" x2="50" y2="12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="22.5" y1="42.5" x2="50" y2="52" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="35" y1="32" x2="50" y2="32" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>`
+        },
+        {
+          value: 'Corte + Barba',
+          label: 'Corte + Barba',
+          desc: 'Corte completo con recorte y diseño de barba.',
+          icon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-cut-beard">
+            <!-- Camisa/Cuerpo -->
+            <path d="M16 60 V52 C16 45 22 40 28 40 H36 C42 40 48 45 48 52 V60" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M24 40 L24 60M40 40 L40 60" stroke="currentColor" stroke-width="2"/>
+            <path d="M24 50 L16 52M40 50 L48 52" stroke="currentColor" stroke-width="2"/>
+            <!-- Cara / Cabello -->
+            <path d="M24 25 C24 16 28 14 32 14 C36 14 40 16 40 25 V30 C40 37 36 40 32 40 C28 40 24 37 24 30 V25Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M23 18 C23 12 26 8 32 8 C38 8 41 12 41 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <!-- Moño -->
+            <circle cx="32" cy="7" r="3" stroke="currentColor" stroke-width="2"/>
+            <!-- Barba -->
+            <path d="M24 25 C20 32 20 40 32 46 C44 40 44 32 40 25" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <!-- Bigote -->
+            <path d="M26 34 C28 32 30 32 32 33 C34 32 36 32 38 34 C36 35 34 36 32 35 C30 36 28 35 26 34Z" stroke="currentColor" stroke-width="2"/>
+          </svg>`
+        },
+        {
+          value: 'Solo Barba',
+          label: 'Solo Barba',
+          desc: 'Recorte, forma y estilo de barba profesional.',
+          icon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-beard">
+            <!-- Bigote -->
+            <path d="M14 26 C20 26 24 20 32 20 C40 20 44 26 50 26 C46 30 40 32 32 30 C24 32 18 30 14 26Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Barba -->
+            <path d="M16 28 C14 36 16 44 24 50 C28 53 32 54 32 54 C32 54 36 53 40 50 C48 44 50 36 48 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Curvas internas de la barba -->
+            <path d="M20 32 C20 40 26 48 32 50 C38 48 44 40 44 32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>`
+        },
+        {
+          value: 'Depilación Nariz',
+          label: 'Depilación Nariz',
+          desc: 'Eliminación rápida y precisa de vellos nasales.',
+          icon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-nose">
+            <!-- Puente de la nariz -->
+            <path d="M32 14 C32 26 24 34 24 42 C24 48 28 50 32 50 C36 50 40 48 40 42 C40 34 32 26 32 14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Fosas nasales -->
+            <path d="M22 42 C18 42 16 46 18 48 C20 50 24 50 26 46" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M42 42 C46 42 48 46 46 48 C44 50 40 50 38 46" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <!-- Vellos nasales (destellos que serán removidos/animados) -->
+            <path d="M22 52 L20 56 M26 52 L28 58" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="icon-spark"/>
+            <path d="M42 52 L44 56 M38 52 L36 58" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="icon-spark"/>
+          </svg>`
+        },
+        {
+          value: 'Depilación Oídos',
+          label: 'Depilación Oídos',
+          desc: 'Tratamiento de vello en oídos limpio y sin dolor.',
+          icon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-ear">
+            <path d="M24 18 C18 22 16 30 18 38 C20 44 26 50 30 50 C28 46 28 42 32 40 C36 38 40 34 40 28 C40 20 34 14 28 14 C22 14 18 18 18 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M28 26 C28 26 32 28 32 32 C32 36 28 38 28 42" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="40" y1="10" x2="46" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="icon-spark"/>
+            <line x1="44" y1="16" x2="52" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="icon-spark"/>
+          </svg>`
+        }
+      ]
     }
   },
   computed: {
@@ -354,6 +464,18 @@ export default {
         this.isSubmitting = false;
       }
     },
+    selectServicio(value) {
+      this.form.servicio = value;
+    },
+    scrollToService(idx) {
+      const carousel = this.$refs.serviceCarousel;
+      if (!carousel) return;
+      const card = carousel.children[idx];
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        this.form.servicio = this.servicios[idx].value;
+      }
+    },
     resetForm() {
       this.success = false;
       this.selectedDate = null;
@@ -391,14 +513,271 @@ export default {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #52525b; /* zinc-600 */
+  background-color: #52525b;
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #71717a; /* zinc-500 */
+  background-color: #71717a;
 }
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #52525b transparent;
+}
+
+/* ===== SERVICE SELECTOR CAROUSEL ===== */
+.service-selector-wrapper {
+  position: relative;
+}
+
+.service-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 8px 4px 16px;
+  cursor: grab;
+}
+.service-carousel:active {
+  cursor: grabbing;
+}
+.service-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tarjeta de servicio */
+.service-card {
+  scroll-snap-align: center;
+  flex-shrink: 0;
+  width: 140px;
+  background: #18181b;
+  border: 1.5px solid #3f3f46;
+  border-radius: 20px;
+  padding: 18px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease, background 0.3s ease;
+  user-select: none;
+}
+.service-card:hover {
+  border-color: #39FF14;
+  transform: translateY(-3px);
+  background: #0a1a08;
+}
+.service-card--active {
+  border-color: #39FF14 !important;
+  background: #071207 !important;
+  box-shadow: 0 0 22px rgba(57, 255, 20, 0.35), inset 0 0 18px rgba(57, 255, 20, 0.07);
+  transform: translateY(-4px) scale(1.03);
+}
+
+/* Icono contenedor */
+.service-icon-wrapper {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #27272a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+.service-card:hover .service-icon-wrapper,
+.service-card--active .service-icon-wrapper {
+  background: rgba(57, 255, 20, 0.12);
+}
+.service-icon {
+  width: 30px;
+  height: 30px;
+  color: #a1a1aa;
+  transition: color 0.3s ease;
+}
+.service-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.service-card:hover .service-icon,
+.service-card--active .service-icon {
+  color: #39FF14;
+}
+
+/* Animaciones de los iconos SVG */
+/* Tijeras - movimiento de corte */
+:deep(.icon-scissors) {
+  animation: scissorIdle 3s ease-in-out infinite;
+  transform-origin: 35px 32px;
+}
+.service-card:hover :deep(.icon-scissors),
+.service-card--active :deep(.icon-scissors) {
+  animation: scissorCut 0.4s ease-in-out infinite alternate;
+}
+@keyframes scissorIdle {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(5deg); }
+}
+@keyframes scissorCut {
+  from { transform: rotate(-8deg); }
+  to   { transform: rotate(8deg); }
+}
+
+/* Barba+corte - pulso suave */
+:deep(.icon-cut-beard) {
+  animation: beardPulse 2.5s ease-in-out infinite;
+}
+@keyframes beardPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.06); }
+}
+
+/* Barba sola - balanceo */
+:deep(.icon-beard) {
+  animation: beardWave 3s ease-in-out infinite;
+  transform-origin: 32px 40px;
+}
+.service-card:hover :deep(.icon-beard),
+.service-card--active :deep(.icon-beard) {
+  animation: beardWaveFast 1.2s ease-in-out infinite;
+}
+@keyframes beardWave {
+  0%, 100% { transform: rotate(-4deg); }
+  50%       { transform: rotate(4deg); }
+}
+@keyframes beardWaveFast {
+  0%, 100% { transform: rotate(-6deg); }
+  50%       { transform: rotate(6deg); }
+}
+
+/* Nariz - destellos parpadeantes */
+:deep(.icon-spark) {
+  animation: sparkle 1.5s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+:deep(.icon-spark:last-child) {
+  animation-delay: 0.3s;
+}
+@keyframes sparkle {
+  from { opacity: 0.3; transform: scale(0.8); }
+  to   { opacity: 1;   transform: scale(1.15); }
+}
+
+/* Oído - ondas de sonido animadas */
+:deep(.icon-ear) {
+  animation: earWiggle 2s ease-in-out infinite;
+}
+.service-card:hover :deep(.icon-ear),
+.service-card--active :deep(.icon-ear) {
+  animation: earWiggleFast 0.8s ease-in-out infinite;
+}
+@keyframes earWiggle {
+  0%, 100% { transform: translateX(0); }
+  25%  { transform: translateX(2px); }
+  75%  { transform: translateX(-2px); }
+}
+@keyframes earWiggleFast {
+  0%, 100% { transform: translateX(0); }
+  25%  { transform: translateX(3px); }
+  75%  { transform: translateX(-3px); }
+}
+
+/* Texto de la tarjeta */
+.service-info {
+  text-align: center;
+}
+.service-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e4e4e7;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  transition: color 0.3s ease;
+}
+.service-card--active .service-name {
+  color: #39FF14;
+}
+.service-desc {
+  font-size: 10px;
+  color: #71717a;
+  line-height: 1.35;
+}
+
+/* Check de seleccionado */
+.service-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  background: #39FF14;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.service-check svg {
+  width: 10px;
+  height: 10px;
+  color: black;
+}
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* Puntos indicadores */
+.service-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.service-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3f3f46;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease, width 0.3s ease;
+}
+.service-dot--active {
+  background: #39FF14;
+  width: 18px;
+  border-radius: 4px;
+  transform: scale(1.1);
+}
+
+/* Badge de confirmación */
+.service-selected-badge {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(57, 255, 20, 0.1);
+  border: 1px solid rgba(57, 255, 20, 0.3);
+  border-radius: 10px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #39FF14;
+}
+.badge-icon {
+  width: 14px;
+  height: 14px;
+}
+.badge-fade-enter-active {
+  animation: badgePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.badge-fade-leave-active {
+  animation: badgePop 0.2s ease reverse;
+}
+@keyframes badgePop {
+  from { opacity: 0; transform: translateY(6px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 </style>
