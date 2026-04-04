@@ -28,10 +28,17 @@
         <!-- CALENDARIO VISUAL -->
         <div>
           <label class="block text-sm font-medium text-zinc-400 mb-3">1. Selecciona el Día</label>
-        <div class="flex overflow-x-auto space-x-3 py-4 snap-x custom-scrollbar">
+        <div 
+          class="flex overflow-x-auto space-x-3 py-4 snap-x custom-scrollbar select-none"
+          ref="dateCarousel"
+          @mousedown="startDragging($event, 'dateCarousel')"
+          @mousemove="onDrag($event, 'dateCarousel')"
+          @mouseup="stopDragging"
+          @mouseleave="stopDragging"
+        >
             <div 
               v-for="(day, index) in availableDays" :key="index"
-              @click="!isDiaLleno(day.rawDate) && selectDate(day.rawDate)"
+              @click="!hasMoved && !isDiaLleno(day.rawDate) && selectDate(day.rawDate)"
               :class="[
                 'snap-center shrink-0 flex flex-col items-center justify-center w-16 h-20 rounded-2xl transition-all border outline-none relative',
                 isDiaLleno(day.rawDate)
@@ -116,11 +123,18 @@
               <label class="block text-sm font-medium text-zinc-400 mb-3">Selecciona el Servicio</label>
               
               <!-- Track del carousel -->
-              <div class="service-carousel" ref="serviceCarousel">
+              <div 
+                class="service-carousel select-none" 
+                ref="serviceCarousel"
+                @mousedown="startDragging($event, 'serviceCarousel')"
+                @mousemove="onDrag($event, 'serviceCarousel')"
+                @mouseup="stopDragging"
+                @mouseleave="stopDragging"
+              >
                 <div 
                   v-for="srv in servicios" 
                   :key="srv.value"
-                  @click="selectServicio(srv.value)"
+                  @click="!hasMoved && selectServicio(srv.value)"
                   :class="['service-card', form.servicio === srv.value ? 'service-card--active' : '']" 
                 >
                   <!-- Icono SVG animado -->
@@ -217,6 +231,10 @@ export default {
         servicio: '',
         direccion: ''
       },
+      isDragging: false,
+      startX: 0,
+      scrollLeft: 0,
+      hasMoved: false,
       servicios: [
         {
           value: 'Corte Sencillo',
@@ -475,6 +493,34 @@ export default {
         card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         this.form.servicio = this.servicios[idx].value;
       }
+    },
+    // Métodos para Arrastrar (Desktop Drag-to-scroll)
+    startDragging(e, refName) {
+      this.isDragging = true;
+      this.hasMoved = false;
+      const el = this.$refs[refName];
+      this.startX = e.pageX - el.offsetLeft;
+      this.scrollLeft = el.scrollLeft;
+      el.style.scrollSnapType = 'none'; // Desactivar snap durante el drag
+    },
+    stopDragging() {
+      this.isDragging = false;
+      // Re-activar snap después de un pequeño delay
+      setTimeout(() => {
+        if (this.$refs.dateCarousel) this.$refs.dateCarousel.style.scrollSnapType = 'x mandatory';
+        if (this.$refs.serviceCarousel) this.$refs.serviceCarousel.style.scrollSnapType = 'x mandatory';
+      }, 100);
+    },
+    onDrag(e, refName) {
+      if (!this.isDragging) return;
+      e.preventDefault();
+      const el = this.$refs[refName];
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - this.startX) * 1.5; // Velocidad de scroll
+      if (Math.abs(walk) > 3) {
+        this.hasMoved = true;
+      }
+      el.scrollLeft = this.scrollLeft - walk;
     },
     resetForm() {
       this.success = false;
