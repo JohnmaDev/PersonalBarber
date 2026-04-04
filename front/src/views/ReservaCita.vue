@@ -450,7 +450,7 @@ export default {
 
       try {
         // 2. Enviamos los datos a nuestra nueva API en Go (Netlify Functions)
-        const response = await fetch('/.netlify/functions/reserve', {
+        const response = await fetch('/api/reserve', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

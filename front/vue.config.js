@@ -14,7 +14,11 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '^/api': {
-        target: 'https://personalbarber.netlify.app',
+        target: 'https://personalbarber.vip',
+        changeOrigin: true
+      },
+      '^/.netlify/functions': {
+        target: 'https://personalbarber.vip',
         changeOrigin: true
       }
     }
