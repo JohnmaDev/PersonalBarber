@@ -16,19 +16,23 @@ export const servicios = [
     label: 'Corte + Barba',
     desc: 'Corte completo con recorte y diseño de barba.',
     icon: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-cut-beard">
-      <!-- Camisa/Cuerpo -->
+      <!-- Camisa/Cuerpo (Base) -->
       <path d="M16 60 V52 C16 45 22 40 28 40 H36 C42 40 48 45 48 52 V60" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       <path d="M24 40 L24 60M40 40 L40 60" stroke="currentColor" stroke-width="2"/>
-      <path d="M24 50 L16 52M40 50 L48 52" stroke="currentColor" stroke-width="2"/>
-      <!-- Cara / Cabello -->
-      <path d="M24 25 C24 16 28 14 32 14 C36 14 40 16 40 25 V30 C40 37 36 40 32 40 C28 40 24 37 24 30 V25Z" stroke="currentColor" stroke-width="2"/>
-      <path d="M23 18 C23 12 26 8 32 8 C38 8 41 12 41 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      <!-- Moño -->
-      <circle cx="32" cy="7" r="3" stroke="currentColor" stroke-width="2"/>
-      <!-- Barba -->
-      <path d="M24 25 C20 32 20 40 32 46 C44 40 44 32 40 25" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-      <!-- Bigote -->
-      <path d="M26 34 C28 32 30 32 32 33 C34 32 36 32 38 34 C36 35 34 36 32 35 C30 36 28 35 26 34Z" stroke="currentColor" stroke-width="2"/>
+      
+      <!-- Grupo Cabeza (Animado) -->
+      <g class="head-group">
+        <!-- Cara / Cabello -->
+        <path d="M24 25 C24 16 28 14 32 14 C36 14 40 16 40 25 V30 C40 37 36 40 32 40 C28 40 24 37 24 30 V25Z" stroke="currentColor" stroke-width="2"/>
+        <path d="M23 18 C23 12 26 8 32 8 C38 8 41 12 41 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <!-- Moño -->
+        <circle cx="32" cy="7" r="3" stroke="currentColor" stroke-width="2"/>
+        <!-- Barba -->
+        <path d="M24 25 C20 32 20 40 32 46 C44 40 44 32 40 25" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M28 38 C28 41 30 42 32 42 C34 42 36 41 36 38" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+        <!-- Bigote -->
+        <path d="M26 34 C28 32 30 32 32 33 C34 32 36 32 38 34 C36 35 34 36 32 35 C30 36 28 35 26 34Z" stroke="currentColor" stroke-width="2"/>
+      </g>
     </svg>`
   },
   {
