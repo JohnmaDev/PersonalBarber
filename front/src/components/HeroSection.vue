@@ -54,7 +54,7 @@
         
         <div class="relative bg-barber-charcoal/90 backdrop-blur-2xl p-8 lg:p-12 rounded-[40px] border border-white/10 flex flex-col items-center gap-6 shadow-2xl">
           <div class="w-40 h-40 lg:w-48 lg:h-48 rounded-[30px] border-4 border-neon-green p-1.5 overflow-hidden shadow-[0_0_30px_rgba(57,255,20,0.2)] bg-black">
-            <img src="@/assets/profile_andres.webp" alt="Andrés Hernández" class="w-full h-full object-cover rounded-[22px]" />
+            <img src="@/assets/Profile_Andres_H.webp" alt="Andrés Hernández" class="w-full h-full object-cover rounded-[22px]" />
           </div>
           <div class="text-center">
             <!-- H2 oculto visualmente para SEO — refuerza la relevancia para "barbería en Medellín" -->
