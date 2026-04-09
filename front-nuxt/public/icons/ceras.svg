@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Tilted Lid -->
+  <polygon points="12,28 68,12 74,28 18,44" />
+  
+  <!-- Neck sides -->
+  <line x1="24" y1="42.3" x2="24" y2="48" />
+  <line x1="70" y1="29.1" x2="70" y2="48" />
+  
+  <!-- Neck threads (dashes) -->
+  <line x1="40" y1="40" x2="50" y2="40" />
+  <line x1="56" y1="40" x2="66" y2="40" />
+  
+  <!-- Jar Body shoulder, sides and base -->
+  <line x1="12" y1="48" x2="82" y2="48" />
+  <path d="M 12 48 V 78 Q 12 88 22 88 H 72 Q 82 88 82 78 V 48" />
+  
+  <!-- Inner Label Line (Balanced and symmetric) -->
+  <path d="M 28 80 V 60 H 66 V 80" />
+</svg>

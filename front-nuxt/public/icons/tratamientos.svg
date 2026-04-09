@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Cap Top with Notch -->
+  <path d="M 42 19 V 12 Q 42 10 44 10 H 46 V 15 H 54 V 10 H 56 Q 58 10 58 12 V 19" />
+  
+  <!-- Cap Base -->
+  <path d="M 36 25 V 19 H 64 V 25" />
+  
+  <!-- Bottle Body -->
+  <rect x="25" y="25" width="50" height="70" rx="8" />
+  
+  <!-- Top Label (Pill shape) -->
+  <path d="M 25 40 H 55 A 5 5 0 0 1 55 50 H 25" />
+  
+  <!-- Bottom Label (Rounded rectangle) -->
+  <path d="M 25 62 H 60 A 4 4 0 0 1 64 66 V 78 A 4 4 0 0 1 60 82 H 25" />
+</svg>
