@@ -28,7 +28,7 @@
           <span class="text-white block">MEDELLÍN.</span>
         </h1>
         <p class="text-lg sm:text-2xl lg:text-3xl text-gray-300 mt-8 mb-10 font-bold max-w-2xl mx-auto lg:mx-0 animate-fade-in-up opacity-0" style="animation-delay: 0.2s;">
-          <span class="text-white">PersonalBarber</span> — No es solo un corte, es tu identidad. Reserva tu cita de autor y equipate con la excelencia en nuestra <span class="text-neon-green">tienda digital exclusiva</span>.
+          <span class="text-white">PersonalBarber</span> — No es solo un corte, es tu identidad. Reserva tu cita y equipate con la excelencia en nuestra <span class="text-neon-green">tienda digital exclusiva</span>.
         </p>
         
         <div class="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start animate-fade-in-up opacity-0" style="animation-delay: 0.4s;">
