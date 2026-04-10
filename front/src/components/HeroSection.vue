@@ -28,7 +28,7 @@
           <span class="text-white block">MEDELLÍN.</span>
         </h1>
         <p class="text-lg sm:text-2xl lg:text-3xl text-gray-300 mt-8 mb-10 font-bold max-w-2xl mx-auto lg:mx-0 animate-fade-in-up opacity-0" style="animation-delay: 0.2s;">
-          <span class="text-white">PersonalBarber</span> — Donde la excelencia es el estándar. Reserva tu cita y <span class="text-neon-green">refleja tu mejor versión</span>.
+          <span class="text-white">PersonalBarber</span> — No es solo un corte, es tu identidad. Reserva tu cita de autor y equipate con la excelencia en nuestra <span class="text-neon-green">tienda digital exclusiva</span>.
         </p>
         
         <div class="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start animate-fade-in-up opacity-0" style="animation-delay: 0.4s;">
@@ -40,7 +40,7 @@
           </button>
           <button 
             @click="scrollToProducts"
-            class="px-10 py-5 bg-transparent border-4 border-white/20 hover:border-white text-white text-xl lg:text-2xl font-black italic tracking-wider rounded-2xl transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] uppercase flex items-center justify-center gap-3"
+            class="px-10 py-5 bg-transparent border-4 border-neon-green/20 hover:border-neon-green text-white hover:text-black hover:bg-neon-green text-xl lg:text-2xl font-black italic tracking-wider rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(57,255,20,0.5)] uppercase flex items-center justify-center gap-3"
           >
             LA TIENDA <i class="fas fa-shopping-bag"></i>
           </button>
