@@ -78,24 +78,18 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: 'HeroSection',
-  data() {
-    return {
-      socials: [
-        { name: 'WhatsApp', icon: 'fab fa-whatsapp', link: 'https://api.whatsapp.com/send?phone=573045840264' },
-        { name: 'TikTok', icon: 'fab fa-tiktok', link: 'https://www.tiktok.com/@pipehpbarber' },
-        { name: 'Instagram', icon: 'fab fa-instagram', link: 'https://www.instagram.com/pipehp_/' }
-      ]
-    }
-  },
-  methods: {
-    scrollToProducts() {
-      const el = document.getElementById('tienda');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
+<script setup>
+const emit = defineEmits(['reserve'])
+
+const socials = [
+  { name: 'WhatsApp', icon: 'fab fa-whatsapp', link: 'https://api.whatsapp.com/send?phone=573045840264' },
+  { name: 'TikTok', icon: 'fab fa-tiktok', link: 'https://www.tiktok.com/@pipehpbarber' },
+  { name: 'Instagram', icon: 'fab fa-instagram', link: 'https://www.instagram.com/pipehp_/' }
+]
+
+const scrollToProducts = () => {
+  const el = document.getElementById('tienda');
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
 }
 </script>
 
