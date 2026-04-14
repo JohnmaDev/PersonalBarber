@@ -79,8 +79,6 @@
 </template>
 
 <script setup>
-const emit = defineEmits(['reserve'])
-
 const socials = [
   { name: 'WhatsApp', icon: 'fab fa-whatsapp', link: 'https://api.whatsapp.com/send?phone=573045840264' },
   { name: 'TikTok', icon: 'fab fa-tiktok', link: 'https://www.tiktok.com/@pipehpbarber' },
