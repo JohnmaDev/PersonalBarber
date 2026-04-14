@@ -60,12 +60,12 @@
               <!-- Selector de cantidad -->
               <div class="flex items-center gap-2 mt-2">
                 <button
-                  @click="handleUpdateQuantity(item.id, item.qty - 1)"
+                  @click="decrementQuantity(item)"
                   class="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors text-white text-xs"
                 >−</button>
                 <span class="text-white text-xs font-bold w-4 text-center">{{ item.qty }}</span>
                 <button
-                  @click="item.qty < item.stock ? handleUpdateQuantity(item.id, item.qty + 1) : null"
+                  @click="incrementQuantity(item)"
                   :disabled="item.qty >= item.stock"
                   class="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors text-white text-xs disabled:opacity-20 disabled:cursor-not-allowed"
                 >+</button>
@@ -139,8 +139,15 @@ onUnmounted(() => {
   window.removeEventListener('keydown', handleKeydown)
 })
 
-const handleUpdateQuantity = (productId, newQty) => {
-  updateQuantity(productId, newQty)
+// Funciones para gestionar el flujo de actualización de cantidades
+const incrementQuantity = (item) => {
+  if (item.qty < item.stock) {
+    updateQuantity(item.id, item.qty + 1)
+  }
+}
+
+const decrementQuantity = (item) => {
+  updateQuantity(item.id, item.qty - 1)
 }
 </script>
 
