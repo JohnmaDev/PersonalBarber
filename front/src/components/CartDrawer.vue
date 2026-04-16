@@ -139,15 +139,13 @@ onUnmounted(() => {
   window.removeEventListener('keydown', handleKeydown)
 })
 
-// Funciones para gestionar el flujo de actualización de cantidades
+// Gestión de cantidades
 const incrementQuantity = (item) => {
-  if (item.qty < item.stock) {
-    updateQuantity(item.id, item.qty + 1)
-  }
+  if (item.qty < item.stock) updateQuantity(item.id, item.qty + 1)
 }
 
 const decrementQuantity = (item) => {
-  updateQuantity(item.id, item.qty - 1)
+  if (item.qty > 1) updateQuantity(item.id, item.qty - 1)
 }
 </script>
 
