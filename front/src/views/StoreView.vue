@@ -234,18 +234,19 @@ export default {
 
     const activeDepartment = ref('men')
 
+    const activeDeptCats = computed(() => {
+      return categories.value.filter(c => {
+        if (c.comingSoon) return false
+        if (activeDepartment.value === 'merch') {
+          return c.department === 'unisex' || c.style === 'premium'
+        }
+        return c.department === activeDepartment.value
+      })
+    })
+
     const filters = computed(() => [
       { id: 'all', label: 'Todos' },
-      ...categories.value
-        .filter(c => {
-          if (c.comingSoon) return false
-          if (activeDepartment.value === 'merch') {
-            // En la tienda, mostramos las 4 de ropa + la boutique para filtrar productos
-            return c.department === 'unisex' || c.style === 'premium'
-          }
-          return c.department === activeDepartment.value
-        })
-        .map(c => ({ id: c.id, label: c.label }))
+      ...activeDeptCats.value.map(c => ({ id: c.id, label: c.label }))
     ])
 
     const activeFilter = ref('all')
@@ -303,15 +304,8 @@ export default {
     watch(() => route.query.dept, syncFilter)
 
     const filteredProducts = computed(() => {
-      // Filtrar el departamento actual de forma estricta
-      const activeDeptCats = categories.value
-        .filter(c => {
-          if (activeDepartment.value === 'merch') return c.department === 'unisex' || c.style === 'premium'
-          return c.department === activeDepartment.value
-        })
-        .map(c => c.id)
-
-      let list = products.value.filter(p => p.category && activeDeptCats.includes(p.category))
+      const catIds = activeDeptCats.value.map(c => c.id)
+      let list = products.value.filter(p => p.category && catIds.includes(p.category))
 
       if (activeFilter.value !== 'all') {
         list = list.filter(p => p.category === activeFilter.value)
