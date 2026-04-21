@@ -5,11 +5,7 @@
       <div v-if="isLoading" class="fixed top-0 left-0 w-full h-[2px] z-[100] overflow-hidden">
         <div 
           class="h-full animate-progress-bar transition-colors duration-500"
-          :class="{
-            'bg-neon-green shadow-[0_0_10px_#39FF14]': activeDepartment === 'men',
-            'bg-cyan-400 shadow-[0_0_10px_#22d3ee]': activeDepartment === 'merch',
-            'bg-pink-500 shadow-[0_0_10px_#ec4899]': activeDepartment === 'women'
-          }"
+          :class="currentTheme.bar"
         ></div>
       </div>
     </transition>
@@ -22,11 +18,7 @@
           <span class="text-[10px] font-semibold sm:hidden">Inicio</span>
         </router-link>
         <h1 class="text-sm sm:text-lg font-bold tracking-tight sm:tracking-widest uppercase text-white truncate text-center flex-1 transition-colors duration-500">
-          <span :class="{
-            'text-neon-green': activeDepartment === 'men',
-            'text-cyan-400': activeDepartment === 'merch',
-            'text-pink-500': activeDepartment === 'women'
-          }">Personal</span>Barber · Tienda
+          <span :class="currentTheme.text">Personal</span>Barber · Tienda
         </h1>
         <div class="w-10 sm:w-16 flex-shrink-0"></div><!-- spacer -->
       </div>
@@ -87,22 +79,14 @@
       <!-- Contador + título -->
       <div class="mb-6 text-center">
         <p class="text-gray-500 text-sm">
-          Mostrando <span class="font-bold transition-colors duration-300" :class="{
-            'text-neon-green': activeDepartment === 'men',
-            'text-cyan-400': activeDepartment === 'merch',
-            'text-pink-500': activeDepartment === 'women'
-          }">{{ filteredProducts.length }}</span> productos
+          Mostrando <span class="font-bold transition-colors duration-300" :class="currentTheme.text">{{ filteredProducts.length }}</span> productos
           <span v-if="activeFilter !== 'all'"> en <span class="text-white">{{ activeFilterLabel }}</span></span>
         </p>
       </div>
 
       <!-- Estado de carga -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-24">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 transition-colors duration-300" :class="{
-          'border-neon-green': activeDepartment === 'men',
-          'border-cyan-400': activeDepartment === 'merch',
-          'border-pink-500': activeDepartment === 'women'
-        }"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 mb-4 transition-colors duration-300" :class="currentTheme.border"></div>
         <p class="text-gray-400 font-medium">Cargando productos...</p>
       </div>
 
@@ -120,7 +104,7 @@
           :style="isFirstVisit ? { '--i': index } : {}"
           :class="[
             'group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all duration-500',
-            activeDepartment === 'men' ? 'hover:border-neon-green/50' : (activeDepartment === 'merch' ? 'hover:border-cyan-400/50' : 'hover:border-pink-500/50')
+            currentTheme.hoverBorder
           ]"
         >
           <!-- Imagen – clic navega al detalle -->
@@ -129,9 +113,8 @@
             @click="goToDetail(product)"
           >
               <img 
-                :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image, 400)" 
-                :alt="product.name" 
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                :src="optimizeImage(product.images?.[0] || product.image, 400)" 
+                :alt="product.name" 134:                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                 :class="{'grayscale opacity-50': product.stock <= 0}"
                 loading="lazy" 
               />
@@ -148,11 +131,7 @@
           <div class="p-4 flex flex-col flex-grow justify-between">
             <div class="cursor-pointer" @click="goToDetail(product)">
               <span class="text-[10px] text-gray-500 uppercase tracking-widest">{{ product.brand }}</span>
-              <h3 class="text-sm font-bold text-white transition-colors duration-300 leading-tight mt-0.5" :class="{
-                'group-hover:text-neon-green': activeDepartment === 'men',
-                'group-hover:text-cyan-400': activeDepartment === 'merch',
-                'group-hover:text-pink-500': activeDepartment === 'women'
-              }">
+              <h3 class="text-sm font-bold text-white transition-colors duration-300 leading-tight mt-0.5" :class="currentTheme.hoverText">
                 {{ product.name }}
               </h3>
               <p class="text-gray-500 text-xs mt-1.5 leading-relaxed line-clamp-2 italic">
@@ -160,11 +139,7 @@
               </p>
             </div>
             <div class="flex items-center justify-between mt-4">
-              <span class="font-bold text-sm transition-colors duration-300" :class="{
-                'text-neon-green': activeDepartment === 'men',
-                'text-cyan-400': activeDepartment === 'merch',
-                'text-pink-500': activeDepartment === 'women'
-              }">{{ formatPrice(product.price) }}</span>
+              <span class="font-bold text-sm transition-colors duration-300" :class="currentTheme.text">{{ formatPrice(product.price) }}</span>
               <!-- Botón agregar al carrito rápido -->
               <button
                 v-if="product.stock > 0"
@@ -174,9 +149,7 @@
                   'w-8 h-8 rounded-full glass flex items-center justify-center transition-all duration-300 text-sm text-white hover:text-black',
                   isStockFull(product)
                     ? 'opacity-20 cursor-not-allowed border-transparent'
-                    : (justAdded === product.id 
-                      ? (activeDepartment === 'men' ? 'bg-neon-green text-black' : (activeDepartment === 'merch' ? 'bg-cyan-400 text-black' : 'bg-pink-500 text-white')) 
-                      : (activeDepartment === 'men' ? 'hover:bg-neon-green' : (activeDepartment === 'merch' ? 'hover:bg-cyan-400' : 'hover:bg-pink-500')))
+                    : (justAdded === product.id ? `${currentTheme.bg} !text-black` : `hover:${currentTheme.bg}`)
                 ]"
                 :aria-label="isStockFull(product) ? 'Stock máximo alcanzado' : 'Agregar ' + product.name + ' al carrito'"
               >
@@ -330,6 +303,48 @@ export default {
       }
     }
 
+    const currentTheme = computed(() => {
+      const themes = {
+        men: { 
+          text: 'text-neon-green', 
+          bg: 'bg-neon-green', 
+          border: 'border-neon-green', 
+          shadow: 'shadow-[0_0_15px_rgba(57,255,20,0.3)]', 
+          bar: 'bg-neon-green shadow-[0_0_10px_#39FF14]',
+          hoverBorder: 'hover:border-neon-green/50',
+          hoverText: 'group-hover:text-neon-green'
+        },
+        merch: { 
+          text: 'text-cyan-400', 
+          bg: 'bg-cyan-400', 
+          border: 'border-cyan-400', 
+          shadow: 'shadow-[0_0_15px_rgba(34,211,238,0.3)]', 
+          bar: 'bg-cyan-400 shadow-[0_0_10px_#22d3ee]',
+          hoverBorder: 'hover:border-cyan-400/50',
+          hoverText: 'group-hover:text-cyan-400'
+        },
+        women: { 
+          text: 'text-pink-500', 
+          bg: 'bg-pink-500', 
+          border: 'border-pink-500', 
+          shadow: 'shadow-[0_0_15px_rgba(236,72,153,0.3)]', 
+          bar: 'bg-pink-500 shadow-[0_0_10px_#ec4899]',
+          hoverBorder: 'hover:border-pink-500/50',
+          hoverText: 'group-hover:text-pink-500'
+        }
+      }
+      return themes[activeDepartment.value] || themes.men
+    })
+
+    const getThemeColor = (type = 'text', dept = activeDepartment.value) => {
+      const themes = {
+        men: { text: 'text-neon-green', bg: 'bg-neon-green', border: 'border-neon-green', shadow: 'shadow-[0_0_15px_rgba(57,255,20,0.3)]', bar: 'bg-neon-green shadow-[0_0_10px_#39FF14]' },
+        merch: { text: 'text-cyan-400', bg: 'bg-cyan-400', border: 'border-cyan-400', shadow: 'shadow-[0_0_15px_rgba(34,211,238,0.3)]', bar: 'bg-cyan-400 shadow-[0_0_10px_#22d3ee]' },
+        women: { text: 'text-pink-500', bg: 'bg-pink-500', border: 'border-pink-500', shadow: 'shadow-[0_0_15px_rgba(236,72,153,0.3)]', bar: 'bg-pink-500 shadow-[0_0_10px_#ec4899]' }
+      }
+      return themes[dept]?.[type] || ''
+    }
+
     // Hacemos el setup retornando todo
     return {
       products,
@@ -347,7 +362,9 @@ export default {
       quickAddToCart,
       isStockFull,
       justAdded,
-      fetchData
+      fetchData,
+      getThemeColor,
+      currentTheme
     }
   }
 }
