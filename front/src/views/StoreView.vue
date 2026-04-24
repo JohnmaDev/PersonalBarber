@@ -30,31 +30,17 @@
       <div class="flex justify-center mt-2 mb-8 fade-in">
         <div class="inline-flex bg-zinc-900 rounded-full p-1 border border-zinc-800 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
           <button 
-            @click="activeDepartment = 'men'; activeFilter = 'all'"
+            v-for="dept in departments"
+            :key="dept.id"
+            @click="activeDepartment = dept.id; activeFilter = 'all'"
             :class="[
               'px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'men' ? 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' : 'text-zinc-500 hover:text-white'
+              activeDepartment === dept.id ? dept.activeClass : 'text-zinc-500 hover:text-white'
             ]"
           >
-            <i class="fas fa-cut"></i> <span class="hidden xs:inline">Para Él</span><span class="xs:hidden">Él</span>
-          </button>
-          <button 
-            @click="activeDepartment = 'merch'; activeFilter = 'all'"
-            :class="[
-              'px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'merch' ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-zinc-500 hover:text-white'
-            ]"
-          >
-            <i class="fas fa-tshirt"></i> <span class="hidden xs:inline">Merch</span><span class="xs:hidden">Ropa</span>
-          </button>
-          <button 
-            @click="activeDepartment = 'women'; activeFilter = 'all'"
-            :class="[
-              'px-4 sm:px-6 py-2 rounded-full font-black tracking-widest text-[10px] sm:text-xs uppercase transition-all duration-300 flex items-center gap-2',
-              activeDepartment === 'women' ? 'bg-pink-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' : 'text-zinc-500 hover:text-white'
-            ]"
-          >
-            <i class="fas fa-spa"></i> <span class="hidden xs:inline">Para Ella</span><span class="xs:hidden">Ella</span>
+            <i :class="dept.icon"></i>
+            <span class="hidden xs:inline">{{ dept.labelFull }}</span>
+            <span class="xs:hidden">{{ dept.labelShort }}</span>
           </button>
         </div>
       </div>
@@ -336,14 +322,11 @@ export default {
       return themes[activeDepartment.value] || themes.men
     })
 
-    const getThemeColor = (type = 'text', dept = activeDepartment.value) => {
-      const themes = {
-        men: { text: 'text-neon-green', bg: 'bg-neon-green', border: 'border-neon-green', shadow: 'shadow-[0_0_15px_rgba(57,255,20,0.3)]', bar: 'bg-neon-green shadow-[0_0_10px_#39FF14]' },
-        merch: { text: 'text-cyan-400', bg: 'bg-cyan-400', border: 'border-cyan-400', shadow: 'shadow-[0_0_15px_rgba(34,211,238,0.3)]', bar: 'bg-cyan-400 shadow-[0_0_10px_#22d3ee]' },
-        women: { text: 'text-pink-500', bg: 'bg-pink-500', border: 'border-pink-500', shadow: 'shadow-[0_0_15px_rgba(236,72,153,0.3)]', bar: 'bg-pink-500 shadow-[0_0_10px_#ec4899]' }
-      }
-      return themes[dept]?.[type] || ''
-    }
+    const departments = [
+      { id: 'men', labelFull: 'Para Él', labelShort: 'Él', icon: 'fas fa-cut', activeClass: 'bg-neon-green text-black shadow-[0_0_15px_rgba(57,255,20,0.3)]' },
+      { id: 'merch', labelFull: 'Merch', labelShort: 'Ropa', icon: 'fas fa-tshirt', activeClass: 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(34,211,238,0.3)]' },
+      { id: 'women', labelFull: 'Para Ella', labelShort: 'Ella', icon: 'fas fa-spa', activeClass: 'bg-pink-500 text-white shadow-[0_0_15px_rgba(236,72,153,0.3)]' }
+    ]
 
     // Hacemos el setup retornando todo
     return {
@@ -353,6 +336,7 @@ export default {
       errorMessage,
       activeFilter,
       activeDepartment,
+      departments,
       filters,
       filteredProducts,
       activeFilterLabel,
@@ -363,7 +347,6 @@ export default {
       isStockFull,
       justAdded,
       fetchData,
-      getThemeColor,
       currentTheme
     }
   }
