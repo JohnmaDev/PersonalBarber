@@ -12,6 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
+	"github.com/JohnmaDev/PersonalBarber/backend/pkg/auth"
 )
 
 type Cut struct {
@@ -22,19 +23,29 @@ type Cut struct {
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	adminPin := os.Getenv("VUE_APP_ADMIN_PIN")
-	providedPin := request.QueryStringParameters["token"]
-
-	if adminPin == "" || providedPin != adminPin {
-		return events.APIGatewayProxyResponse{StatusCode: http.StatusUnauthorized, Body: `{"error": "Unauthorized"}`}, nil
+	// 1. Proteger producción: deshabilitado por defecto para evitar borrado accidental
+	if os.Getenv("ENABLE_SEED_SCRIPTS") != "true" {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusNotFound,
+			Body:       `{"error": "Endpoint not found"}`,
+		}, nil
 	}
 
 	uri := os.Getenv("MONGODB_URI")
+	if uri == "" {
+		return events.APIGatewayProxyResponse{StatusCode: 500, Body: `{"error": "Missing URI"}`}, nil
+	}
 	client, err := mongo.Connect(options.Client().ApplyURI(uri))
 	if err != nil {
 		return events.APIGatewayProxyResponse{StatusCode: 500, Body: fmt.Sprintf(`{"error": "%v"}`, err)}, nil
 	}
 	defer client.Disconnect(ctx)
+
+	// 2. Verificación de seguridad estricta
+	ok, _ := auth.VerifyTokenWithRateLimit(ctx, request, client)
+	if !ok {
+		return events.APIGatewayProxyResponse{StatusCode: http.StatusUnauthorized, Body: `{"error": "Unauthorized"}`}, nil
+	}
 
 	collection := client.Database("personalbarber").Collection("cuts")
 	

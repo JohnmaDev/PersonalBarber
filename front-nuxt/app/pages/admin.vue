@@ -59,7 +59,10 @@ import AdminProducts from '~/components/admin/AdminProducts.vue'
 import AdminCategories from '~/components/admin/AdminCategories.vue'
 import AdminCuts from '~/components/admin/AdminCuts.vue'
 
-useSeoMeta({ title: 'Panel de Administración | PersonalBarber' })
+useSeoMeta({
+  title: 'Panel de Administración | PersonalBarber',
+  robots: 'noindex, nofollow',
+})
 
 // PIN validado EXCLUSIVAMENTE server-side vía /api-auth/admin-auth
 // El PIN real NUNCA baja al navegador del cliente.

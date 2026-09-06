@@ -47,7 +47,7 @@
             <template v-if="activeDepartment === 'women'">{{ t('store.heroBadgeWomen') }}</template>
             <template v-else-if="activeDepartment === 'merch'">{{ t('store.heroBadgeMerch') }}</template>
             <template v-else-if="activeDepartment === 'all'">{{ t('store.heroBadgeAll') }}</template>
-            <template v-else>Medellín · Barbería Premium</template>
+            <template v-else>Medellín · Tienda de Barbería Premium</template>
           </span>
         </div>
 
@@ -381,38 +381,68 @@ function scrollCategoryFilter(direction: 'left' | 'right') {
 
 // SEO — tienda como home
 useSeoMeta({
-  title: 'PersonalBarber — Tienda Online de Barbería | Medellín',
-  ogTitle: 'PersonalBarber — Tienda Online de Barbería | Medellín',
-  description: 'Compra productos profesionales de barbería, cuidado personal y moda en PersonalBarber. Envíos a Medellín y toda Colombia. También agenda tu cita con el barber a domicilio.',
-  ogDescription: 'Tienda online de barbería premium en Medellín. Ceras, maquinas, cuidado de barba, skincare y más. Compra online con envío.',
+  title: 'PersonalBarber — Tienda de Barbería Online | Medellín & Colombia',
+  ogTitle: 'PersonalBarber — Tienda de Barbería Online | Medellín & Colombia',
+  description: 'Tienda de barbería líder en Medellín y Colombia. Compra productos profesionales para barberos: máquinas WMark, ceras para peinar, minoxidil kirkland, tijeras y servicio de barbería a domicilio. Envíos rápidos a toda Colombia.',
+  ogDescription: 'Tienda de barbería profesional en Medellín. Ceras, máquinas, cuidado de barba, minoxidil y skincare. Compra online con envíos a toda Colombia.',
   ogUrl: 'https://personalbarber.co',
 })
 
-// JSON-LD — Store + BarberShop (dual schema)
+// JSON-LD — Store + BarberShop + WebSite (Schema unificado)
 useHead({
   script: [{
     type: 'application/ld+json',
     children: JSON.stringify({
       '@context': 'https://schema.org',
-      '@type': ['Store', 'BarberShop'],
-      name: 'PersonalBarber',
-      description: 'Tienda online de productos de barbería premium y servicio de barbero a domicilio en Medellín.',
-      url: 'https://personalbarber.co',
-      telephone: '+573337518070',
-      image: 'https://personalbarber.co/og-image.webp',
-      priceRange: '$$',
-      currenciesAccepted: 'COP',
-      paymentAccepted: 'Cash, Transferencia, Nequi, PSE',
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'Medellín',
-        addressRegion: 'Antioquia',
-        addressCountry: 'CO',
-      },
-      sameAs: [
-        'https://www.instagram.com/pipehp_/',
-        'https://www.tiktok.com/@pipehpbarber',
-      ],
+      '@graph': [
+        {
+          '@type': ['Store', 'BarberShop'],
+          '@id': 'https://personalbarber.co/#store',
+          name: 'PersonalBarber — Tienda de Barbería',
+          alternateName: ['Personal Barber', 'PersonalBarber Medellín', 'Tienda de Barbería PersonalBarber'],
+          description: 'Tienda de barbería líder en Medellín y barbería a domicilio. Productos profesionales e insumos para barberos con envíos a toda Colombia.',
+          url: 'https://personalbarber.co',
+          telephone: '+573337518070',
+          image: 'https://personalbarber.co/og-image.webp',
+          priceRange: '$$',
+          currenciesAccepted: 'COP',
+          paymentAccepted: 'Cash, Transferencia, Nequi, PSE, Wompi',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: 'La Candelaria',
+            addressLocality: 'Medellín',
+            addressRegion: 'Antioquia',
+            addressCountry: 'CO',
+          },
+          geo: {
+            '@type': 'GeoCoordinates',
+            latitude: 6.2442,
+            longitude: -75.5812,
+          },
+          openingHoursSpecification: [
+            {
+              '@type': 'OpeningHoursSpecification',
+              dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+              opens: '00:00',
+              closes: '23:59',
+            },
+          ],
+          sameAs: [
+            'https://www.instagram.com/personalbarber.co/',
+            'https://www.tiktok.com/@pipehpbarber',
+          ],
+        },
+        {
+          '@type': 'WebSite',
+          '@id': 'https://personalbarber.co/#website',
+          url: 'https://personalbarber.co',
+          name: 'PersonalBarber',
+          description: 'Tienda de Barbería Online en Medellín y Colombia',
+          publisher: {
+            '@id': 'https://personalbarber.co/#store',
+          },
+        }
+      ]
     })
   }]
 })

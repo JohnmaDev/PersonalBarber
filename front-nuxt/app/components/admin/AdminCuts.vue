@@ -159,10 +159,13 @@ export default {
       if (!this.cutForm.image || !this.cutForm.style) return alert('Imagen y estilo son obligatorios');
       this.guardandoCut = true;
       try {
-        const url = `/api/manage_cuts?token=${this.adminPin}`;
+        const url = `/api/manage_cuts`;
         const res = await fetch(url, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.adminPin}`
+          },
           body: JSON.stringify(this.cutForm)
         });
         const data = await res.json();
@@ -181,8 +184,13 @@ export default {
     async borrarCorte(id) {
       if (!confirm('¿Seguro que quieres eliminar esta foto de la galería?')) return;
       try {
-        const url = `/api/manage_cuts?id=${id}&token=${this.adminPin}`;
-        const res = await fetch(url, { method: 'DELETE' });
+        const url = `/api/manage_cuts?id=${encodeURIComponent(id)}`;
+        const res = await fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${this.adminPin}`
+          }
+        });
         const data = await res.json();
         if (data.ok) this.cargarCortes();
       } catch (e) {

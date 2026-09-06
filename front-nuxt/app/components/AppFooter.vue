@@ -41,7 +41,7 @@
       <!-- Redes sociales del barbero -->
       <nav class="flex items-center justify-center gap-4 mb-5" :aria-label="t('footer.socialLabel')">
         <a
-          href="https://www.instagram.com/pipehp_/"
+          href="https://www.instagram.com/personalbarber.co/"
           target="_blank"
           rel="noopener noreferrer"
           class="text-gray-400 hover:text-pink-500 transition duration-300 text-sm"

@@ -428,7 +428,7 @@ export default {
       const originalState = p.is_active;
       p.is_active = nuevoEstado;
       try {
-        const url = `/api/manage_products?token=${this.adminPin}`;
+        const url = `/api/manage_products`;
         const payload = {
           ...p,
           brand: p.brand ? p.brand.trim() : '',
@@ -438,7 +438,7 @@ export default {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
-            'Authorization': this.adminPin 
+            'Authorization': `Bearer ${this.adminPin}` 
           },
           body: JSON.stringify(payload)
         });
@@ -463,12 +463,12 @@ export default {
         this.prodForm.price = Number(this.prodForm.price) || 0;
         this.prodForm.stock = Number(this.prodForm.stock) || 0;
 
-        const url = `/api/manage_products?token=${this.adminPin}`;
+        const url = `/api/manage_products`;
         const res = await fetch(url, {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
-            'Authorization': this.adminPin 
+            'Authorization': `Bearer ${this.adminPin}` 
           },
           body: JSON.stringify(this.prodForm)
         });
@@ -489,8 +489,13 @@ export default {
     async borrarProducto(id) {
       if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
       try {
-        const url = `/api/manage_products?id=${id}&token=${this.adminPin}`;
-        const res = await fetch(url, { method: 'DELETE' });
+        const url = `/api/manage_products?id=${encodeURIComponent(id)}`;
+        const res = await fetch(url, { 
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${this.adminPin}`
+          }
+        });
         const data = await res.json();
         if (data.ok) {
           this.cargarProductos();

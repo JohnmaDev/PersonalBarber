@@ -373,12 +373,14 @@ watchEffect(() => {
   }
 })
 
-// SEO dinámico
+// SEO dinámico de alta conversión
 watchEffect(() => {
   if (product.value) {
-    const title = `${product.value.name} | PersonalBarber`
-    const description = `${product.value.name} de ${product.value.brand}. ${String(product.value.description).substring(0, 150)}...`
-    const image = product.value.images?.[0] || product.value.image || '/og-image.webp'
+    const brand = product.value.brand ? ` — ${product.value.brand}` : ''
+    const title = `${product.value.name}${brand} | Tienda de Barbería Medellín`
+    const cleanDesc = String(product.value.description || '').replace(/\s+/g, ' ').trim()
+    const description = `Compra ${product.value.name} en PersonalBarber Medellín. ${cleanDesc.substring(0, 130)}... Envíos a toda Colombia. 100% original.`
+    const image = product.value.images?.[0] || product.value.image || 'https://personalbarber.co/og-image.webp'
 
     useSeoMeta({
       title,
@@ -386,6 +388,7 @@ watchEffect(() => {
       description,
       ogDescription: description,
       ogImage: image,
+      keywords: `${product.value.name}, ${product.value.brand || 'PersonalBarber'}, comprar ${product.value.name} medellin, tienda de barberia medellin, productos de barberia colombia`,
     })
 
     useHead({
@@ -404,10 +407,16 @@ watchEffect(() => {
             '@type': 'Offer',
             priceCurrency: 'COP',
             price: String(product.value.price).replace(/\D/g, ''),
+            priceValidUntil: '2027-12-31',
+            itemCondition: 'https://schema.org/NewCondition',
             availability: product.value.stock > 0
               ? 'https://schema.org/InStock'
               : 'https://schema.org/OutOfStock',
-            seller: { '@type': 'Organization', name: 'PersonalBarber' },
+            seller: {
+              '@type': 'Store',
+              name: 'PersonalBarber',
+              url: 'https://personalbarber.co'
+            },
           }
         })
       }]

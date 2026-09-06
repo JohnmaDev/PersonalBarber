@@ -180,9 +180,13 @@ export default {
     async cargarReservas() {
       this.cargando = true;
       try {
-        const url = `/api/list_reservations?token=${this.adminPin}`;
+        const url = `/api/list_reservations`;
         
-        const res = await fetch(url);
+        const res = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${this.adminPin}`
+          }
+        });
         const data = await res.json();
         if (data.ok) this.reservas = data.reservas;
       } catch (e) {

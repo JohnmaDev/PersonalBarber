@@ -49,6 +49,12 @@ export default defineNuxtConfig({
     }
   },
 
+  // Configuración global de sitio para SEO / Sitemap
+  site: {
+    url: process.env.NODE_ENV === 'production' ? 'https://personalbarber.co' : (process.env.NUXT_PUBLIC_SITE_URL || 'https://personalbarber.co'),
+    name: 'PersonalBarber',
+  },
+
   // App head global — metadatos base SEO
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
@@ -57,12 +63,13 @@ export default defineNuxtConfig({
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
       htmlAttrs: { lang: 'es' },
-      title: 'PersonalBarber — Tienda Online de Barbería | Medellín',
+      title: 'PersonalBarber — Tienda de Barbería Online | Medellín & Colombia',
       meta: [
-        { name: 'description', content: 'Tienda online de productos profesionales de barbería, cuidado personal y moda en Medellín. Envíos a toda Colombia. También agenda tu cita con el barber a domicilio.' },
+        { name: 'description', content: 'Tienda de barbería líder en Medellín y Colombia. Compra productos profesionales para barberos: máquinas WMark, ceras para cabello, minoxidil kirkland, tijeras y barbería a domicilio. Envíos rápidos a todo el país.' },
+        { name: 'keywords', content: 'tienda de barberias, tienda de barberia medellin, productos de barberia, insumos de barberia colombia, maquinas de barberia, ceras para cabello, minoxidil medellin, minoxidil kirkland colombia, barberia medellin, barbero a domicilio medellin' },
         { name: 'theme-color', content: '#0A0A0A' },
-        { property: 'og:title', content: 'PersonalBarber — Tienda Online de Barbería | Medellín' },
-        { property: 'og:description', content: 'Tienda online de barbería premium. Ceras, maquinas, cuidado de barba, skincare y más. Compra online con envío a toda Colombia.' },
+        { property: 'og:title', content: 'PersonalBarber — Tienda de Barbería Online | Medellín & Colombia' },
+        { property: 'og:description', content: 'Tienda de barbería profesional en Medellín. Ceras, máquinas WMark, cuidado de barba, minoxidil y skincare. Compra online con envíos a toda Colombia.' },
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'PersonalBarber' },
         { property: 'og:url', content: 'https://personalbarber.co' },
@@ -71,10 +78,10 @@ export default defineNuxtConfig({
         { property: 'og:image:type', content: 'image/webp' },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
-        { property: 'og:image:alt', content: 'PersonalBarber — Tienda Online de Barbería en Medellín' },
+        { property: 'og:image:alt', content: 'PersonalBarber — Tienda de Barbería en Medellín' },
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'PersonalBarber — Tienda Online de Barbería | Medellín' },
-        { name: 'twitter:description', content: 'Tienda online de barbería premium en Medellín. Compra online con envío a toda Colombia.' },
+        { name: 'twitter:title', content: 'PersonalBarber — Tienda de Barbería Online | Medellín' },
+        { name: 'twitter:description', content: 'Tienda de barbería profesional en Medellín. Compra online productos para barberos con envío a toda Colombia.' },
         { name: 'twitter:image', content: 'https://personalbarber.co/og-image.webp' },
       ],
       link: [
@@ -104,9 +111,50 @@ export default defineNuxtConfig({
     }
   },
 
-  // Sitemap automático (@nuxtjs/sitemap v8 — auto-discovers rutas)
+  // Sitemap automático (@nuxtjs/sitemap v8) con productos dinámicos
   sitemap: {
     siteUrl: 'https://personalbarber.co',
+    exclude: [
+      '/admin',
+      '/admin/**',
+      '/checkout',
+      '/checkout/**',
+      '/wa',
+    ],
+    urls: async () => {
+      try {
+        const response = await fetch('https://personalbarber.co/api/get_catalog')
+        if (!response.ok) return []
+        const data: any = await response.json()
+        if (!data?.products || !Array.isArray(data.products)) return []
+
+        return data.products
+          .filter((p: any) => p.is_active !== false)
+          .map((p: any) => {
+            const cleanName = (p.name || '')
+              .toLowerCase()
+              .normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/^-+|-+$/g, '')
+            const slug = `${p.id}-${cleanName}`
+
+            const images = (p.images && p.images.length > 0 ? p.images : (p.image ? [p.image] : [])).slice(0, 2).map((img: string) => ({
+              loc: img,
+              title: p.name,
+            }))
+
+            return {
+              loc: `/tienda/producto/${slug}`,
+              _priority: 0.8,
+              changefreq: 'weekly',
+              images,
+            }
+          })
+      } catch {
+        return []
+      }
+    },
   },
 
   // Nitro — preset Netlify para deploy
@@ -118,7 +166,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/api/**': {
       proxy: process.env.NODE_ENV === 'development'
-        ? 'https://personalbarber.co/api/**'
+        ? 'http://localhost:8888/.netlify/functions/**'
         : 'https://personalbarber.co/.netlify/functions/**'
     },
     // Aplicar security headers a todo el sitio

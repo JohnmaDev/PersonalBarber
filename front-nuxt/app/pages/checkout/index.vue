@@ -551,7 +551,10 @@
 </template>
 
 <script setup lang="ts">
-useSeoMeta({ title: 'Finalizar Compra | PersonalBarber' })
+useSeoMeta({
+  title: 'Finalizar Compra | PersonalBarber',
+  robots: 'noindex, nofollow',
+})
 
 const router = useRouter()
 const { cartItems, cartTotal, cartTotalFormatted, formatPrice, parsePrice, clearCart } = useCart()
@@ -727,12 +730,20 @@ async function handleCheckout() {
         ok: boolean; publicKey: string; amountInCents: number;
         currency: string; reference: string; integrityHash: string;
         redirectUrl: string; wompiEnvironment: string;
+        orderToken?: string;
       }>('/api/create_transaction', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: { orderId: orderData.order.id },
       })
       if (!txData.ok) throw new Error('Error preparando pago')
+
+      const token = txData.orderToken || orderData.order?.orderToken || ''
+      if (token) {
+        try {
+          sessionStorage.setItem(`pb_order_token_${txData.reference}`, token)
+        } catch {}
+      }
 
       // 3. Cargar el script de Wompi
       await loadWompiScript()
@@ -744,7 +755,7 @@ async function handleCheckout() {
         reference: txData.reference,
         publicKey: txData.publicKey,
         signature: { integrity: txData.integrityHash },
-        redirectUrl: `${txData.redirectUrl}?id=${txData.reference}`,
+        redirectUrl: `${txData.redirectUrl}?id=${txData.reference}&token=${encodeURIComponent(token)}`,
         customerData: {
           email: form.email,
           fullName: `${form.firstName} ${form.lastName}`,
@@ -756,7 +767,7 @@ async function handleCheckout() {
       checkout.open(function (result: any) {
         const txRef = result?.transaction?.reference || txData.reference
         // Redirigir a la página de resultado
-        router.push(`/checkout/resultado?id=${txRef}`)
+        router.push(`/checkout/resultado?id=${txRef}&token=${encodeURIComponent(token)}`)
       })
     }
   } catch (e: any) {

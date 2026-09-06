@@ -153,7 +153,7 @@ const { t } = useLanguage()
 const socials = [
   { name: 'WhatsApp', icon: ['fab', 'whatsapp'], link: 'https://api.whatsapp.com/send?phone=573337518070' },
   { name: 'TikTok', icon: ['fab', 'tiktok'], link: 'https://www.tiktok.com/@pipehpbarber' },
-  { name: 'Instagram', icon: ['fab', 'instagram'], link: 'https://www.instagram.com/pipehp_/' },
+  { name: 'Instagram', icon: ['fab', 'instagram'], link: 'https://www.instagram.com/personalbarber.co/' },
 ]
 
 const emit = defineEmits<{ reserve: [] }>()

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"math/big"
@@ -63,6 +64,7 @@ type Order struct {
 	Status         string    `bson:"status" json:"status"`
 	ClientIP       string    `bson:"clientIp,omitempty" json:"clientIp,omitempty"`
 	CreatedAt      time.Time `bson:"createdAt" json:"createdAt"`
+	OrderToken     string    `bson:"orderToken" json:"orderToken"`
 	// Campos para integración Wompi (se llenan después)
 	WompiTransactionID string `bson:"wompiTransactionId,omitempty" json:"wompiTransactionId,omitempty"`
 	WompiStatus        string `bson:"wompiStatus,omitempty" json:"wompiStatus,omitempty"`
@@ -163,6 +165,15 @@ func generateOrderID() string {
 		return fmt.Sprintf("ORD-%d", time.Now().UnixNano()%90000+10000)
 	}
 	return fmt.Sprintf("ORD-%d", n.Int64()+10000)
+}
+
+// generateOrderToken genera un token criptográfico seguro para autorizar consultas de la orden
+func generateOrderToken() string {
+	b := make([]byte, 24)
+	if _, err := rand.Read(b); err != nil {
+		return fmt.Sprintf("%x", time.Now().UnixNano())
+	}
+	return hex.EncodeToString(b)
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -284,6 +295,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		Status:         "PENDING",
 		ClientIP:       getClientIP(request),
 		CreatedAt:      time.Now(),
+		OrderToken:     generateOrderToken(),
 	}
 
 	// 6. Guardar en Colección

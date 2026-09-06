@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html"
 	"net/http"
 	"os"
 	"strings"
@@ -29,6 +30,13 @@ type Reservation struct {
 }
 
 func buildEmailHTML(res Reservation) string {
+	nombre := html.EscapeString(res.Nombre)
+	servicio := html.EscapeString(res.Servicio)
+	fechaRaw := html.EscapeString(res.FechaRaw)
+	horaRaw := html.EscapeString(res.HoraRaw)
+	telefono := html.EscapeString(res.Telefono)
+	direccion := html.EscapeString(res.Direccion)
+
 	return fmt.Sprintf(`<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -153,7 +161,7 @@ func buildEmailHTML(res Reservation) string {
   </table>
 
 </body>
-</html>`, res.Nombre, res.Nombre, res.Servicio, res.FechaRaw, res.HoraRaw, res.Telefono, res.Direccion)
+</html>`, nombre, nombre, servicio, fechaRaw, horaRaw, telefono, direccion)
 }
 
 func getClientIP(req events.APIGatewayProxyRequest) string {

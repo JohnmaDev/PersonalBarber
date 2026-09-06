@@ -225,10 +225,13 @@ export default {
       if (!this.catForm.id || !this.catForm.label) return alert('ID y Etiqueta son obligatorios');
       this.guardandoCat = true;
       try {
-        const url = `/api/manage_categories?token=${this.adminPin}`;
+        const url = `/api/manage_categories`;
         const res = await fetch(url, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.adminPin}`
+          },
           body: JSON.stringify(this.catForm)
         });
         const data = await res.json();
@@ -247,8 +250,13 @@ export default {
     async borrarCategoria(id) {
       if (!confirm('¿Seguro que quieres eliminar esta categoría? Esto no borrará los productos, pero quedarán sin categoría asignada.')) return;
       try {
-        const url = `/api/manage_categories?id=${id}&token=${this.adminPin}`;
-        const res = await fetch(url, { method: 'DELETE' });
+        const url = `/api/manage_categories?id=${encodeURIComponent(id)}`;
+        const res = await fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${this.adminPin}`
+          }
+        });
         const data = await res.json();
         if (data.ok) this.cargarCategorias();
       } catch (e) {

@@ -29,8 +29,9 @@ type TransactionRequest struct {
 }
 
 type Order struct {
-	ID    string  `bson:"id" json:"id"`
-	Total float64 `bson:"total" json:"total"`
+	ID         string  `bson:"id" json:"id"`
+	Total      float64 `bson:"total" json:"total"`
+	OrderToken string  `bson:"orderToken" json:"orderToken"`
 }
 
 // corsHeaders devuelve las cabeceras CORS estándar
@@ -156,14 +157,15 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 
 	// ── 8. Responder con los datos para el Widget ──
 	responseBody, _ := json.Marshal(map[string]interface{}{
-		"ok":              true,
-		"publicKey":       publicKey,
-		"amountInCents":   amountInCents,
-		"currency":        "COP",
-		"reference":       order.ID,
-		"integrityHash":   integrityHash,
-		"redirectUrl":     redirectURL,
+		"ok":               true,
+		"publicKey":        publicKey,
+		"amountInCents":    amountInCents,
+		"currency":         "COP",
+		"reference":        order.ID,
+		"integrityHash":    integrityHash,
+		"redirectUrl":      redirectURL,
 		"wompiEnvironment": wompiEnv,
+		"orderToken":       order.OrderToken,
 	})
 
 	return events.APIGatewayProxyResponse{

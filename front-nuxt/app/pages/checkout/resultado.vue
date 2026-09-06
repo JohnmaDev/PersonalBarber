@@ -187,7 +187,10 @@
 </template>
 
 <script setup lang="ts">
-useSeoMeta({ title: 'Gracias por tu compra | PersonalBarber' })
+useSeoMeta({
+  title: 'Gracias por tu compra | PersonalBarber',
+  robots: 'noindex, nofollow',
+})
 
 const route = useRoute()
 const router = useRouter()
@@ -260,11 +263,16 @@ function particleStyle(n: number) {
   }
 }
 
+const orderToken = ref('')
+
 // Consultar estado de la orden
 async function checkOrderStatus() {
   if (!orderId.value) return
   try {
-    const data = await $fetch<{ ok: boolean; order: any }>(`/api/order_status?id=${orderId.value}`)
+    const tokenQuery = orderToken.value ? `&token=${encodeURIComponent(orderToken.value)}` : ''
+    const data = await $fetch<{ ok: boolean; order: any }>(`/api/order_status?id=${orderId.value}${tokenQuery}`, {
+      headers: orderToken.value ? { 'X-Order-Token': orderToken.value } : {}
+    })
     if (data.ok && data.order) {
       orderData.value = data.order
       const status = data.order.status
@@ -297,6 +305,15 @@ onMounted(() => {
   const id = route.query.id as string
   if (!id) { orderStatus.value = 'no_id'; return }
   orderId.value = id
+
+  let tok = (route.query.token as string) || ''
+  if (!tok && typeof window !== 'undefined') {
+    try {
+      tok = sessionStorage.getItem(`pb_order_token_${id}`) || ''
+    } catch {}
+  }
+  orderToken.value = tok
+
   orderStatus.value = 'loading'
   checkOrderStatus()
   pollInterval = setInterval(checkOrderStatus, 3000)
