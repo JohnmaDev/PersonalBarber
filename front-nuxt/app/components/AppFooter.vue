@@ -156,7 +156,7 @@
                 <!-- Envíos -->
                 <template v-if="activePolicy === 'envios'">
                   <h4 class="font-bold text-white text-sm mb-1 text-neon-green">Cobertura y Tarifas</h4>
-                  <p>Envíos a Medellín y Valle de Aburrá tarifa plana de <strong>$10.000 COP</strong> mediante PersonalBarber Express.</p>
+                  <p>¡Envíos <strong>100% GRATIS a toda Colombia</strong>! Despachamos a Medellín, Valle de Aburrá y a nivel nacional mediante PersonalBarber Express y transportadoras aliadas certificadas.</p>
 
                   <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">Nuestra Garantía</h4>
                   <p>Si el empaque o producto llega defectuoso o dañado de fábrica, contáctanos dentro de los primeros 3 días hábiles tras recibirlo para coordinar el cambio sin costo adicional.</p>

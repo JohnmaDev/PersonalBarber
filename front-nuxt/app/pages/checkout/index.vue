@@ -104,32 +104,32 @@
                       <label class="label-xs">Ciudad / Municipio *</label>
                       <input v-model="form.city" @blur="touched.city=true" list="colombian-cities" type="text" placeholder="Medellín, Envigado, Girardota, Bogotá..." class="input-field" :class="{'border-red-500/50': touched.city && !form.city.trim()}" />
                       <datalist id="colombian-cities">
-                        <option value="Medellín">Medellín — Valle de Aburrá ($10.000 COP)</option>
-                        <option value="Bello">Bello — Valle de Aburrá ($10.000 COP)</option>
-                        <option value="Envigado">Envigado — Valle de Aburrá ($10.000 COP)</option>
-                        <option value="Itagüí">Itagüí — Valle de Aburrá ($10.000 COP)</option>
-                        <option value="Sabaneta">Sabaneta — Valle de Aburrá ($10.000 COP)</option>
-                        <option value="La Estrella">La Estrella — Valle de Aburrá ($10.000 COP)</option>
-                        <option value="Girardota">Girardota — Oriente / Alrededores ($15.000 COP)</option>
-                        <option value="Copacabana">Copacabana — Oriente / Alrededores ($15.000 COP)</option>
-                        <option value="Guarne">Guarne — Oriente / Alrededores ($15.000 COP)</option>
-                        <option value="Rionegro">Rionegro — Oriente / Alrededores ($15.000 COP)</option>
-                        <option value="Caldas">Caldas — Oriente / Alrededores ($15.000 COP)</option>
-                        <option value="Marinilla">Marinilla — Oriente / Alrededores ($15.000 COP)</option>
-                        <option value="La Ceja">La Ceja — Oriente / Alrededores ($15.000 COP)</option>
-                        <option value="El Retiro">El Retiro — Oriente / Alrededores ($15.000 COP)</option>
-                        <option value="Bogotá">Bogotá — Envío Nacional ($20.000 COP)</option>
-                        <option value="Cali">Cali — Envío Nacional ($20.000 COP)</option>
-                        <option value="Barranquilla">Barranquilla — Envío Nacional ($20.000 COP)</option>
-                        <option value="Bucaramanga">Bucaramanga — Envío Nacional ($20.000 COP)</option>
-                        <option value="Pereira">Pereira — Envío Nacional ($20.000 COP)</option>
+                        <option value="Medellín">Medellín — Valle de Aburrá (Envío GRATIS)</option>
+                        <option value="Bello">Bello — Valle de Aburrá (Envío GRATIS)</option>
+                        <option value="Envigado">Envigado — Valle de Aburrá (Envío GRATIS)</option>
+                        <option value="Itagüí">Itagüí — Valle de Aburrá (Envío GRATIS)</option>
+                        <option value="Sabaneta">Sabaneta — Valle de Aburrá (Envío GRATIS)</option>
+                        <option value="La Estrella">La Estrella — Valle de Aburrá (Envío GRATIS)</option>
+                        <option value="Girardota">Girardota — Oriente / Alrededores (Envío GRATIS)</option>
+                        <option value="Copacabana">Copacabana — Oriente / Alrededores (Envío GRATIS)</option>
+                        <option value="Guarne">Guarne — Oriente / Alrededores (Envío GRATIS)</option>
+                        <option value="Rionegro">Rionegro — Oriente / Alrededores (Envío GRATIS)</option>
+                        <option value="Caldas">Caldas — Oriente / Alrededores (Envío GRATIS)</option>
+                        <option value="Marinilla">Marinilla — Oriente / Alrededores (Envío GRATIS)</option>
+                        <option value="La Ceja">La Ceja — Oriente / Alrededores (Envío GRATIS)</option>
+                        <option value="El Retiro">El Retiro — Oriente / Alrededores (Envío GRATIS)</option>
+                        <option value="Bogotá">Bogotá — Envío Nacional (Envío GRATIS)</option>
+                        <option value="Cali">Cali — Envío Nacional (Envío GRATIS)</option>
+                        <option value="Barranquilla">Barranquilla — Envío Nacional (Envío GRATIS)</option>
+                        <option value="Bucaramanga">Bucaramanga — Envío Nacional (Envío GRATIS)</option>
+                        <option value="Pereira">Pereira — Envío Nacional (Envío GRATIS)</option>
                       </datalist>
                       <p v-if="touched.city && !form.city.trim()" class="err">La ciudad es obligatoria</p>
                       <p v-if="form.city.trim() && currentShipping" class="text-[11px] font-bold dept-text mt-1.5 flex items-center gap-1">
                         <span>⚡ Destino: <strong class="text-white underline">{{ form.city }}</strong> → {{ currentShipping.label }} ({{ currentShipping.price }})</span>
                       </p>
                       <p v-else class="text-[11px] text-gray-500 mt-1.5">
-                        <span class="text-neon-green font-bold">⚡</span> Tarifa autocalculada según tu municipio.
+                        <span class="text-neon-green font-bold">⚡</span> Envío 100% GRATIS a todo Colombia.
                       </p>
                     </div>
                     <div>
@@ -284,12 +284,8 @@
                   <div class="flex justify-between text-sm">
                     <span class="text-gray-400">Envío <span v-if="form.city" class="text-xs text-white font-semibold">({{ form.city }})</span></span>
                     <span class="font-semibold" :class="currentShipping ? 'dept-text' : 'text-gray-400'">
-                      {{ currentShipping ? formatPrice(shippingCost) : 'Calculando...' }}
+                      {{ currentShipping ? (shippingCost === 0 ? 'GRATIS' : formatPrice(shippingCost)) : 'Calculando...' }}
                     </span>
-                  </div>
-                  <div v-if="step >= 2 && currentShipping?.id === 'nacional'" class="flex justify-between text-sm">
-                    <span class="text-yellow-400 text-xs">+ Costo transportadora</span>
-                    <span class="text-yellow-400 text-xs font-semibold">Por confirmar</span>
                   </div>
                   <div class="flex justify-between text-base font-black border-t border-white/10 pt-3 mt-2">
                     <span class="text-white">TOTAL</span>
@@ -364,13 +360,13 @@
 
             <!-- Política de Envíos -->
             <div v-if="activePolicy === 'envios'" class="policy-body">
-              <p class="policy-lead">En <strong>PersonalBarber</strong> organizamos nuestras entregas en <strong>3 zonas geográficas</strong> para garantizar la máxima rapidez y transparencia, sin lentitud en el cálculo ni costos ocultos.</p>
+              <p class="policy-lead">En <strong>PersonalBarber</strong> todos nuestros envíos son <strong>100% GRATIS a todo Colombia</strong>. Organizamos nuestras entregas en <strong>3 zonas operativas</strong> para optimizar los tiempos de despacho y garantizar máxima rapidez sin costos ocultos.</p>
               
               <div class="space-y-3 my-4">
                 <div class="policy-alert-box !bg-neon-green/10 !border-neon-green/30" style="--alert-color: #39ff14;">
                   <div class="text-xl flex-shrink-0 mt-0.5">⚡</div>
                   <div>
-                    <p class="policy-alert-title !text-neon-green">Zona 1: Valle de Aburrá · $10.000 COP</p>
+                    <p class="policy-alert-title !text-neon-green">Zona 1: Valle de Aburrá · Envío GRATIS</p>
                     <p class="policy-alert-sub">Incluye: Medellín, Bello, Envigado, Itagüí, Sabaneta y La Estrella. Entrega estimada en 24–48 horas hábiles.</p>
                   </div>
                 </div>
@@ -378,7 +374,7 @@
                 <div class="policy-alert-box !bg-cyan-500/10 !border-cyan-500/30" style="--alert-color: #06b6d4;">
                   <div class="text-xl flex-shrink-0 mt-0.5">🚀</div>
                   <div>
-                    <p class="policy-alert-title !text-cyan-400">Zona 2: Alrededores & Oriente · $15.000 COP</p>
+                    <p class="policy-alert-title !text-cyan-400">Zona 2: Alrededores & Oriente · Envío GRATIS</p>
                     <p class="policy-alert-sub">Incluye: Girardota, Copacabana, Caldas, Guarne, Rionegro, Marinilla, La Ceja y El Retiro. Entrega en 24–48 horas hábiles.</p>
                   </div>
                 </div>
@@ -386,7 +382,7 @@
                 <div class="policy-alert-box !bg-purple-500/10 !border-purple-500/30" style="--alert-color: #a855f7;">
                   <div class="text-xl flex-shrink-0 mt-0.5">📦</div>
                   <div>
-                    <p class="policy-alert-title !text-purple-400">Zona 3: Nacional & Otras Ciudades · $20.000 COP</p>
+                    <p class="policy-alert-title !text-purple-400">Zona 3: Nacional & Otras Ciudades · Envío GRATIS</p>
                     <p class="policy-alert-sub">Incluye: Bogotá, Cali, Barranquilla, Bucaramanga, Pereira y resto del país vía transportadora certificada (2–5 días hábiles).</p>
                   </div>
                 </div>
@@ -586,8 +582,8 @@ const shippingMethods = [
     emoji: '⚡',
     label: 'PersonalBarber Express — Valle de Aburrá',
     desc: 'Medellín, Bello, Envigado, Itagüí, Sabaneta, La Estrella',
-    price: '$10.000 COP',
-    cost: 10000,
+    price: 'GRATIS',
+    cost: 0,
     badge: 'Urbano · 24-48h',
   },
   {
@@ -595,8 +591,8 @@ const shippingMethods = [
     emoji: '🚀',
     label: 'PersonalBarber Express — Alrededores & Oriente',
     desc: 'Girardota, Copacabana, Caldas, Guarne, Rionegro, La Ceja, Marinilla',
-    price: '$15.000 COP',
-    cost: 15000,
+    price: 'GRATIS',
+    cost: 0,
     badge: 'Alrededores · 24-48h',
   },
   {
@@ -604,8 +600,8 @@ const shippingMethods = [
     emoji: '📦',
     label: 'PersonalBarber Express — Envío Nacional',
     desc: 'Bogotá, Cali, Barranquilla, Bucaramanga y resto de Colombia',
-    price: '$20.000 COP',
-    cost: 20000,
+    price: 'GRATIS',
+    cost: 0,
     badge: 'Nacional · 2-5 días',
   },
 ]
@@ -714,7 +710,7 @@ async function handleCheckout() {
       if (!data.ok) throw new Error('Error creando orden')
       const phone = '573337518070'
       const itemsList = cartItems.map(i => `• ${i.name} x${i.qty}`).join('\n')
-      const shippingLabel = `${currentShipping.value?.label || 'PersonalBarber Express'} · ${currentShipping.value?.price || '$10.000 COP'}`
+      const shippingLabel = `${currentShipping.value?.label || 'PersonalBarber Express'} · ${currentShipping.value?.price || 'GRATIS'}`
       const msg = `¡Hola Andrés! Acabo de hacer un pedido:\n\n*ID:* ${data.order.id}\n\n${itemsList}\n\n*Subtotal Productos:* $${data.order.subtotal_format || data.order.total_format} COP\n*Envío (${form.city}):* ${shippingLabel}\n*TOTAL A PAGAR:* ${grandTotalFormatted.value}\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad / Municipio: ${form.city}\nDirección: ${form.address}`
       window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank')
       clearCart()

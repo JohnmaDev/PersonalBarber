@@ -141,20 +141,13 @@ func getClientIP(req events.APIGatewayProxyRequest) string {
 	return "desconocida"
 }
 
-// calculateShippingCost determina el costo de envío SIEMPRE en el servidor
-// NUNCA confía en valores enviados desde el frontend
+// calculateShippingCost determina el costo de envío SIEMPRE en el servidor.
+// NUNCA confía en valores enviados desde el frontend.
+// Política Comercial PersonalBarber: Envío 100% GRATIS a todo Colombia ($0 COP).
+// El método de envío se preserva en la orden exclusivamente para logística y despacho.
 func calculateShippingCost(shippingMethod string) float64 {
-	switch shippingMethod {
-	case "express_valle", "valle":
-		return 10000
-	case "express_alrededores", "alrededores":
-		return 15000
-	case "express_nacional", "nacional":
-		return 20000
-	default:
-		// Default seguro: zona más económica
-		return 10000
-	}
+	// Costo de envío absorbido completamente por PersonalBarber
+	return 0
 }
 
 // generateOrderID genera un ID de orden con crypto/rand en vez de math/rand
@@ -201,7 +194,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	if uri == "" {
 		return events.APIGatewayProxyResponse{StatusCode: 500, Headers: corsHeaders(), Body: `{"error": "Falta MONGODB_URI"}`}, nil
 	}
-	
+
 	client, err := mongo.Connect(options.Client().ApplyURI(uri))
 	if err != nil {
 		return events.APIGatewayProxyResponse{StatusCode: 500, Headers: corsHeaders(), Body: fmt.Sprintf(`{"error": "%v"}`, err)}, nil
@@ -258,10 +251,10 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 			total += lineTotal
 
 			finalItems = append(finalItems, bson.M{
-				"id":      matched.ID,
-				"name":    matched.Name,
-				"qty":     payloadItem.Qty,
-				"price":   price,
+				"id":       matched.ID,
+				"name":     matched.Name,
+				"qty":      payloadItem.Qty,
+				"price":    price,
 				"subtotal": lineTotal,
 			})
 		}
