@@ -299,7 +299,7 @@ export const en = {
     payPseDesc: 'Online bank debit',
     payWhatsapp: 'Coordinate via WhatsApp',
     payWhatsappDesc: 'Contact the barber directly to arrange payment',
-    stepInfo: 'Information',
+    stepInfo: 'Information & Delivery',
     stepShipping: 'Shipping',
     stepPayment: 'Payment',
     footerStore: 'Store',

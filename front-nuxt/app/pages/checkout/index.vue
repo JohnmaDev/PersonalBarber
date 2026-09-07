@@ -9,11 +9,9 @@
         </NuxtLink>
         <!-- Breadcrumb -->
         <nav class="flex items-center gap-2 text-xs font-semibold tracking-wide">
-          <button @click="goToStep(1)" :class="step >= 1 ? 'dept-text font-bold' : 'text-white/30'" class="hover:underline">Información</button>
+          <button @click="goToStep(1)" :class="step >= 1 ? 'dept-text font-bold' : 'text-white/30'" class="hover:underline">Información y Entrega</button>
           <span class="text-white/20">›</span>
-          <button @click="goToStep(2)" :class="step >= 2 ? 'dept-text font-bold' : 'text-white/30'" :disabled="step < 2" class="disabled:cursor-not-allowed hover:underline">Envío</button>
-          <span class="text-white/20">›</span>
-          <span :class="step === 3 ? 'text-white font-bold' : 'text-white/30'">Pago</span>
+          <button @click="goToStep(2)" :class="step === 2 ? 'dept-text font-bold' : 'text-white/30'" :disabled="step < 2" class="disabled:cursor-not-allowed hover:underline">Pago</button>
         </nav>
       </div>
     </header>
@@ -33,187 +31,143 @@
             <!-- Columna principal -->
             <div class="lg:col-span-3 space-y-6">
 
-              <!-- ═══ PASO 1: INFORMACIÓN ═══ -->
-              <div v-if="step === 1">
+              <!-- ═══ PASO 1: INFORMACIÓN Y ENTREGA ═══ -->
+              <div v-if="step === 1" class="space-y-6">
+                <!-- Información de contacto -->
                 <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
                   <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
                     <span class="w-6 h-6 dept-bg text-black text-xs font-black rounded-full flex items-center justify-center">1</span>
                     Información de contacto
                   </h2>
                   <div class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="label-xs">Nombre completo *</label>
+                      <input v-model="form.fullName" @blur="touched.fullName=true" type="text" placeholder="Carlos Gómez" class="input-field" :class="{'border-red-500/50': touched.fullName && !form.fullName.trim()}" />
+                      <p v-if="touched.fullName && !form.fullName.trim()" class="err">El nombre completo es obligatorio</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label class="label-xs">Nombre *</label>
-                        <input v-model="form.firstName" @blur="touched.firstName=true" type="text" placeholder="Juan" class="input-field" :class="{'border-red-500/50': touched.firstName && !form.firstName.trim()}" />
-                        <p v-if="touched.firstName && !form.firstName.trim()" class="err">Campo obligatorio</p>
+                        <label class="label-xs">Email *</label>
+                        <input v-model="form.email" @blur="touched.email=true" type="email" placeholder="juan@email.com" class="input-field" :class="{'border-red-500/50': touched.email && !isEmailValid}" />
+                        <p v-if="touched.email && !isEmailValid" class="err">Ingresa un correo válido</p>
                       </div>
                       <div>
-                        <label class="label-xs">Apellido *</label>
-                        <input v-model="form.lastName" @blur="touched.lastName=true" type="text" placeholder="García" class="input-field" :class="{'border-red-500/50': touched.lastName && !form.lastName.trim()}" />
-                        <p v-if="touched.lastName && !form.lastName.trim()" class="err">Campo obligatorio</p>
+                        <label class="label-xs">Teléfono / WhatsApp *</label>
+                        <input v-model="form.phone" @input="form.phone=form.phone.replace(/[^0-9+]/g,'')" @blur="touched.phone=true" type="tel" placeholder="+57 300 123 4567" class="input-field" :class="{'border-red-500/50': touched.phone && !isPhoneValid}" />
+                        <p v-if="touched.phone && !isPhoneValid" class="err">Número colombiano inválido (10 dígitos)</p>
                       </div>
-                    </div>
-                    <div>
-                      <label class="label-xs">Email *</label>
-                      <input v-model="form.email" @blur="touched.email=true" type="email" placeholder="juan@email.com" class="input-field" :class="{'border-red-500/50': touched.email && !isEmailValid}" />
-                      <p v-if="touched.email && !isEmailValid" class="err">Ingresa un correo válido</p>
-                    </div>
-                    <div>
-                      <label class="label-xs">Teléfono / WhatsApp *</label>
-                      <input v-model="form.phone" @input="form.phone=form.phone.replace(/[^0-9+]/g,'')" @blur="touched.phone=true" type="tel" placeholder="+57 300 123 4567" class="input-field" :class="{'border-red-500/50': touched.phone && !isPhoneValid}" />
-                      <p v-if="touched.phone && !isPhoneValid" class="err">Número colombiano inválido</p>
                     </div>
                   </div>
-                  <div class="mt-6 flex items-center justify-between">
+                </div>
+
+                <!-- Datos de entrega -->
+                <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
+                  <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
+                    <span class="w-6 h-6 dept-bg text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
+                    Datos de entrega
+                  </h2>
+
+                  <div class="space-y-4">
+                    <div>
+                      <label class="label-xs">¿En qué ciudad deseas recibir tu pedido? *</label>
+                      <input v-model="form.city" @blur="touched.city=true" list="colombian-cities" type="text" placeholder="Medellín, Bogotá, Cali, Barranquilla, Pereira..." class="input-field" :class="{'border-red-500/50': touched.city && !form.city.trim()}" />
+                      <datalist id="colombian-cities">
+                        <option value="Medellín" />
+                        <option value="Bogotá" />
+                        <option value="Cali" />
+                        <option value="Barranquilla" />
+                        <option value="Bucaramanga" />
+                        <option value="Pereira" />
+                        <option value="Envigado" />
+                        <option value="Bello" />
+                        <option value="Itagüí" />
+                        <option value="Sabaneta" />
+                        <option value="Rionegro" />
+                        <option value="Cartagena" />
+                        <option value="Manizales" />
+                        <option value="Cúcuta" />
+                        <option value="Ibagué" />
+                        <option value="Santa Marta" />
+                        <option value="Villavicencio" />
+                        <option value="Pasto" />
+                        <option value="Montería" />
+                        <option value="Valledupar" />
+                        <option value="Armenia" />
+                        <option value="Popayán" />
+                        <option value="Neiva" />
+                        <option value="Tunja" />
+                        <option value="Girardota" />
+                        <option value="Copacabana" />
+                        <option value="Guarne" />
+                        <option value="Marinilla" />
+                        <option value="La Ceja" />
+                        <option value="La Estrella" />
+                        <option value="Caldas" />
+                        <option value="El Retiro" />
+                      </datalist>
+                      <p v-if="touched.city && !form.city.trim()" class="err">La ciudad es obligatoria</p>
+                      <p class="text-xs text-neon-green font-bold flex items-center gap-1.5 mt-2">
+                        <fa-icon :icon="['fas', 'truck']" /> Envío 100% GRATIS a todo Colombia 🇨🇴
+                      </p>
+                    </div>
+
+                    <div>
+                      <label class="label-xs">Dirección completa *</label>
+                      <input v-model="form.address" @blur="touched.address=true" type="text" placeholder="Calle 50 # 30-10, Carrera 43A # 1-50..." class="input-field" :class="{'border-red-500/50': touched.address && !form.address.trim()}" />
+                      <p v-if="touched.address && !form.address.trim()" class="err">La dirección es obligatoria</p>
+                    </div>
+
+                    <div>
+                      <label class="label-xs">Piso, apartamento, casa o referencia <span class="text-gray-500 font-normal">(opcional)</span></label>
+                      <input v-model="form.apartment" type="text" placeholder="Apto 201, Torre B, Casa 14, timbre blanco..." class="input-field" />
+                    </div>
+                  </div>
+
+                  <div class="mt-8 flex items-center justify-between">
                     <NuxtLink to="/" class="text-gray-400 hover:text-white text-sm flex items-center gap-1 transition-colors">
                       <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" /> Volver a la tienda
                     </NuxtLink>
                     <button @click="nextStep" :disabled="!step1Valid"
                       class="px-8 py-3 font-black text-sm rounded-xl transition-all duration-300 flex items-center gap-2"
                       :class="step1Valid ? 'dept-bg hover:opacity-90 text-black shadow-[0_0_20px_var(--dept-glow)]' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
-                      Continuar con el envío <fa-icon :icon="['fas', 'arrow-right']" class="text-xs" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- ═══ PASO 2: ENVÍO ═══ -->
-              <div v-if="step === 2">
-                <!-- Resumen de contacto (modo lectura) -->
-                <div class="bg-white/5 rounded-2xl p-5 border border-white/10 mb-4">
-                  <div class="flex items-center justify-between text-sm">
-                    <div class="flex flex-col gap-1">
-                      <div class="flex gap-4">
-                        <span class="text-gray-500 w-16">Contacto</span>
-                        <span class="text-white">{{ form.firstName }} {{ form.lastName }} · {{ form.email }}</span>
-                      </div>
-                    </div>
-                    <button @click="step = 1" class="dept-text text-xs hover:underline font-semibold">Cambiar</button>
-                  </div>
-                </div>
-
-                <!-- Dirección + Envío juntos -->
-                <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
-                  <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                    <span class="w-6 h-6 dept-bg text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
-                    Dirección de envío
-                  </h2>
-
-                  <div class="space-y-4 mb-6">
-                    <div>
-                      <label class="label-xs">Ciudad / Municipio *</label>
-                      <input v-model="form.city" @blur="touched.city=true" list="colombian-cities" type="text" placeholder="Medellín, Envigado, Girardota, Bogotá..." class="input-field" :class="{'border-red-500/50': touched.city && !form.city.trim()}" />
-                      <datalist id="colombian-cities">
-                        <option value="Medellín">Medellín — Valle de Aburrá (Envío GRATIS)</option>
-                        <option value="Bello">Bello — Valle de Aburrá (Envío GRATIS)</option>
-                        <option value="Envigado">Envigado — Valle de Aburrá (Envío GRATIS)</option>
-                        <option value="Itagüí">Itagüí — Valle de Aburrá (Envío GRATIS)</option>
-                        <option value="Sabaneta">Sabaneta — Valle de Aburrá (Envío GRATIS)</option>
-                        <option value="La Estrella">La Estrella — Valle de Aburrá (Envío GRATIS)</option>
-                        <option value="Girardota">Girardota — Oriente / Alrededores (Envío GRATIS)</option>
-                        <option value="Copacabana">Copacabana — Oriente / Alrededores (Envío GRATIS)</option>
-                        <option value="Guarne">Guarne — Oriente / Alrededores (Envío GRATIS)</option>
-                        <option value="Rionegro">Rionegro — Oriente / Alrededores (Envío GRATIS)</option>
-                        <option value="Caldas">Caldas — Oriente / Alrededores (Envío GRATIS)</option>
-                        <option value="Marinilla">Marinilla — Oriente / Alrededores (Envío GRATIS)</option>
-                        <option value="La Ceja">La Ceja — Oriente / Alrededores (Envío GRATIS)</option>
-                        <option value="El Retiro">El Retiro — Oriente / Alrededores (Envío GRATIS)</option>
-                        <option value="Bogotá">Bogotá — Envío Nacional (Envío GRATIS)</option>
-                        <option value="Cali">Cali — Envío Nacional (Envío GRATIS)</option>
-                        <option value="Barranquilla">Barranquilla — Envío Nacional (Envío GRATIS)</option>
-                        <option value="Bucaramanga">Bucaramanga — Envío Nacional (Envío GRATIS)</option>
-                        <option value="Pereira">Pereira — Envío Nacional (Envío GRATIS)</option>
-                      </datalist>
-                      <p v-if="touched.city && !form.city.trim()" class="err">La ciudad es obligatoria</p>
-                      <p v-if="form.city.trim() && currentShipping" class="text-[11px] font-bold dept-text mt-1.5 flex items-center gap-1">
-                        <span>⚡ Destino: <strong class="text-white underline">{{ form.city }}</strong> → {{ currentShipping.label }} ({{ currentShipping.price }})</span>
-                      </p>
-                      <p v-else class="text-[11px] text-gray-500 mt-1.5">
-                        <span class="text-neon-green font-bold">⚡</span> Envío 100% GRATIS a todo Colombia.
-                      </p>
-                    </div>
-                    <div>
-                      <label class="label-xs">Dirección completa *</label>
-                      <input v-model="form.address" @blur="touched.address=true" type="text" placeholder="Calle 50 # 30-10 Apto 201" class="input-field" :class="{'border-red-500/50': touched.address && !form.address.trim()}" />
-                      <p v-if="touched.address && !form.address.trim()" class="err">La dirección es obligatoria</p>
-                    </div>
-                    <div>
-                      <label class="label-xs">Notas adicionales <span class="text-gray-600 font-normal">(opcional)</span></label>
-                      <input v-model="form.notes" type="text" placeholder="Torre A, conjunto cerrado, timbre 302..." class="input-field" />
-                    </div>
-                  </div>
-
-                  <!-- Selector de método de envío -->
-                  <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
-                    <fa-icon :icon="['fas', 'truck']" class="text-xs dept-text" /> Método de envío
-                  </h3>
-                  <div class="space-y-3">
-                    <label v-for="s in shippingMethods" :key="s.id"
-                      class="flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all duration-300"
-                      :class="selectedShipping === s.id ? 'dept-border bg-white/10' : 'border-white/10 hover:border-white/20'">
-                      <input type="radio" v-model="selectedShipping" :value="s.id" class="hidden" />
-                      <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0"
-                        :class="selectedShipping === s.id ? 'dept-border' : 'border-gray-600'">
-                        <div v-if="selectedShipping === s.id" class="w-2.5 h-2.5 rounded-full dept-bg"></div>
-                      </div>
-                      <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-0.5 flex-wrap">
-                          <span class="text-xl">{{ s.emoji }}</span>
-                          <p class="text-white font-bold text-sm">{{ s.label }}</p>
-                          <span v-if="s.badge" class="text-[9px] dept-badge dept-text px-2 py-0.5 rounded-full font-black">{{ s.badge }}</span>
-                        </div>
-                        <p class="text-gray-500 text-xs">{{ s.desc }}</p>
-                      </div>
-                      <span class="text-white font-bold text-sm flex-shrink-0">{{ s.price }}</span>
-                    </label>
-                  </div>
-
-                  <div class="mt-6 flex items-center justify-between">
-                    <button @click="step = 1" class="text-gray-400 hover:text-white text-sm flex items-center gap-1 transition-colors">
-                      <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" /> Volver
-                    </button>
-                    <button @click="nextStep" :disabled="!step2Valid"
-                      class="px-8 py-3 font-black text-sm rounded-xl transition-all duration-300 flex items-center gap-2"
-                      :class="step2Valid ? 'dept-bg hover:opacity-90 text-black shadow-[0_0_20px_var(--dept-glow)]' : 'bg-white/10 text-gray-600 cursor-not-allowed'">
                       Continuar al pago <fa-icon :icon="['fas', 'arrow-right']" class="text-xs" />
                     </button>
                   </div>
                 </div>
               </div>
 
-              <!-- ═══ PASO 3: PAGO ═══ -->
-              <div v-if="step === 3">
-                <!-- Resúmenes de pasos anteriores -->
-                <div class="bg-white/5 rounded-2xl p-5 border border-white/10 mb-4 divide-y divide-white/8">
+              <!-- ═══ PASO 2: PAGO ═══ -->
+              <div v-if="step === 2">
+                <!-- Resumen de contacto y entrega en modo lectura -->
+                <div class="bg-white/5 rounded-2xl p-5 border border-white/10 mb-6 divide-y divide-white/8">
                   <div class="flex items-center justify-between text-sm pb-3">
                     <div class="flex gap-4">
-                      <span class="text-gray-500 w-16">Contacto</span>
-                      <span class="text-white">{{ form.email }}</span>
+                      <span class="text-gray-500 w-20">Contacto</span>
+                      <span class="text-white">{{ form.fullName }} · {{ form.email }} · {{ form.phone }}</span>
                     </div>
                     <button @click="step = 1" class="dept-text text-xs hover:underline font-semibold">Cambiar</button>
                   </div>
                   <div class="flex items-center justify-between text-sm py-3">
                     <div class="flex gap-4">
-                      <span class="text-gray-500 w-16">Enviar a</span>
-                      <span class="text-white">{{ form.firstName }} {{ form.lastName }}, {{ form.address }}, {{ form.city }}</span>
+                      <span class="text-gray-500 w-20">Enviar a</span>
+                      <span class="text-white">{{ form.address }}<span v-if="form.apartment">, {{ form.apartment }}</span>, {{ form.city }}</span>
                     </div>
                     <button @click="step = 1" class="dept-text text-xs hover:underline font-semibold">Cambiar</button>
                   </div>
                   <div class="flex items-center justify-between text-sm pt-3">
                     <div class="flex gap-4">
-                      <span class="text-gray-500 w-16">Envío</span>
-                      <span class="text-white">
-                        <strong class="dept-text">{{ form.city || 'Destino' }}</strong> <span class="text-gray-400">({{ currentShipping?.label }})</span> · {{ currentShipping?.price }}
+                      <span class="text-gray-500 w-20">Envío</span>
+                      <span class="text-neon-green font-semibold flex items-center gap-1.5">
+                        ⚡ Envío 100% GRATIS a todo Colombia 🇨🇴
                       </span>
                     </div>
-                    <button @click="step = 2" class="dept-text text-xs hover:underline font-semibold">Cambiar</button>
                   </div>
                 </div>
 
                 <!-- Métodos de pago -->
                 <div class="bg-white/5 rounded-2xl p-6 border border-white/10">
                   <h2 class="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                    <span class="w-6 h-6 dept-bg text-black text-xs font-black rounded-full flex items-center justify-center">3</span>
+                    <span class="w-6 h-6 dept-bg text-black text-xs font-black rounded-full flex items-center justify-center">2</span>
                     Método de pago
                   </h2>
                   <div class="space-y-3">
@@ -249,7 +203,7 @@
                   </div>
 
                   <div class="mt-6 flex items-center justify-between">
-                    <button @click="step = 2" class="text-gray-400 hover:text-white text-sm flex items-center gap-1 transition-colors">
+                    <button @click="step = 1" class="text-gray-400 hover:text-white text-sm flex items-center gap-1 transition-colors">
                       <fa-icon :icon="['fas', 'arrow-left']" class="text-xs" /> Volver
                     </button>
                     <button @click="handleCheckout" :disabled="isProcessing"
@@ -282,10 +236,8 @@
                 <div class="border-t border-white/10 pt-4 space-y-2">
                   <div class="flex justify-between text-sm"><span class="text-gray-400">Subtotal</span><span class="text-white font-semibold">{{ cartTotalFormatted }}</span></div>
                   <div class="flex justify-between text-sm">
-                    <span class="text-gray-400">Envío <span v-if="form.city" class="text-xs text-white font-semibold">({{ form.city }})</span></span>
-                    <span class="font-semibold" :class="currentShipping ? 'dept-text' : 'text-gray-400'">
-                      {{ currentShipping ? (shippingCost === 0 ? 'GRATIS' : formatPrice(shippingCost)) : 'Calculando...' }}
-                    </span>
+                    <span class="text-gray-400">Envío</span>
+                    <span class="dept-text font-bold">GRATIS</span>
                   </div>
                   <div class="flex justify-between text-base font-black border-t border-white/10 pt-3 mt-2">
                     <span class="text-white">TOTAL</span>
@@ -360,48 +312,27 @@
 
             <!-- Política de Envíos -->
             <div v-if="activePolicy === 'envios'" class="policy-body">
-              <p class="policy-lead">En <strong>PersonalBarber</strong> todos nuestros envíos son <strong>100% GRATIS a todo Colombia</strong>. Organizamos nuestras entregas en <strong>3 zonas operativas</strong> para optimizar los tiempos de despacho y garantizar máxima rapidez sin costos ocultos.</p>
+              <p class="policy-lead">En <strong>PersonalBarber</strong> todos nuestros envíos son <strong>100% GRATIS a todo Colombia</strong> 🇨🇴. Sin tarifas ocultas ni montos mínimos de compra.</p>
               
               <div class="space-y-3 my-4">
                 <div class="policy-alert-box !bg-neon-green/10 !border-neon-green/30" style="--alert-color: #39ff14;">
-                  <div class="text-xl flex-shrink-0 mt-0.5">⚡</div>
-                  <div>
-                    <p class="policy-alert-title !text-neon-green">Zona 1: Valle de Aburrá · Envío GRATIS</p>
-                    <p class="policy-alert-sub">Incluye: Medellín, Bello, Envigado, Itagüí, Sabaneta y La Estrella. Entrega estimada en 24–48 horas hábiles.</p>
-                  </div>
-                </div>
-                
-                <div class="policy-alert-box !bg-cyan-500/10 !border-cyan-500/30" style="--alert-color: #06b6d4;">
-                  <div class="text-xl flex-shrink-0 mt-0.5">🚀</div>
-                  <div>
-                    <p class="policy-alert-title !text-cyan-400">Zona 2: Alrededores & Oriente · Envío GRATIS</p>
-                    <p class="policy-alert-sub">Incluye: Girardota, Copacabana, Caldas, Guarne, Rionegro, Marinilla, La Ceja y El Retiro. Entrega en 24–48 horas hábiles.</p>
-                  </div>
-                </div>
-                
-                <div class="policy-alert-box !bg-purple-500/10 !border-purple-500/30" style="--alert-color: #a855f7;">
                   <div class="text-xl flex-shrink-0 mt-0.5">📦</div>
                   <div>
-                    <p class="policy-alert-title !text-purple-400">Zona 3: Nacional & Otras Ciudades · Envío GRATIS</p>
-                    <p class="policy-alert-sub">Incluye: Bogotá, Cali, Barranquilla, Bucaramanga, Pereira y resto del país vía transportadora certificada (2–5 días hábiles).</p>
+                    <p class="policy-alert-title !text-neon-green">Envío GRATIS a nivel nacional</p>
+                    <p class="policy-alert-sub">Cubrimos todas las ciudades y municipios del territorio colombiano con costo de envío $0 COP.</p>
                   </div>
                 </div>
               </div>
 
-              <h4 class="policy-section-title">¿Cómo se calcula el costo?</h4>
-              <p class="text-xs text-gray-400 leading-relaxed mb-3">
-                Para mantener la <strong>máxima eficiencia</strong> sin que percibas lentitud en tu compra, nuestro sistema clasifica instantáneamente tu ciudad o municipio tan pronto lo ingresas en el formulario. Siempre podrás revisar y confirmar la zona asignada en el Paso 2 de tu compra.
-              </p>
-
-              <h4 class="policy-section-title">Detalles del despacho</h4>
+              <h4 class="policy-section-title">Detalles y tiempos de despacho</h4>
               <ul class="policy-list">
-                <li>Los pedidos se despachan dentro de las <strong>24 horas hábiles</strong> siguientes a la confirmación del pago.</li>
-                <li>El tiempo de tránsito varía según la ciudad destino: 1–2 días en Valle de Aburrá y Oriente, 2–5 días a nivel nacional.</li>
-                <li>Se enviará número de guía por WhatsApp o correo electrónico para seguimiento continuo.</li>
+                <li>Los pedidos son despachados dentro de las <strong>24 horas hábiles</strong> siguientes a la confirmación del pago.</li>
+                <li>El tiempo de entrega puede variar según la ciudad de destino y la transportadora (generalmente entre 1 y 5 días hábiles a nivel nacional).</li>
+                <li>Te compartiremos el número de guía por WhatsApp y correo electrónico para que puedas realizar el seguimiento de tu paquete.</li>
               </ul>
 
               <h4 class="policy-section-title">Dirección de entrega</h4>
-              <p class="policy-note">El cliente es responsable de suministrar una dirección exacta y completa. En caso de paquetes no entregados por dirección incorrecta, el costo de reenvío correrá por cuenta del comprador.</p>
+              <p class="policy-note">Por favor verifica que tu ciudad, dirección y referencias sean exactas y completas para garantizar una entrega sin contratiempos.</p>
             </div>
 
             <!-- Política de Privacidad -->
@@ -463,7 +394,7 @@
 
               <h4 class="policy-section-title">2. Tiempos y Detalles de Envío</h4>
               <p class="text-xs text-gray-400 leading-relaxed mb-3">
-                Los envíos operan exclusivamente a nivel nacional (Colombia). El tiempo estimado de entrega mediante PersonalBarber Express es de 24 a 48 horas hábiles. Debido al volumen de pedidos, esto es una estimación y no una garantía estricta.
+                Los envíos operan exclusivamente a nivel nacional (Colombia) con cobertura 100% gratuita. Los tiempos de entrega son gestionados con transportadoras certificadas y pueden variar según la ciudad de destino y la temporada.
               </p>
 
               <h4 class="policy-section-title">3. Direcciones de Envío</h4>
@@ -556,8 +487,21 @@ const router = useRouter()
 const { cartItems, cartTotal, cartTotalFormatted, formatPrice, parsePrice, clearCart } = useCart()
 
 const step = ref(1)
-const form = reactive({ firstName: '', lastName: '', email: '', phone: '', city: '', address: '', notes: '' })
-const touched = reactive({ firstName: false, lastName: false, email: false, phone: false, city: false, address: false })
+const form = reactive({
+  fullName: '',
+  email: '',
+  phone: '',
+  city: '',
+  address: '',
+  apartment: '',
+})
+const touched = reactive({
+  fullName: false,
+  email: false,
+  phone: false,
+  city: false,
+  address: false,
+})
 const selectedShipping = ref('express_valle')
 const selectedPayment = ref('wompi')
 const isProcessing = ref(false)
@@ -576,36 +520,7 @@ const policies: Record<string, { title: string; icon?: string; iconBg?: string }
   contacto: { title: 'Atención al Cliente', icon: '💬', iconBg: 'bg-yellow-500/20 text-yellow-400' },
 }
 
-const shippingMethods = [
-  {
-    id: 'express_valle',
-    emoji: '⚡',
-    label: 'PersonalBarber Express — Valle de Aburrá',
-    desc: 'Medellín, Bello, Envigado, Itagüí, Sabaneta, La Estrella',
-    price: 'GRATIS',
-    cost: 0,
-    badge: 'Urbano · 24-48h',
-  },
-  {
-    id: 'express_alrededores',
-    emoji: '🚀',
-    label: 'PersonalBarber Express — Alrededores & Oriente',
-    desc: 'Girardota, Copacabana, Caldas, Guarne, Rionegro, La Ceja, Marinilla',
-    price: 'GRATIS',
-    cost: 0,
-    badge: 'Alrededores · 24-48h',
-  },
-  {
-    id: 'express_nacional',
-    emoji: '📦',
-    label: 'PersonalBarber Express — Envío Nacional',
-    desc: 'Bogotá, Cali, Barranquilla, Bucaramanga y resto de Colombia',
-    price: 'GRATIS',
-    cost: 0,
-    badge: 'Nacional · 2-5 días',
-  },
-]
-
+// ── Detección interna y silenciosa de zona logística ───────
 function detectShippingZone(cityStr: string): string {
   if (!cityStr) return 'express_valle'
   const norm = cityStr.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim()
@@ -619,51 +534,50 @@ function detectShippingZone(cityStr: string): string {
   return 'express_nacional'
 }
 
-const paymentMethods = [
-  { id: 'wompi', emoji: '💳', label: 'Pago Online', desc: 'Nequi, PSE, tarjetas Visa/Mastercard, Bancolombia', badge: 'Recomendado' },
-  { id: 'whatsapp', emoji: '💬', label: 'Coordinar por WhatsApp', desc: 'Contacta al barber para acordar el pago' },
-]
-
-const currentShipping = computed(() => shippingMethods.find(s => s.id === selectedShipping.value))
-const shippingCost = computed(() => currentShipping.value?.cost ?? 0)
-const grandTotal = computed(() => cartTotal.value + shippingCost.value)
-const grandTotalFormatted = computed(() => formatPrice(grandTotal.value))
-
-const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-const isPhoneValid = computed(() => /^(57)?3\d{9}$/.test(form.phone.replace(/[\s\-+]/g, '')))
-
-// Paso 1: solo datos de contacto
-const step1Valid = computed(() =>
-  form.firstName.trim() && form.lastName.trim() &&
-  isEmailValid.value && isPhoneValid.value
-)
-
-// Paso 2: dirección + método de envío
-const step2Valid = computed(() =>
-  form.city.trim() && form.address.trim() && !!selectedShipping.value
-)
-
 watch(() => form.city, (newCity) => {
   if (newCity.trim()) {
     selectedShipping.value = detectShippingZone(newCity)
   }
 }, { immediate: true })
 
+const paymentMethods = [
+  { id: 'wompi', emoji: '💳', label: 'Pago Online', desc: 'Nequi, PSE, tarjetas Visa/Mastercard, Bancolombia', badge: 'Recomendado' },
+  { id: 'whatsapp', emoji: '💬', label: 'Coordinar por WhatsApp', desc: 'Contacta al barber para acordar el pago' },
+]
+
+const shippingCost = computed(() => 0)
+const grandTotal = computed(() => cartTotal.value)
+const grandTotalFormatted = computed(() => formatPrice(grandTotal.value))
+
+const isEmailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+const isPhoneValid = computed(() => /^(57)?3\d{9}$/.test(form.phone.replace(/[\s\-+]/g, '')))
+
+// Paso 1: contacto + entrega obligatorios
+const step1Valid = computed(() =>
+  form.fullName.trim().length >= 3 &&
+  isEmailValid.value &&
+  isPhoneValid.value &&
+  form.city.trim().length >= 2 &&
+  form.address.trim().length >= 4
+)
+
 function nextStep() {
-  if (step.value === 1) {
-    touched.firstName = true; touched.lastName = true
-    touched.email = true; touched.phone = true
-    if (!step1Valid.value) return
-  }
-  if (step.value === 2) {
-    touched.city = true; touched.address = true
-    if (!step2Valid.value) return
-  }
-  step.value++
+  touched.fullName = true
+  touched.email = true
+  touched.phone = true
+  touched.city = true
+  touched.address = true
+  if (!step1Valid.value) return
+  step.value = 2
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 function goToStep(n: number) {
-  if (n <= step.value) step.value = n
+  if (n === 1) {
+    step.value = 1
+  } else if (n === 2 && step1Valid.value) {
+    step.value = 2
+  }
 }
 
 // ── Cargar script del Widget Wompi dinámicamente ──
@@ -688,13 +602,27 @@ function loadWompiScript(): Promise<void> {
 
 // ── Crear orden base en backend ──
 async function createBackendOrder(paymentMethod: string) {
+  const parts = form.fullName.trim().split(/\s+/)
+  const firstName = parts[0] || ''
+  const lastName = parts.slice(1).join(' ') || parts[0] || ''
+  const fullAddress = form.apartment.trim()
+    ? `${form.address.trim()} (${form.apartment.trim()})`
+    : form.address.trim()
+
   const payload = {
-    customer: { firstName: form.firstName, lastName: form.lastName, email: form.email, phone: form.phone, city: form.city, address: form.address },
+    customer: {
+      firstName,
+      lastName,
+      email: form.email.trim(),
+      phone: form.phone.replace(/[\s\-+]/g, ''),
+      city: form.city.trim(),
+      address: fullAddress,
+    },
     items: cartItems.map(i => ({ id: i.id, qty: i.qty })),
     paymentMethod,
-    shippingMethod: selectedShipping.value,
+    shippingMethod: selectedShipping.value || 'express_nacional',
   }
-  return await $fetch<{ ok: boolean; order: { id: string; total: number; total_format: string; subtotal_format?: string } }>('/api/create_order', {
+  return await $fetch<{ ok: boolean; order: { id: string; total: number; total_format: string; subtotal_format?: string; orderToken?: string } }>('/api/create_order', {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload,
   })
 }
@@ -705,23 +633,21 @@ async function handleCheckout() {
 
   try {
     if (selectedPayment.value === 'whatsapp') {
-      // ── Flujo WhatsApp (igual que antes) ──
+      // ── Flujo WhatsApp ──
       const data = await createBackendOrder('whatsapp')
       if (!data.ok) throw new Error('Error creando orden')
       const phone = '573337518070'
       const itemsList = cartItems.map(i => `• ${i.name} x${i.qty}`).join('\n')
-      const shippingLabel = `${currentShipping.value?.label || 'PersonalBarber Express'} · ${currentShipping.value?.price || 'GRATIS'}`
-      const msg = `¡Hola Andrés! Acabo de hacer un pedido:\n\n*ID:* ${data.order.id}\n\n${itemsList}\n\n*Subtotal Productos:* $${data.order.subtotal_format || data.order.total_format} COP\n*Envío (${form.city}):* ${shippingLabel}\n*TOTAL A PAGAR:* ${grandTotalFormatted.value}\n\nNombre: ${form.firstName} ${form.lastName}\nCiudad / Municipio: ${form.city}\nDirección: ${form.address}`
+      const addressDisplay = form.apartment.trim() ? `${form.address.trim()} (${form.apartment.trim()})` : form.address.trim()
+      const msg = `¡Hola! Acabo de hacer un pedido en PersonalBarber:\n\n*ID:* ${data.order.id}\n\n${itemsList}\n\n*Subtotal:* $${data.order.subtotal_format || data.order.total_format} COP\n*Envío:* GRATIS a todo Colombia 🇨🇴\n*TOTAL A PAGAR:* ${grandTotalFormatted.value}\n\n*Cliente:* ${form.fullName.trim()}\n*Ciudad:* ${form.city.trim()}\n*Dirección:* ${addressDisplay}\n*Teléfono:* ${form.phone}`
       window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`, '_blank')
       clearCart()
       router.push('/')
     } else {
       // ── Flujo Wompi ──
-      // 1. Crear la orden en el backend
       const orderData = await createBackendOrder('wompi')
       if (!orderData.ok) throw new Error('Error creando orden')
 
-      // 2. Obtener datos de transacción (hash de integridad del servidor)
       const txData = await $fetch<{
         ok: boolean; publicKey: string; amountInCents: number;
         currency: string; reference: string; integrityHash: string;
@@ -741,10 +667,8 @@ async function handleCheckout() {
         } catch {}
       }
 
-      // 3. Cargar el script de Wompi
       await loadWompiScript()
 
-      // 4. Abrir el Widget de Wompi
       const checkout = new (window as any).WidgetCheckout({
         currency: txData.currency,
         amountInCents: txData.amountInCents,
@@ -753,8 +677,8 @@ async function handleCheckout() {
         signature: { integrity: txData.integrityHash },
         redirectUrl: `${txData.redirectUrl}?id=${txData.reference}&token=${encodeURIComponent(token)}`,
         customerData: {
-          email: form.email,
-          fullName: `${form.firstName} ${form.lastName}`,
+          email: form.email.trim(),
+          fullName: form.fullName.trim(),
           phoneNumber: form.phone.replace(/[\s\-+]/g, ''),
           phoneNumberPrefix: '+57',
         },
@@ -762,7 +686,6 @@ async function handleCheckout() {
 
       checkout.open(function (result: any) {
         const txRef = result?.transaction?.reference || txData.reference
-        // Redirigir a la página de resultado
         router.push(`/checkout/resultado?id=${txRef}&token=${encodeURIComponent(token)}`)
       })
     }

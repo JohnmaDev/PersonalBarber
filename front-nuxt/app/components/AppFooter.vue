@@ -130,7 +130,7 @@
                   <p><strong>PersonalBarber</strong> es una iniciativa independiente y un emprendimiento local colombiano en Medellín, operado directamente por sus propios fundadores y barberos apasionados. No somos una gran corporación masiva; somos emprendedores locales que trabajamos día a día con honestidad, esfuerzo y vocación para ofrecer productos de barbería y cuidado personal de alta calidad a nuestra comunidad. Cada compra realizada respalda el trabajo directo y el crecimiento de nuestro equipo.</p>
 
                   <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">2. Envíos y Tiempos de Entrega</h4>
-                  <p>Operamos envíos en todo el territorio colombiano. En Medellín y Valle de Aburrá, las entregas con PersonalBarber Express toman entre 24 y 48 horas hábiles.</p>
+                  <p>Operamos envíos a todo el territorio colombiano con cobertura 100% gratuita. Los pedidos son despachados tras la confirmación del pago a través de transportadoras certificadas.</p>
 
                   <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">3. Garantía y Respaldo</h4>
                   <p>Nos hacemos 100% responsables por la entrega de tu pedido. Si tu paquete sufre daños o pérdida durante el transporte, gestionaremos el reenvío de tus productos para que tu dinero siempre esté protegido.</p>
@@ -155,8 +155,8 @@
 
                 <!-- Envíos -->
                 <template v-if="activePolicy === 'envios'">
-                  <h4 class="font-bold text-white text-sm mb-1 text-neon-green">Cobertura y Tarifas</h4>
-                  <p>¡Envíos <strong>100% GRATIS a toda Colombia</strong>! Despachamos a Medellín, Valle de Aburrá y a nivel nacional mediante PersonalBarber Express y transportadoras aliadas certificadas.</p>
+                  <h4 class="font-bold text-white text-sm mb-1 text-neon-green">Envío GRATIS a todo Colombia 🇨🇴</h4>
+                  <p>¡Envíos <strong>100% GRATIS a todo el país</strong>! Despachamos todos los pedidos tras la confirmación del pago mediante transportadoras certificadas a nivel nacional.</p>
 
                   <h4 class="font-bold text-white text-sm mt-3 mb-1 text-neon-green">Nuestra Garantía</h4>
                   <p>Si el empaque o producto llega defectuoso o dañado de fábrica, contáctanos dentro de los primeros 3 días hábiles tras recibirlo para coordinar el cambio sin costo adicional.</p>

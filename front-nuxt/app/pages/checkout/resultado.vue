@@ -228,14 +228,7 @@ const declinedMessage = computed(() => {
 })
 
 // Etiqueta de envío
-const shippingLabel = computed(() => {
-  const m: Record<string, string> = {
-    express_valle: 'Valle de Aburrá · GRATIS (24-48h)',
-    express_alrededores: 'Alrededores · GRATIS (24-48h)',
-    express_nacional: 'Nacional · GRATIS (2-5 días)',
-  }
-  return m[orderData.value?.shippingMethod] || orderData.value?.shippingMethod || 'Envío GRATIS'
-})
+const shippingLabel = computed(() => 'Envío 100% GRATIS a todo Colombia 🇨🇴')
 
 // WhatsApp con contexto de la orden
 const whatsappLink = computed(() => {

@@ -301,7 +301,7 @@ export const es = {
     payPseDesc: 'Débito bancario en línea',
     payWhatsapp: 'Coordinar por WhatsApp',
     payWhatsappDesc: 'Contacta directamente al barber para acordar el pago',
-    stepInfo: 'Información',
+    stepInfo: 'Información y Entrega',
     stepShipping: 'Envío',
     stepPayment: 'Pago',
     footerStore: 'Tienda',
