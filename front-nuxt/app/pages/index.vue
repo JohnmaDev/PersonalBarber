@@ -11,14 +11,14 @@
           alt=""
           aria-hidden="true"
           class="w-full h-full object-cover object-top"
-          style="filter: brightness(0.22) saturate(0.8)"
+          style="filter: brightness(0.30) saturate(0.85)"
           fetchpriority="high"
         />
       </picture>
-      <!-- Vignette lateral izquierda -->
-      <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/40"></div>
-      <!-- Fade gradual hacia abajo conforme el usuario scrollea -->
-      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black"></div>
+      <!-- Vignette lateral izquierda sutil -->
+      <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/30"></div>
+      <!-- Fade gradual hacia abajo hacia el fondo gris suave (#181818) -->
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-[#181818]"></div>
     </div>
 
     <!-- ─── Barra de carga top ─── -->
@@ -124,21 +124,21 @@
     </div>
 
     <!-- ─── CONTENIDO TIENDA ─── -->
-    <!-- Panel que sube sobre el fondo fijo -->
-    <div class="relative z-10 bg-barber-black/85 backdrop-blur-sm rounded-t-[2rem] w-full pt-8 pb-8">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <!-- Panel que sube sobre el fondo fijo con paleta gris YouTube elevada (#181818) -->
+    <div class="relative z-10 bg-[#181818] border-t border-[#303030] rounded-t-[2.5rem] w-full pt-10 pb-12 shadow-[0_-15px_40px_rgba(0,0,0,0.3)]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
 
       <!-- Selector de Universo — 2 niveles: protagonistas arriba, complementarios abajo -->
       <div class="flex flex-col items-center gap-2 mt-2 mb-8">
 
         <!-- Fila 1: Los protagonistas (Él y Ella) -->
-        <div class="inline-flex rounded-xl bg-zinc-900/90 p-1 border border-zinc-800 gap-1 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
+        <div class="inline-flex rounded-xl bg-[#272727] p-1 border border-[#3c3c3c] gap-1 shadow-sm">
           <button
             @click="storeUniverse = 'grooming'; activeDepartment = 'men'; activeFilter = 'all'"
             class="px-5 sm:px-7 py-2.5 rounded-lg font-black text-[11px] sm:text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 shrink-0"
             :class="storeUniverse === 'grooming'
               ? 'bg-neon-green text-black shadow-[0_0_14px_rgba(57,255,20,0.25)]'
-              : 'text-zinc-500 hover:text-white'"
+              : 'text-[#bbbbbb] hover:text-white'"
           >
             <fa-icon :icon="['fas', 'cut']" />
             <span class="hidden sm:inline">Barbería</span>
@@ -149,7 +149,7 @@
             class="px-5 sm:px-7 py-2.5 rounded-lg font-black text-[11px] sm:text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 shrink-0"
             :class="storeUniverse === 'beauty'
               ? 'bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-[0_0_14px_rgba(236,72,153,0.35)]'
-              : 'text-zinc-500 hover:text-white'"
+              : 'text-[#bbbbbb] hover:text-white'"
           >
             <fa-icon :icon="['fas', 'spa']" />
             <span class="hidden sm:inline">Beauty</span>
@@ -158,20 +158,20 @@
         </div>
 
         <!-- Divisor visual sutil -->
-        <div class="flex items-center gap-3 text-zinc-700">
-          <span class="h-px w-12 bg-zinc-800"></span>
-          <span class="text-[9px] font-bold tracking-[0.2em] uppercase text-zinc-600">también</span>
-          <span class="h-px w-12 bg-zinc-800"></span>
+        <div class="flex items-center gap-3 text-[#888888]">
+          <span class="h-px w-12 bg-[#3a3a3a]"></span>
+          <span class="text-[9px] font-bold tracking-[0.2em] uppercase text-[#b0b0b0]">también</span>
+          <span class="h-px w-12 bg-[#3a3a3a]"></span>
         </div>
 
         <!-- Fila 2: Complementarios (Ropa y Ver Todo) — más pequeños -->
-        <div class="inline-flex rounded-lg bg-zinc-900/60 p-0.5 border border-zinc-800/60 gap-0.5">
+        <div class="inline-flex rounded-lg bg-[#272727] p-0.5 border border-[#3c3c3c] gap-0.5">
           <button
             @click="storeUniverse = 'boutique'; activeDepartment = 'merch'; activeFilter = 'all'"
             class="px-4 sm:px-5 py-1.5 rounded-md font-bold text-[9px] sm:text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center gap-1.5 shrink-0"
             :class="storeUniverse === 'boutique'
               ? 'bg-cyan-400/20 text-cyan-400 border border-cyan-400/30 shadow-[0_0_10px_rgba(34,211,238,0.15)]'
-              : 'text-zinc-600 hover:text-zinc-300'"
+              : 'text-[#bbbbbb] hover:text-white'"
           >
             <fa-icon :icon="['fas', 'tshirt']" class="text-[8px]" />
             <span>Ropa & Merch</span>
@@ -181,7 +181,7 @@
             class="px-4 sm:px-5 py-1.5 rounded-md font-bold text-[9px] sm:text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center gap-1.5 shrink-0"
             :class="storeUniverse === 'all'
               ? 'bg-neon-green text-black font-black shadow-[0_0_14px_rgba(57,255,20,0.3)]'
-              : 'text-zinc-600 hover:text-zinc-300'"
+              : 'text-[#bbbbbb] hover:text-white'"
           >
             <fa-icon :icon="['fas', 'border-all']" class="text-[8px]" />
             <span>Ver Todo</span>
@@ -206,20 +206,20 @@
       <!-- Buscador Rápido y Botón de Filtros Avanzados -->
       <div class="flex items-center justify-between gap-3 mb-6 max-w-2xl mx-auto">
         <div class="relative flex-1 group">
-          <fa-icon :icon="['fas', 'search']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-white transition-colors pointer-events-none" />
+          <fa-icon :icon="['fas', 'search']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-white transition-colors pointer-events-none" />
           <input 
             v-model="searchQuery" 
             type="text" 
             placeholder="Buscar por nombre o marca..." 
-            class="w-full pl-11 pr-10 py-2.5 bg-zinc-900/90 border border-zinc-800 rounded-2xl text-xs sm:text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-white transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
+            class="w-full pl-11 pr-10 py-2.5 bg-[#202020] border border-[#383838] rounded-full text-xs sm:text-sm text-[#f1f1f1] placeholder:text-[#999999] focus:outline-none focus:border-[#3ea6ff] transition-all"
           />
-          <button v-if="searchQuery" @click="searchQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white">
+          <button v-if="searchQuery" @click="searchQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-[#bbbbbb] hover:text-white">
             <fa-icon :icon="['fas', 'times-circle']" />
           </button>
         </div>
         <button 
           @click="drawerOpen = true" 
-          class="flex items-center gap-2 px-4 sm:px-5 py-2.5 bg-zinc-900/90 border border-zinc-800 hover:border-zinc-700 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all shadow-md shrink-0 group"
+          class="flex items-center gap-2 px-5 py-2.5 bg-[#2c2c2c] hover:bg-[#383838] border border-[#424242] text-[#f1f1f1] rounded-full text-xs font-black uppercase tracking-wider transition-all shadow-sm shrink-0 group"
         >
           <span class="w-5 h-5 rounded-lg dept-bg flex items-center justify-center text-black font-black text-[10px]">⚡</span>
           <span>Filtros</span>
@@ -251,10 +251,10 @@
         :class="{'opacity-40 pointer-events-none': isLoading}">
         <div v-for="(product, index) in displayedProducts" :key="product.id"
           :style="isFirstVisit ? { '--i': index } : {}"
-          class="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-premium dept-hover-card product-card">
+          class="group flex flex-col bg-[#252525] border border-[#383838] hover:border-[#525252] rounded-2xl overflow-hidden transition-premium dept-hover-card product-card shadow-[0_4px_16px_rgba(0,0,0,0.22)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.38)] hover:-translate-y-1">
 
-          <!-- Imagen -->
-          <div class="aspect-square overflow-hidden bg-white relative cursor-pointer flex items-center justify-center p-3" @click="goToDetail(product)">
+          <!-- Imagen con marco suave y separación elegante -->
+          <div class="aspect-square overflow-hidden bg-white relative cursor-pointer flex items-center justify-center p-3.5 border-b border-[#333333]" @click="goToDetail(product)">
             <img
               :src="optimizeImage(product.images && product.images.length > 0 ? product.images[0] : product.image, 400)"
               :srcset="optimizeSrcSet(product.images && product.images.length > 0 ? product.images[0] : product.image, [200, 400])"

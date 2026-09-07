@@ -22,13 +22,13 @@
       <div class="flex flex-col items-center gap-2 mt-8 mb-12 fade-in">
 
         <!-- Fila 1: Los protagonistas (Él y Ella) -->
-        <div class="inline-flex rounded-xl bg-zinc-900/90 p-1 border border-zinc-800 gap-1 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
+        <div class="inline-flex rounded-xl bg-[#272727] p-1 border border-[#3c3c3c] gap-1 shadow-sm">
           <button
             @click="setDepartment('men')"
             class="px-5 sm:px-7 py-2.5 rounded-lg font-black text-[11px] sm:text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 shrink-0"
             :class="activeDepartment !== 'merch' && activeDepartment !== 'women' && activeDepartment !== 'all'
               ? 'bg-neon-green text-black shadow-[0_0_14px_rgba(57,255,20,0.25)]'
-              : 'text-zinc-500 hover:text-white'"
+              : 'text-[#bbbbbb] hover:text-white'"
           >
             <fa-icon :icon="['fas', 'cut']" />
             <span class="hidden sm:inline">Barbería</span>
@@ -39,7 +39,7 @@
             class="px-5 sm:px-7 py-2.5 rounded-lg font-black text-[11px] sm:text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 shrink-0"
             :class="activeDepartment === 'women'
               ? 'bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-[0_0_14px_rgba(236,72,153,0.35)]'
-              : 'text-zinc-500 hover:text-white'"
+              : 'text-[#bbbbbb] hover:text-white'"
           >
             <fa-icon :icon="['fas', 'spa']" />
             <span class="hidden sm:inline">Beauty</span>
@@ -49,13 +49,13 @@
 
         <!-- Divisor visual sutil -->
         <div class="flex items-center gap-3">
-          <span class="h-px w-12 bg-zinc-800"></span>
-          <span class="text-[9px] font-bold tracking-[0.2em] uppercase text-zinc-600">también</span>
-          <span class="h-px w-12 bg-zinc-800"></span>
+          <span class="h-px w-12 bg-[#3a3a3a]"></span>
+          <span class="text-[9px] font-bold tracking-[0.2em] uppercase text-[#b0b0b0]">también</span>
+          <span class="h-px w-12 bg-[#3a3a3a]"></span>
         </div>
 
         <!-- Fila 2: Complementarios (Ropa y Ver Todo) — más pequeños -->
-        <div class="inline-flex rounded-lg bg-zinc-900/60 p-0.5 border border-zinc-800/60 gap-0.5">
+        <div class="inline-flex rounded-lg bg-[#272727] p-0.5 border border-[#3c3c3c] gap-0.5">
           <button
             @click="setDepartment('merch')"
             class="px-4 sm:px-5 py-1.5 rounded-md font-bold text-[9px] sm:text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center gap-1.5 shrink-0"

@@ -10,8 +10,10 @@
   /* Colors */
   --color-neon-green: #39FF14;
   --color-neon-green-dark: #2eff2e;
-  --color-barber-black: #0A0A0A;
-  --color-barber-charcoal: #1A1A1A;
+  --color-barber-black: #181818;
+  --color-barber-charcoal: #272727;
+  --color-barber-card: #272727;
+  --color-barber-border: #383838;
 
   /* Typography */
   --font-sans: 'Oswald', ui-sans-serif, system-ui, sans-serif;
@@ -28,7 +30,7 @@
 
   body {
     background-color: var(--color-barber-black);
-    color: white;
+    color: #f5f5f7;
     font-family: var(--font-sans);
   }
 
