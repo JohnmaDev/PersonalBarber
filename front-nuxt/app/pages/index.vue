@@ -134,7 +134,7 @@
         <!-- Fila 1: Los protagonistas (Él y Ella) -->
         <div class="inline-flex rounded-xl bg-zinc-900/90 p-1 border border-zinc-800 gap-1 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
           <button
-            @click="storeUniverse = 'grooming'; activeDepartment = 'men'; activeFilter = 'all'"
+            @click="selectUniverse('grooming')"
             class="px-5 sm:px-7 py-2.5 rounded-lg font-black text-[11px] sm:text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 shrink-0"
             :class="storeUniverse === 'grooming'
               ? 'bg-neon-green text-black shadow-[0_0_14px_rgba(57,255,20,0.25)]'
@@ -145,7 +145,7 @@
             <span class="sm:hidden">Él</span>
           </button>
           <button
-            @click="storeUniverse = 'beauty'; activeDepartment = 'women'; activeFilter = 'all'"
+            @click="selectUniverse('beauty')"
             class="px-5 sm:px-7 py-2.5 rounded-lg font-black text-[11px] sm:text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 shrink-0"
             :class="storeUniverse === 'beauty'
               ? 'bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-[0_0_14px_rgba(236,72,153,0.35)]'
@@ -167,7 +167,7 @@
         <!-- Fila 2: Complementarios (Ropa y Ver Todo) — más pequeños -->
         <div class="inline-flex rounded-lg bg-zinc-900/60 p-0.5 border border-zinc-800/60 gap-0.5">
           <button
-            @click="storeUniverse = 'boutique'; activeDepartment = 'merch'; activeFilter = 'all'"
+            @click="selectUniverse('boutique')"
             class="px-4 sm:px-5 py-1.5 rounded-md font-bold text-[9px] sm:text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center gap-1.5 shrink-0"
             :class="storeUniverse === 'boutique'
               ? 'bg-cyan-400/20 text-cyan-400 border border-cyan-400/30 shadow-[0_0_10px_rgba(34,211,238,0.15)]'
@@ -177,7 +177,7 @@
             <span>Ropa & Merch</span>
           </button>
           <button
-            @click="storeUniverse = 'all'; activeDepartment = 'all'; activeFilter = 'all'"
+            @click="selectUniverse('all')"
             class="px-4 sm:px-5 py-1.5 rounded-md font-bold text-[9px] sm:text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center gap-1.5 shrink-0"
             :class="storeUniverse === 'all'
               ? 'bg-neon-green text-black font-black shadow-[0_0_14px_rgba(57,255,20,0.3)]'
@@ -203,41 +203,70 @@
         </p>
       </div>
 
-      <!-- Buscador Rápido y Botón de Filtros Avanzados -->
-      <div class="flex items-center justify-between gap-3 mb-6 max-w-2xl mx-auto">
-        <div class="relative flex-1 group">
+
+      <!-- Buscador Rápido unificado -->
+      <div class="mb-4 max-w-2xl mx-auto">
+        <div class="relative group">
           <fa-icon :icon="['fas', 'search']" class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-white transition-colors pointer-events-none" />
           <input 
             v-model="searchQuery" 
             type="text" 
-            placeholder="Buscar por nombre o marca..." 
-            class="w-full pl-11 pr-10 py-2.5 bg-zinc-900/90 border border-zinc-800 rounded-2xl text-xs sm:text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-white transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
+            placeholder="Buscar por nombre, marca o características..." 
+            class="w-full pl-11 pr-10 py-2.5 bg-zinc-900/90 border border-zinc-800 rounded-2xl text-xs sm:text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
           />
-          <button v-if="searchQuery" @click="searchQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white">
+          <button v-if="searchQuery" @click="searchQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white p-1">
             <fa-icon :icon="['fas', 'times-circle']" />
           </button>
         </div>
-        <button 
-          @click="drawerOpen = true" 
-          class="flex items-center gap-2 px-4 sm:px-5 py-2.5 bg-zinc-900/90 border border-zinc-800 hover:border-zinc-700 text-white rounded-2xl text-xs font-black uppercase tracking-wider transition-all shadow-md shrink-0 group"
-        >
-          <span class="w-5 h-5 rounded-lg dept-bg flex items-center justify-center text-black font-black text-[10px]">⚡</span>
-          <span>Filtros</span>
-          <span v-if="activeFilterCount > 0" class="w-5 h-5 rounded-full dept-bg text-black font-black text-[10px] flex items-center justify-center animate-pulse">
-            {{ activeFilterCount }}
+      </div>
+
+      <!-- Barra de Acción: Conteo de productos + Botón [Filtros] + [Ordenar: Recomendados ▾] -->
+      <div class="flex items-center justify-between gap-3 mb-5 py-2.5 px-1 border-b border-zinc-800/60">
+        <!-- Conteo de productos encontrados -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs sm:text-sm font-bold text-zinc-300">
+            <span class="dept-text font-black">{{ filteredProducts.length }}</span>
+            <span class="text-zinc-400 font-normal"> productos</span>
+            <span v-if="activeCategoryLabel" class="text-zinc-500 font-normal hidden xs:inline"> en <strong class="text-zinc-200">{{ activeCategoryLabel }}</strong></span>
           </span>
-        </button>
+        </div>
+
+        <!-- Acciones: Botón [ Filtros ] + Dropdown [ Ordenar: ... ▾ ] -->
+        <div class="flex items-center gap-2 sm:gap-3 ml-auto">
+          <!-- Botón Filtros con contador activo -->
+          <button 
+            @click="drawerOpen = true" 
+            class="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm group"
+            aria-label="Abrir filtros"
+          >
+            <fa-icon :icon="['fas', 'sliders-h']" class="text-[11px] dept-text transition-transform group-hover:scale-110" />
+            <span>Filtros</span>
+            <span v-if="drawerFiltersActiveCount > 0" class="w-4 h-4 rounded-full dept-bg text-black font-black text-[10px] flex items-center justify-center">
+              {{ drawerFiltersActiveCount }}
+            </span>
+          </button>
+
+          <!-- Dropdown Ordenar separado -->
+          <div class="relative flex items-center">
+            <label for="sort-select" class="text-[11px] font-bold text-zinc-400 hidden sm:inline mr-1.5 whitespace-nowrap">Ordenar:</label>
+            <div class="relative">
+              <select
+                id="sort-select"
+                v-model="sortBy"
+                class="appearance-none bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-white text-xs font-bold rounded-xl pl-3 pr-8 py-2 focus:outline-none focus:border-zinc-500 transition-all cursor-pointer shadow-sm"
+              >
+                <option v-for="opt in sortOptions" :key="opt.id" :value="opt.id" class="bg-zinc-950 text-white">
+                  {{ opt.label }}
+                </option>
+              </select>
+              <fa-icon :icon="['fas', 'chevron-down']" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] text-zinc-400 pointer-events-none" />
+            </div>
+          </div>
+        </div>
       </div>
 
-
-
-      <!-- Contador -->
-      <div class="mb-6 text-center">
-        <p class="text-gray-400 text-sm">
-          {{ t('tienda.showing') }} <span class="font-bold transition-all duration-500 dept-text">{{ filteredProducts.length }}</span> {{ t('tienda.products') }}
-          <span v-if="activeFilter !== 'all'"> {{ t('tienda.in') }} <span class="text-white">{{ activeFilterLabel }}</span></span>
-        </p>
-      </div>
+      <!-- Chips de Filtros Activos -->
+      <ActiveFilterChips :chips="activeChips" @remove="removeChip" @clear-all="resetAllFilters" />
 
       <!-- Loading -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-24">
@@ -330,10 +359,17 @@
         </div>
       </div>
 
-      <!-- Empty State -->
-      <div v-if="!isLoading && filteredProducts.length === 0 && !errorMessage" class="text-center py-24">
-        <fa-icon :icon="['fas', 'box-open']" class="text-4xl text-gray-600 mb-4" />
-        <p class="text-gray-500">{{ t('tienda.emptySub') }}</p>
+      <!-- Empty State con botón de restablecer -->
+      <div v-if="!isLoading && filteredProducts.length === 0 && !errorMessage" class="text-center py-20 bg-zinc-900/40 border border-zinc-800/80 rounded-3xl p-8 max-w-md mx-auto my-6">
+        <fa-icon :icon="['fas', 'box-open']" class="text-4xl text-gray-500 mb-3" />
+        <h3 class="text-base font-bold text-white mb-1">No se encontraron productos</h3>
+        <p class="text-gray-400 text-xs mb-5">Prueba cambiando los términos de búsqueda o limpiando los filtros seleccionados.</p>
+        <button
+          @click="resetAllFilters"
+          class="px-5 py-2.5 rounded-xl dept-bg text-black font-black text-xs uppercase tracking-wider transition-all shadow-lg hover:brightness-110 active:scale-95"
+        >
+          Restablecer todos los filtros
+        </button>
       </div>
 
       <!-- Footer (integrado dentro del panel homogéneo de la tienda) -->
@@ -341,18 +377,24 @@
       </div><!-- /max-w-7xl -->
     </div><!-- /store panel -->
 
-    <!-- Drawer lateral de Filtros Avanzados -->
+    <!-- Drawer lateral de Filtros -->
     <ClientOnly>
       <ShopFiltersDrawer 
         :is-open="drawerOpen"
-        :brands="availableBrands"
-        :categories="filters"
-        :search-query="searchQuery"
+        :categories-with-counts="categoriesWithCounts"
+        :brands-with-counts="availableBrandsWithCounts"
+        :subtypes-with-counts="availableSubtypesWithCounts"
         :selected-brands="selectedBrands"
-        :selected-category="activeFilter"
-        :sort-by="sortBy"
+        :selected-category="activeCategory"
+        :selected-product-type="selectedProductType"
+        :min-price="minPrice"
+        :max-price="maxPrice"
+        :price-bounds="priceBounds"
+        :in-stock-only="inStockOnly"
+        :total-matching-products="filteredProducts.length"
         @close="drawerOpen = false"
         @update:filters="handleFilterUpdate"
+        @reset="resetAllFilters"
       />
     </ClientOnly>
   </div>
@@ -448,16 +490,16 @@ useHead({
 })
 
 import { useDepartment } from '~/composables/useDepartment'
+import { useProductFilters, SORT_OPTIONS, type SortOptionId } from '~/composables/useProductFilters'
+import { CANONICAL_CATEGORIES, type CanonicalCategoryId } from '~/utils/taxonomy'
 
 const { activeDepartment, setDepartment } = useDepartment()
 const storeUniverse = ref<'grooming' | 'beauty' | 'boutique' | 'all'>('grooming')
-const activeFilter = ref('all')
-const searchQuery = ref('')
-const selectedBrands = ref<string[]>([])
-const sortBy = ref('default')
 const drawerOpen = ref(false)
 const justAdded = ref<string | number | null>(null)
 const isFirstVisit = ref(true)
+
+const sortOptions = SORT_OPTIONS
 
 const trustBadges = computed(() => [
   t('tienda.badgeOriginal'),
@@ -465,161 +507,67 @@ const trustBadges = computed(() => [
   t('tienda.badgeSupport'),
 ])
 
-function getCategoryLabel(catId: string) {
-  const cat = categories.value.find(c => c.id === catId)
-  const label = cat ? cat.label : catId
-  const key = `tienda.categorias.${catId}`
-  const translated = t(key)
-  return translated === key ? label : translated
-}
+// ─── Motor Centralizado de Filtros Facetados ───
+const {
+  activeCategory,
+  searchQuery,
+  selectedBrands,
+  minPrice,
+  maxPrice,
+  inStockOnly,
+  sortBy,
+  selectedProductType,
+  priceBounds,
+  availableBrandsWithCounts,
+  categoriesWithCounts,
+  availableSubtypesWithCounts,
+  filteredProducts,
+  activeFiltersCount,
+  activeChips,
+  setCategory,
+  toggleBrand,
+  setPriceRange,
+  setProductType,
+  removeChip,
+  resetAllFilters,
+} = useProductFilters(products)
 
-// Helper: identifica categorías de ropa/merch/boutique (excluye servicios como micropigmentación)
-function isMerchCategory(c: { department: string; style?: string; id: string }) {
-  if (c.style === 'premium') return true
-  if (c.id === 'boutique') return true
-  // Solo prendas de vestir con department 'unisex' o 'merch'
-  const clothingIds = ['camisetas', 'gorras', 'shorts', 'accesorios-merch', 'hoodies', 'pantalones']
-  if (c.department === 'merch') return true
-  if (c.department === 'unisex' && clothingIds.includes(c.id)) return true
-  return false
-}
-
-const filters = computed(() => [
-  { id: 'all', label: t('tienda.all') },
-  ...categories.value
-    .filter(c => {
-      if (c.comingSoon) return false
-      if (activeDepartment.value === 'all') return true
-      if (activeDepartment.value === 'merch') return isMerchCategory(c)
-      return c.department === activeDepartment.value
-    })
-    .map(c => ({ id: c.id, label: getCategoryLabel(c.id) }))
-])
-
-let syncingFromRoute = false
-
-function syncFilter() {
-  const cat = route.query.cat as string
-  const dept = route.query.dept as string
-  syncingFromRoute = true
-  if (dept && ['all', 'men', 'women', 'merch'].includes(dept)) {
-    activeDepartment.value = dept as 'all' | 'men' | 'merch' | 'women'
-  }
-  const categoryObj = categories.value.find(c => c.id === cat)
-  if (categoryObj) {
-    if (categoryObj.department === 'unisex' || categoryObj.style === 'premium' || categoryObj.department === 'merch' || categoryObj.id === 'boutique') {
-      activeDepartment.value = 'merch'
-    } else if (categoryObj.department && ['men', 'women'].includes(categoryObj.department)) {
-      activeDepartment.value = categoryObj.department as 'men' | 'women'
-    }
-  }
-  storeUniverse.value = activeDepartment.value === 'merch' ? 'boutique' : (activeDepartment.value === 'women' ? 'beauty' : activeDepartment.value === 'all' ? 'all' : 'grooming')
-  activeFilter.value = (cat && filters.value.find(f => f.id === cat)) ? cat : 'all'
-  nextTick(() => { syncingFromRoute = false })
-}
-
-function shuffleProducts() {
-  if (products.value.length > 0) {
-    const shuffled = [...products.value]
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-    }
-    products.value = shuffled
-  }
-}
-
-async function fetchData() {
-  await fetchCatalog(true)
-  shuffleProducts()
-  syncFilter()
-  setTimeout(() => { isFirstVisit.value = false }, 1000)
-}
-
-onMounted(async () => {
-  await fetchData()
+const activeCategoryLabel = computed(() => {
+  if (activeCategory.value === 'all') return ''
+  const cat = CANONICAL_CATEGORIES.find(c => c.id === activeCategory.value)
+  return cat ? cat.label : ''
 })
 
-watch(categories, syncFilter)
-
-watch(() => route.query.cat, syncFilter)
-watch(() => route.query.dept, syncFilter)
-watch(activeDepartment, (newDept) => {
-  storeUniverse.value = newDept === 'merch' ? 'boutique' : (newDept === 'women' ? 'beauty' : newDept === 'all' ? 'all' : 'grooming')
-  if (!syncingFromRoute) activeFilter.value = 'all'
-})
-watch(activeFilter, (newFilter) => {
-  const label = filters.value.find(f => f.id === newFilter)?.label || 'Tienda'
-  useSeoMeta({ title: `${label} | PersonalBarber Medellín` })
-}, { immediate: false })
-
-const availableBrands = computed(() => {
-  const activeDeptCats = categories.value
-    .filter(c => {
-      if (activeDepartment.value === 'all') return true
-      if (activeDepartment.value === 'merch') return isMerchCategory(c)
-      return c.department === activeDepartment.value
-    })
-    .map(c => c.id)
-  const list = products.value.filter(p => activeDepartment.value === 'all' || (p.category && activeDeptCats.includes(p.category)))
-  const brands = list.map(p => p.brand ? p.brand.trim() : '').filter(Boolean)
-  return [...new Set(brands)].sort()
-})
-
-const activeFilterCount = computed(() => {
+// Conteo de filtros aplicados dentro del drawer (categoría, marcas, precio, stock, subtipo)
+const drawerFiltersActiveCount = computed(() => {
   let count = 0
-  if (searchQuery.value) count++
+  if (activeCategory.value !== 'all') count++
   if (selectedBrands.value.length > 0) count += selectedBrands.value.length
-  if (sortBy.value !== 'default') count++
-  if (activeFilter.value !== 'all') count++
+  if (minPrice.value !== null || maxPrice.value !== null) count++
+  if (inStockOnly.value) count++
+  if (selectedProductType.value !== null) count++
   return count
 })
 
-function handleFilterUpdate(payload: { searchQuery: string; selectedBrands: string[]; selectedCategory: string; sortBy: string }) {
-  searchQuery.value = payload.searchQuery
+function handleFilterUpdate(payload: {
+  selectedCategory: string
+  selectedBrands: string[]
+  selectedProductType: string | null
+  minPrice: number | null
+  maxPrice: number | null
+  inStockOnly: boolean
+}) {
+  if (payload.selectedCategory !== activeCategory.value) {
+    setCategory(payload.selectedCategory as CanonicalCategoryId | 'all')
+  }
   selectedBrands.value = payload.selectedBrands
-  activeFilter.value = payload.selectedCategory
-  sortBy.value = payload.sortBy
+  selectedProductType.value = payload.selectedProductType
+  minPrice.value = payload.minPrice
+  maxPrice.value = payload.maxPrice
+  inStockOnly.value = payload.inStockOnly
 }
 
-const filteredProducts = computed(() => {
-  const activeDeptCats = categories.value
-    .filter(c => {
-      if (activeDepartment.value === 'all') return true
-      if (activeDepartment.value === 'merch') return isMerchCategory(c)
-      if (activeDepartment.value === 'women') return c.department === 'women'
-      return !c.department || c.department === 'men' || c.department === 'unisex'
-    })
-    .map(c => c.id)
-
-  let list = products.value.filter(p => {
-    if (p.is_active === false) return false
-    if (activeDepartment.value === 'all') return true
-    if (!p.category) return true
-    if (categories.value.length === 0) return true
-    return activeDeptCats.includes(p.category)
-  })
-  
-  if (activeFilter.value !== 'all') {
-    list = list.filter(p => p.category === activeFilter.value)
-  }
-  if (searchQuery.value) {
-    const q = searchQuery.value.toLowerCase()
-    list = list.filter(p => p.name.toLowerCase().includes(q) || (p.brand && p.brand.toLowerCase().includes(q)))
-  }
-  if (selectedBrands.value.length > 0) {
-    list = list.filter(p => p.brand && selectedBrands.value.includes(p.brand.trim()))
-  }
-  
-  if (sortBy.value === 'price-asc') {
-    list = [...list].sort((a, b) => (a.price || 0) - (b.price || 0))
-  } else if (sortBy.value === 'price-desc') {
-    list = [...list].sort((a, b) => (b.price || 0) - (a.price || 0))
-  }
-  
-  return list
-})
-
+// Control de paginación progresiva ("Cargar Más")
 const displayLimit = ref(12)
 
 const displayedProducts = computed(() => {
@@ -634,11 +582,73 @@ function loadMoreProducts() {
   displayLimit.value += 12
 }
 
-watch([activeFilter, activeDepartment, searchQuery, selectedBrands, sortBy], () => {
-  displayLimit.value = 12
-})
+watch(
+  [activeCategory, searchQuery, selectedBrands, minPrice, maxPrice, inStockOnly, sortBy, selectedProductType],
+  () => {
+    displayLimit.value = 12
+  }
+)
 
-const activeFilterLabel = computed(() => filters.value.find(f => f.id === activeFilter.value)?.label ?? '')
+function selectUniverse(universe: 'grooming' | 'beauty' | 'boutique' | 'all') {
+  storeUniverse.value = universe
+  if (universe === 'grooming') {
+    setDepartment('men')
+    if (activeCategory.value === 'planchas') {
+      setCategory('all')
+    }
+  } else if (universe === 'beauty') {
+    setDepartment('women')
+    setCategory('planchas')
+  } else if (universe === 'boutique') {
+    setDepartment('merch')
+    setCategory('all')
+  } else {
+    setDepartment('all')
+    setCategory('all')
+  }
+}
+
+// Sincronización de departamento y SEO dinámico por categoría
+watch(
+  activeCategory,
+  (newCat) => {
+    if (newCat === 'planchas') {
+      setDepartment('women')
+      storeUniverse.value = 'beauty'
+      useSeoMeta({ title: 'Planchas | PersonalBarber Medellín' })
+    } else if (newCat !== 'all') {
+      setDepartment('men')
+      storeUniverse.value = 'grooming'
+      const cat = CANONICAL_CATEGORIES.find(c => c.id === newCat)
+      if (cat) {
+        useSeoMeta({ title: `${cat.label} | PersonalBarber Medellín` })
+      }
+    } else {
+      useSeoMeta({ title: 'PersonalBarber — Tienda de Barbería Online | Medellín & Colombia' })
+    }
+  },
+  { immediate: false }
+)
+
+// Helper para generar slug de producto
+const generateProductSlug = (id: number | string, name: string) => {
+  const cleanName = (name || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+  return `${id}-${cleanName}`
+}
+
+async function fetchData() {
+  await fetchCatalog(true)
+  setTimeout(() => { isFirstVisit.value = false }, 1000)
+}
+
+onMounted(async () => {
+  await fetchData()
+})
 
 function goToDetail(product: { id: number; name: string }) {
   if (import.meta.client) {

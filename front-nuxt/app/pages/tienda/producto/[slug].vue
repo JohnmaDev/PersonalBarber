@@ -35,7 +35,7 @@
       <nav class="flex items-center gap-2 text-[10px] md:text-[11px] text-[#555] uppercase tracking-[0.18em] font-bold mb-10">
         <NuxtLink to="/" class="hover:dept-text transition-colors duration-200">Tienda</NuxtLink>
         <span class="text-[#333]">›</span>
-        <NuxtLink :to="{ path: '/', query: { cat: product.category } }" class="hover:dept-text transition-colors duration-200">{{ getCategoryLabel(product.category) }}</NuxtLink>
+        <NuxtLink :to="{ path: '/', query: { cat: normalizedCategory } }" class="hover:dept-text transition-colors duration-200">{{ categoryLabel }}</NuxtLink>
         <span class="text-[#333]">›</span>
         <span class="text-[#A1A1AA] truncate max-w-[200px] sm:max-w-[400px]">{{ product.name }}</span>
       </nav>
@@ -341,6 +341,7 @@ import { useLanguage } from '~/composables/useLanguage'
 import { useDepartment } from '~/composables/useDepartment'
 import { formatPrice } from '~/utils/format'
 import { optimizeImage } from '~/utils/image'
+import { normalizeProductCategory, CANONICAL_CATEGORIES } from '~/utils/taxonomy'
 
 const route = useRoute()
 const router = useRouter()
@@ -363,6 +364,16 @@ const slug = computed(() => route.params.slug as string)
 const productId = computed(() => getIdFromSlug(slug.value))
 
 const product = computed(() => products.value.find(p => p.id === productId.value) as Product | undefined)
+
+const normalizedCategory = computed(() => {
+  if (!product.value) return 'ceras'
+  return normalizeProductCategory(product.value)
+})
+
+const categoryLabel = computed(() => {
+  const cat = CANONICAL_CATEGORIES.find(c => c.id === normalizedCategory.value)
+  return cat ? cat.label : normalizedCategory.value
+})
 
 watchEffect(() => {
   if (product.value && categories.value.length > 0) {
@@ -392,6 +403,9 @@ watchEffect(() => {
     })
 
     useHead({
+      link: [
+        { rel: 'canonical', href: `https://personalbarber.co/tienda/producto/${slug.value}` }
+      ],
       script: [{
         key: 'product-ld',
         type: 'application/ld+json',
