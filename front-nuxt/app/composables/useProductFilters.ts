@@ -3,7 +3,7 @@
 
 import { ref, computed, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import type { Product } from '~/composables/useCatalog'
+import { useCatalog, type Product } from '~/composables/useCatalog'
 import {
   type CanonicalCategoryId,
   CANONICAL_CATEGORIES,
@@ -143,31 +143,45 @@ export function useProductFilters(productsRef: Ref<Product[]>) {
       }))
   })
 
+  const { categories: catalogCategories } = useCatalog()
+
   // ─── Facetas de Categorías con Conteo ───
   const categoriesWithCounts = computed(() => {
     const listWithoutCategoryFilter = filterProductsExcluding('category')
-    const countMap: Record<string, number> = {
-      ceras: 0,
-      maquinas: 0,
-      planchas: 0,
-      afeitado: 0,
-      insumos: 0,
-      tratamientos: 0,
-      bienestar: 0,
-    }
+    const countMap: Record<string, number> = {}
 
     for (const p of listWithoutCategoryFilter) {
       const cat = normalizeProductCategory(p)
-      if (countMap[cat] !== undefined) {
-        countMap[cat]++
+      if (cat) {
+        countMap[cat] = (countMap[cat] || 0) + 1
       }
     }
 
     const totalCount = listWithoutCategoryFilter.length
 
+    // Categorías base canónicas
+    const knownCats: { id: any; label: string; icon: string; description: string }[] = [...CANONICAL_CATEGORIES]
+
+    // Si en las categorías de MongoDB hay categorías adicionales con productos activos, añadirlas
+    if (catalogCategories.value && catalogCategories.value.length > 0) {
+      for (const dbCat of catalogCategories.value) {
+        if (!knownCats.some(c => c.id === dbCat.id) && countMap[dbCat.id] > 0) {
+          knownCats.push({
+            id: dbCat.id,
+            label: dbCat.label || dbCat.id,
+            icon: dbCat.icon || 'fas fa-tag',
+            description: (dbCat.subtitle as string) || '',
+          })
+        }
+      }
+    }
+
+    // Regla inteligente: Solo mostrar categorías que tengan al menos 1 producto (count > 0)
+    const activeCats = knownCats.filter(c => (countMap[c.id] || 0) > 0)
+
     return {
       all: totalCount,
-      categories: CANONICAL_CATEGORIES.map(c => ({
+      categories: activeCats.map(c => ({
         id: c.id,
         label: c.label,
         icon: c.icon,
@@ -181,8 +195,7 @@ export function useProductFilters(productsRef: Ref<Product[]>) {
   // ─── Facetas de Subtipos de Producto con Conteo ───
   const availableSubtypesWithCounts = computed(() => {
     if (activeCategory.value === 'all') return []
-    const availableTypes = getCategorySubtypes(activeCategory.value)
-    if (availableTypes.length === 0) return []
+    const staticTypes = getCategorySubtypes(activeCategory.value as any)
 
     const listWithoutTypeFilter = filterProductsExcluding('type')
     const countMap: Record<string, number> = {}
@@ -194,11 +207,16 @@ export function useProductFilters(productsRef: Ref<Product[]>) {
       }
     }
 
-    return availableTypes.map(type => ({
-      type,
-      count: countMap[type] || 0,
-      selected: selectedProductType.value === type,
-    }))
+    // Unir tipos estáticos con cualquier tipo dinámico presente en los productos
+    const allTypes = [...new Set([...staticTypes, ...Object.keys(countMap)])]
+
+    return allTypes
+      .filter(type => (countMap[type] || 0) > 0)
+      .map(type => ({
+        type,
+        count: countMap[type] || 0,
+        selected: selectedProductType.value === type,
+      }))
   })
 
   // ─── Catálogo Filtrado Final ───

@@ -60,7 +60,7 @@ const CATEGORY_ALIASES: Record<string, CanonicalCategoryId> = {
  * 2. Aliases de categorías legadas ('insumos-barberia' -> 'insumos', 'capilar-mujer' -> 'planchas')
  * 3. Categoría propia del producto si ya es canónica
  */
-export function normalizeProductCategory(product: { id: number; category?: string; name?: string }): CanonicalCategoryId {
+export function normalizeProductCategory(product: { id: number; category?: string; name?: string; product_type?: string }): string {
   if (AUDITED_PRODUCT_CATEGORY_MAP[product.id]) {
     return AUDITED_PRODUCT_CATEGORY_MAP[product.id]
   }
@@ -68,8 +68,8 @@ export function normalizeProductCategory(product: { id: number; category?: strin
   if (CATEGORY_ALIASES[rawCat]) {
     return CATEGORY_ALIASES[rawCat]
   }
-  if (CANONICAL_CATEGORIES.some(c => c.id === rawCat)) {
-    return rawCat as CanonicalCategoryId
+  if (rawCat) {
+    return rawCat
   }
   return 'ceras'
 }
@@ -77,23 +77,24 @@ export function normalizeProductCategory(product: { id: number; category?: strin
 /**
  * Normaliza cualquier slug o ID de categoría que provenga de la URL o estado legado
  */
-export function normalizeCategorySlug(slug: string | null | undefined): CanonicalCategoryId | 'all' {
+export function normalizeCategorySlug(slug: string | null | undefined): string | 'all' {
   if (!slug || slug === 'all') return 'all'
   const clean = slug.toLowerCase().trim()
   if (CATEGORY_ALIASES[clean]) {
     return CATEGORY_ALIASES[clean]
   }
-  if (CANONICAL_CATEGORIES.some(c => c.id === clean)) {
-    return clean as CanonicalCategoryId
-  }
-  return 'all'
+  return clean
 }
 
 /**
  * Extracción determinística del tipo de producto basada en el nombre y categoría normalizada.
- * Utiliza un orden estricto de precedencia para evitar cualquier colisión.
+ * Si el producto tiene definido un product_type explícito, se utiliza con máxima prioridad.
  */
-export function extractProductType(product: { id: number; name: string; category?: string }): string | null {
+export function extractProductType(product: { id: number; name: string; category?: string; product_type?: string }): string | null {
+  if (product.product_type && typeof product.product_type === 'string' && product.product_type.trim()) {
+    return product.product_type.trim()
+  }
+
   const cat = normalizeProductCategory(product)
   const nameLower = (product.name || '').toLowerCase()
 

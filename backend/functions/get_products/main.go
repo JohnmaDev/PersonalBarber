@@ -22,6 +22,7 @@ type Product struct {
 	Name         string   `json:"name" bson:"name"`
 	Brand        string   `json:"brand" bson:"brand"`
 	Category     string   `json:"category" bson:"category"`
+	ProductType  string   `json:"product_type,omitempty" bson:"product_type,omitempty"`
 	Description  string   `json:"description" bson:"description"`
 	Price        int64    `json:"price" bson:"price"`
 	ComparePrice int64    `json:"comparePrice,omitempty" bson:"comparePrice,omitempty"`
@@ -41,6 +42,7 @@ type flexibleProduct struct {
 	Name         string      `bson:"name"`
 	Brand        string      `bson:"brand"`
 	Category     string      `bson:"category"`
+	ProductType  string      `bson:"product_type,omitempty"`
 	Description  string      `bson:"description"`
 	Price        interface{} `bson:"price"`
 	ComparePrice interface{} `bson:"comparePrice,omitempty"`
@@ -105,6 +107,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 			Name:        rp.Name,
 			Brand:       rp.Brand,
 			Category:    rp.Category,
+			ProductType: rp.ProductType,
 			Description: rp.Description,
 			Images:      rp.Images,
 			Image:       rp.Image,

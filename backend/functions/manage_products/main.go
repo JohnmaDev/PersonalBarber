@@ -21,6 +21,7 @@ type Product struct {
 	Name         string   `json:"name" bson:"name"`
 	Brand        string   `json:"brand" bson:"brand"`
 	Category     string   `json:"category" bson:"category"`
+	ProductType  string   `json:"product_type,omitempty" bson:"product_type,omitempty"`
 	Description  string   `json:"description" bson:"description"`
 	Price        int64    `json:"price" bson:"price"`
 	ComparePrice int64    `json:"comparePrice,omitempty" bson:"comparePrice,omitempty"`

@@ -40,7 +40,12 @@
             class="w-full pl-11 pr-10 py-3 bg-zinc-900 border border-zinc-800 rounded-2xl text-sm text-white focus:outline-none focus:border-neon-green/50 focus:ring-1 focus:ring-neon-green/20 appearance-none cursor-pointer group-hover:border-zinc-700 transition-all"
           >
             <option value="all">Todas las Categorías</option>
-            <option v-for="cat in categorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
+            <optgroup v-if="mainCategorias.length" label="⭐ Categorías Principales">
+              <option v-for="cat in mainCategorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
+            </optgroup>
+            <optgroup v-if="otherCategorias.length" label="📁 Otras Categorías">
+              <option v-for="cat in otherCategorias" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
+            </optgroup>
           </select>
           <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
             <fa-icon :icon="['fas', 'chevron-down']" class="text-[10px] text-zinc-500 group-focus-within:text-neon-green transition-colors" />
@@ -129,7 +134,8 @@
             </span>
           </div>
           <div class="flex items-center gap-2 mt-0.5">
-            <span class="text-[9px] font-black text-neon-green uppercase px-1.5 py-0.5 bg-neon-green/10 rounded border border-neon-green/20">{{ p.category }}</span>
+            <span class="text-[9px] font-black text-neon-green uppercase px-1.5 py-0.5 bg-neon-green/10 rounded border border-neon-green/20">{{ getCategoryLabel(p.category) }}</span>
+            <span v-if="p.product_type" class="text-[9px] font-bold text-cyan-400 uppercase px-1.5 py-0.5 bg-cyan-950/40 rounded border border-cyan-800/60">{{ p.product_type }}</span>
             <span class="text-zinc-500 text-[10px] font-bold">{{ formatPrice(p.price) }}</span>
             <span 
               class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded border"
@@ -193,11 +199,26 @@
               <div class="space-y-1">
                 <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">Categoría</label>
                 <select v-model="prodForm.category" class="input-modern appearance-none">
-                  <option v-for="cat in sortedCategorias" :key="cat.id" :value="cat.id">
-                    {{ cat.department === 'women' ? '👩 [Para Ella]' : cat.department === 'unisex' ? '⚡ [Unisex]' : '🧔 [Para Él]' }} — {{ cat.label }}
-                  </option>
+                  <optgroup v-if="mainCategorias.length" label="⭐ Categorías Principales del Catálogo">
+                    <option v-for="cat in mainCategorias" :key="cat.id" :value="cat.id">
+                      {{ cat.label }} ({{ cat.department === 'women' ? 'Para Ella' : cat.department === 'unisex' ? 'Unisex' : 'Para Él' }})
+                    </option>
+                  </optgroup>
+                  <optgroup v-if="otherCategorias.length" label="📁 Otras Categorías">
+                    <option v-for="cat in otherCategorias" :key="cat.id" :value="cat.id">
+                      {{ cat.label }} ({{ cat.department === 'women' ? 'Para Ella' : cat.department === 'unisex' ? 'Unisex' : 'Para Él' }})
+                    </option>
+                  </optgroup>
                 </select>
               </div>
+            </div>
+
+            <!-- Tipo / Subtipo dinámico para filtros facetados -->
+            <div class="space-y-1">
+              <label class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest pl-1">
+                Tipo / Subtipo de Producto <span class="text-zinc-600 font-normal">(Opcional — genera pastilla en filtros, ej: Polvo Voluminizador, Clipper, Térmico)</span>
+              </label>
+              <input v-model="prodForm.product_type" type="text" class="input-modern" placeholder="Ej: Polvo Voluminizador, Clipper, Shaver, Térmico">
             </div>
 
             <div class="space-y-3">
@@ -297,6 +318,7 @@ export default {
         name: '',
         brand: '',
         category: '',
+        product_type: '',
         description: '',
         usage: '',
         price: '',
@@ -311,6 +333,23 @@ export default {
     this.cargarProductos()
   },
   computed: {
+    canonicalCategoryIds() {
+      return ['ceras', 'maquinas', 'planchas', 'afeitado', 'insumos', 'tratamientos', 'bienestar'];
+    },
+    mainCategorias() {
+      if (!this.categorias || !this.categorias.length) return [];
+      const order = this.canonicalCategoryIds;
+      return [...this.categorias]
+        .filter(c => order.includes(c.id))
+        .sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+    },
+    otherCategorias() {
+      if (!this.categorias || !this.categorias.length) return [];
+      const order = this.canonicalCategoryIds;
+      return [...this.categorias]
+        .filter(c => !order.includes(c.id))
+        .sort((a, b) => (a.label || '').localeCompare(b.label || ''));
+    },
     sortedCategorias() {
       if (!this.categorias || !this.categorias.length) return [];
       const deptOrder = { men: 1, unisex: 2, women: 3 };
@@ -328,7 +367,7 @@ export default {
     filteredProducts() {
       return this.productos.filter(p => {
         const matchesSearch = !this.searchQuery || p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-                             (p.brand && p.brand.toLowerCase().includes(this.searchQuery.toLowerCase()));
+                              (p.brand && p.brand.toLowerCase().includes(this.searchQuery.toLowerCase()));
         const matchesCategory = this.filterCategory === 'all' || p.category === this.filterCategory;
         const matchesBrand = this.filterBrand === 'all' || (p.brand && p.brand.trim() === this.filterBrand);
         
@@ -349,6 +388,22 @@ export default {
   methods: {
     formatPrice,
     optimizeImage,
+    getCategoryLabel(catId) {
+      if (!catId) return 'Sin categoría';
+      const cat = this.categorias.find(c => c.id === catId);
+      if (cat) return cat.label;
+      const canonicalMap = {
+        ceras: 'Ceras',
+        maquinas: 'Máquinas',
+        planchas: 'Planchas',
+        afeitado: 'Afeitado',
+        insumos: 'Insumos',
+        'insumos-barberia': 'Insumos',
+        tratamientos: 'Tratamientos',
+        bienestar: 'Bienestar'
+      };
+      return canonicalMap[catId] || catId;
+    },
     async cargarCategorias() {
       try {
         const url = '/api/get_categories';
@@ -396,6 +451,7 @@ export default {
         this.editando = true;
         this.prodForm = { 
           ...p, 
+          product_type: p.product_type || '',
           usage: p.usage || '',
           specs: p.specs || '',
           benefits: p.benefits ? [...p.benefits] : [],
@@ -405,12 +461,13 @@ export default {
       } else {
         this.editando = false;
         const nextId = this.productos.length > 0 ? Math.max(...this.productos.map(pr => pr.id)) : 1;
-        const defaultCat = this.sortedCategorias.length ? this.sortedCategorias[0].id : (this.categorias.length ? this.categorias[0].id : '');
+        const defaultCat = this.mainCategorias.length ? this.mainCategorias[0].id : (this.sortedCategorias.length ? this.sortedCategorias[0].id : (this.categorias.length ? this.categorias[0].id : 'ceras'));
         this.prodForm = { 
           id: nextId + 1, 
           name: '', 
           brand: '', 
           category: defaultCat, 
+          product_type: '',
           description: '', 
           usage: '', 
           specs: '',
