@@ -221,7 +221,7 @@
       </div>
 
       <!-- Barra de Acción: Conteo de productos + Botón [Filtros] + [Ordenar: Recomendados ▾] -->
-      <div class="flex items-center justify-between gap-3 mb-5 py-2.5 px-1 border-b border-zinc-800/60">
+      <div id="catalogo-toolbar" class="flex items-center justify-between gap-3 mb-5 py-2.5 px-1 border-b border-zinc-800/60 scroll-mt-24">
         <!-- Conteo de productos encontrados -->
         <div class="flex items-center gap-2">
           <span class="text-xs sm:text-sm font-bold text-zinc-300">
@@ -392,7 +392,7 @@
         :price-bounds="priceBounds"
         :in-stock-only="inStockOnly"
         :total-matching-products="filteredProducts.length"
-        @close="drawerOpen = false"
+        @close="onDrawerClose"
         @update:filters="handleFilterUpdate"
         @reset="resetAllFilters"
       />
@@ -648,7 +648,33 @@ async function fetchData() {
 
 onMounted(async () => {
   await fetchData()
+  if (import.meta.client && (route.query.cat || route.query.brand || route.query.type || route.query.min || route.query.max || route.query.stock)) {
+    setTimeout(() => {
+      scrollToProductsToolbar()
+    }, 300)
+  }
 })
+
+function onDrawerClose() {
+  drawerOpen.value = false
+  if (import.meta.client) {
+    setTimeout(() => {
+      scrollToProductsToolbar()
+    }, 50)
+  }
+}
+
+function scrollToProductsToolbar() {
+  if (!import.meta.client) return
+  const el = document.getElementById('catalogo-toolbar')
+  if (el) {
+    const rect = el.getBoundingClientRect()
+    // Si la barra del catálogo está fuera de la zona visible superior, desplazar suavemente
+    if (rect.top < 60 || rect.top > 350) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+}
 
 function goToDetail(product: { id: number; name: string }) {
   if (import.meta.client) {
