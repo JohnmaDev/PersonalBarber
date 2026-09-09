@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -180,6 +181,30 @@ func cleanPhoneForWhatsApp(phone string) string {
 	return "57" + d
 }
 
+// formatOrderDate formatea una fecha ISO/RFC3339 de Wompi al formato local de Colombia (UTC-5)
+func formatOrderDate(rawDate string) string {
+	rawDate = strings.TrimSpace(rawDate)
+	if rawDate == "" {
+		return ""
+	}
+	t, err := time.Parse(time.RFC3339Nano, rawDate)
+	if err != nil {
+		t, err = time.Parse(time.RFC3339, rawDate)
+		if err != nil {
+			t, err = time.Parse("2006-01-02T15:04:05", rawDate)
+			if err != nil {
+				return ""
+			}
+		}
+	}
+	loc := time.FixedZone("COT", -5*60*60)
+	t = t.In(loc)
+
+	meses := []string{"", "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"}
+	mes := meses[t.Month()]
+	return fmt.Sprintf("%d de %s de %d, %02d:%02d", t.Day(), mes, t.Year(), t.Hour(), t.Minute())
+}
+
 // buildCustomerOrderEmailHTML genera la plantilla HTML del correo para el cliente
 func buildCustomerOrderEmailHTML(order StoredOrder, tx WompiTransaction) string {
 	var itemsHTML strings.Builder
@@ -194,30 +219,65 @@ func buildCustomerOrderEmailHTML(order StoredOrder, tx WompiTransaction) string 
 					<strong>%s</strong>
 					<div style="font-size:12px;color:#94a3b8;margin-top:2px;">Cantidad: %d &times; $%s COP</div>
 				</td>
-				<td align="right" style="padding:12px 16px;border-bottom:1px solid #1a1d28;color:#39FF14;font-size:14px;font-weight:600;white-space:nowrap;">
+				<td align="right" style="padding:12px 16px;border-bottom:1px solid #1a1d28;color:#22c55e;font-size:14px;font-weight:600;white-space:nowrap;">
 					$%s COP
 				</td>
 			</tr>`, itemName, item.Qty, itemPrice, itemSubtotal))
 	}
 
-	customerName := html.EscapeString(strings.TrimSpace(order.Customer.FirstName + " " + order.Customer.LastName))
-	if customerName == "" {
-		customerName = "Cliente"
+	// Extraer primer nombre del cliente para saludo amigable
+	displayName := strings.TrimSpace(order.Customer.FirstName)
+	if displayName == "" {
+		fullName := strings.TrimSpace(order.Customer.FirstName + " " + order.Customer.LastName)
+		parts := strings.Fields(fullName)
+		if len(parts) > 0 {
+			displayName = parts[0]
+		} else {
+			displayName = "Cliente"
+		}
 	}
+	escapedDisplayName := html.EscapeString(displayName)
+
+	fullCustomerName := strings.TrimSpace(order.Customer.FirstName + " " + order.Customer.LastName)
+	if fullCustomerName == "" {
+		fullCustomerName = displayName
+	}
+	escapedFullCustomerName := html.EscapeString(fullCustomerName)
+
 	customerAddress := html.EscapeString(order.Customer.Address)
 	customerCity := html.EscapeString(order.Customer.City)
 	customerPhone := html.EscapeString(order.Customer.Phone)
 
 	subtotalStr := formatAmount(order.Subtotal, order.SubtotalFormat)
-	shippingStr := formatAmount(order.ShippingCost, order.ShippingFormat)
 	totalStr := formatAmount(order.Total, order.TotalFormat)
 
-	shippingLabel := "Envío"
-	if order.ShippingCost == 0 {
-		shippingStr = "GRATIS"
-	} else if order.ShippingMethod != "" {
-		shippingLabel = fmt.Sprintf("Envío (%s)", html.EscapeString(order.ShippingMethod))
+	// Envío: Política PersonalBarber 100% GRATIS a todo Colombia
+	shippingTitle := "Envío (100% GRATIS a todo Colombia 🇨🇴)"
+	shippingVal := "$0 COP"
+	shippingColor := "#22c55e"
+	if order.ShippingCost > 0 {
+		shippingTitle = "Envío"
+		if order.ShippingMethod != "" {
+			shippingTitle = fmt.Sprintf("Envío (%s)", html.EscapeString(order.ShippingMethod))
+		}
+		shippingVal = fmt.Sprintf("$%s COP", formatAmount(order.ShippingCost, order.ShippingFormat))
+		shippingColor = "#ffffff"
 	}
+
+	// Fecha de compra a partir de los datos existentes en la transacción
+	orderDate := formatOrderDate(tx.FinalizedAt)
+	if orderDate == "" {
+		orderDate = formatOrderDate(tx.CreatedAt)
+	}
+	var dateHTML string
+	if orderDate != "" {
+		dateHTML = fmt.Sprintf(`<div style="font-size:13px;color:#94a3b8;margin-top:4px;"><strong style="color:#ffffff;">Fecha:</strong> %s</div>`, html.EscapeString(orderDate))
+	}
+
+	// Construcción segura del enlace de WhatsApp con mensaje precargado
+	waMessage := fmt.Sprintf("Hola, soy %s. Quiero hacer seguimiento a mi pedido #%s. ¿Me pueden ayudar?", displayName, order.ID)
+	waURL := fmt.Sprintf("https://wa.me/573337518070?text=%s", url.QueryEscape(waMessage))
+	escapedWaURL := html.EscapeString(waURL)
 
 	return fmt.Sprintf(`<!DOCTYPE html>
 <html lang="es">
@@ -227,42 +287,58 @@ func buildCustomerOrderEmailHTML(order StoredOrder, tx WompiTransaction) string 
   <title>Confirmación de Pedido - Personal Barber</title>
 </head>
 <body style="margin:0;padding:0;background-color:#0a0b0f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#e2e8f0;">
-  <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#0a0b0f;padding:30px 10px;">
+  <table width="100%%" border="0" cellpadding="0" cellspacing="0" bgcolor="#0a0b0f" style="background-color:#0a0b0f;padding:24px 8px;">
     <tr>
       <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="background-color:#13151c;border-radius:20px;overflow:hidden;border:1px solid #1e2130;max-width:600px;width:100%%;">
+        <table width="100%%" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#13151c" style="background-color:#13151c;border-radius:16px;overflow:hidden;border:1px solid #1e2130;max-width:600px;">
           
           <!-- HEADER -->
           <tr>
-            <td style="background:linear-gradient(160deg,#0d0f16 0%%,#0d1a10 100%%);padding:36px 30px 28px;text-align:center;border-bottom:1px solid #1a3d1a;">
-              <img src="https://personalbarber.co/icon-512.png" alt="Personal Barber" width="68" height="68"
-                style="border-radius:16px;border:2px solid rgba(57,255,20,0.25);display:block;margin:0 auto 16px;" />
-              <h1 style="margin:0 0 4px;font-size:26px;font-weight:800;letter-spacing:3px;color:#ffffff;text-transform:uppercase;">
-                PERSONAL <span style="color:#39FF14;">BARBER</span>
-              </h1>
-              <p style="margin:0 0 16px;font-size:12px;letter-spacing:2px;color:rgba(57,255,20,0.6);text-transform:uppercase;">
+            <td bgcolor="#0d0f16" style="background-color:#0d0f16;padding:32px 24px 24px;text-align:center;border-bottom:1px solid #1a231a;">
+              <img src="https://personalbarber.co/icon-512.png" alt="Personal Barber" width="60" height="60"
+                style="border-radius:14px;border:1px solid rgba(34,197,94,0.3);display:block;margin:0 auto 12px;" />
+              <h2 style="margin:0 0 4px;font-size:24px;font-weight:800;letter-spacing:2px;color:#ffffff;text-transform:uppercase;">
+                PERSONAL <span style="color:#22c55e;">BARBER</span>
+              </h2>
+              <p style="margin:0 0 16px;font-size:11px;letter-spacing:1.5px;color:#94a3b8;text-transform:uppercase;">
                 Tienda Online Oficial
               </p>
-              <span style="display:inline-block;background-color:rgba(57,255,20,0.1);border:1px solid rgba(57,255,20,0.3);color:#39FF14;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 18px;border-radius:50px;">
-                ✓ Pago Confirmado · Pedido #%s
+              <span style="display:inline-block;background-color:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.35);color:#22c55e;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 16px;border-radius:50px;">
+                ✓ Pedido confirmado · Pago recibido
               </span>
             </td>
           </tr>
 
           <!-- BODY -->
           <tr>
-            <td style="padding:32px 30px;">
-              <p style="font-size:16px;color:#ffffff;margin:0 0 10px;font-weight:600;">
-                ¡Hola, %s!
-              </p>
-              <p style="font-size:14px;color:#94a3b8;margin:0 0 24px;line-height:1.6;">
-                Tu pago a través de <strong>Wompi</strong> ha sido procesado y aprobado con éxito. Hemos registrado tu pedido y ya estamos alistando tus productos para enviártelos lo antes posible.
+            <td style="padding:32px 24px;">
+              <h1 style="margin:0 0 10px;font-size:22px;font-weight:800;color:#ffffff;text-align:center;">
+                ¡Gracias por tu compra, %s!
+              </h1>
+              <p style="font-size:14px;color:#94a3b8;margin:0 0 24px;line-height:1.6;text-align:center;">
+                Hemos recibido correctamente tu pago y tu pedido ya fue confirmado.<br>
+                Te avisaremos cuando avance el proceso de despacho.
               </p>
 
-              <!-- PRODUCT BREAKDOWN -->
-              <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#0d0f16;border-radius:14px;border:1px solid #1e2130;overflow:hidden;margin-bottom:24px;">
+              <!-- ORDER INFO CARD -->
+              <table width="100%%" cellpadding="0" cellspacing="0" bgcolor="#0d0f16" style="background-color:#0d0f16;border-radius:12px;border:1px solid #1e2130;margin-bottom:24px;padding:16px;">
                 <tr>
-                  <td colspan="2" style="padding:12px 16px;background-color:#161922;border-bottom:1px solid #1e2130;color:#39FF14;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">
+                  <td>
+                    <div style="font-size:14px;color:#ffffff;margin-bottom:2px;">
+                      <strong style="color:#94a3b8;">Pedido:</strong> <span style="color:#22c55e;font-weight:700;">#%s</span>
+                    </div>
+                    %s
+                    <div style="font-size:13px;color:#94a3b8;margin-top:4px;">
+                      <strong style="color:#ffffff;">Estado:</strong> Pedido confirmado · Pago recibido
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- PRODUCT BREAKDOWN -->
+              <table width="100%%" cellpadding="0" cellspacing="0" bgcolor="#0d0f16" style="background-color:#0d0f16;border-radius:12px;border:1px solid #1e2130;overflow:hidden;margin-bottom:24px;">
+                <tr>
+                  <td colspan="2" style="padding:12px 16px;background-color:#161922;border-bottom:1px solid #1e2130;color:#22c55e;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">
                     Resumen de Productos
                   </td>
                 </tr>
@@ -270,59 +346,72 @@ func buildCustomerOrderEmailHTML(order StoredOrder, tx WompiTransaction) string 
               </table>
 
               <!-- FINANCIAL SUMMARY -->
-              <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#0d0f16;border-radius:14px;border:1px solid #1e2130;overflow:hidden;margin-bottom:24px;padding:16px;">
+              <table width="100%%" cellpadding="0" cellspacing="0" bgcolor="#0d0f16" style="background-color:#0d0f16;border-radius:12px;border:1px solid #1e2130;overflow:hidden;margin-bottom:24px;padding:16px;">
                 <tr>
                   <td style="padding:6px 16px;color:#94a3b8;font-size:14px;">Subtotal</td>
-                  <td align="right" style="padding:6px 16px;color:#ffffff;font-size:14px;">$%s COP</td>
+                  <td align="right" style="padding:6px 16px;color:#ffffff;font-size:14px;font-weight:600;">$%s COP</td>
                 </tr>
                 <tr>
                   <td style="padding:6px 16px;color:#94a3b8;font-size:14px;">%s</td>
-                  <td align="right" style="padding:6px 16px;color:#ffffff;font-size:14px;">%s</td>
+                  <td align="right" style="padding:6px 16px;color:%s;font-size:14px;font-weight:600;">%s</td>
                 </tr>
                 <tr>
-                  <td colspan="2" style="padding:10px 16px 4px;"><hr style="border:none;border-top:1px solid #1e2130;margin:0;" /></td>
+                  <td colspan="2" style="padding:10px 16px 6px;"><hr style="border:none;border-top:1px solid #1e2130;margin:0;" /></td>
                 </tr>
                 <tr>
-                  <td style="padding:8px 16px;color:#ffffff;font-size:16px;font-weight:700;">Total Pagado</td>
-                  <td align="right" style="padding:8px 16px;color:#39FF14;font-size:20px;font-weight:800;">$%s COP</td>
+                  <td style="padding:8px 16px;color:#ffffff;font-size:16px;font-weight:700;">TOTAL PAGADO</td>
+                  <td align="right" style="padding:8px 16px;color:#22c55e;font-size:18px;font-weight:800;">$%s COP</td>
                 </tr>
                 <tr>
-                  <td colspan="2" style="padding:4px 16px;color:#64748b;font-size:11px;">
-                    Método: Wompi · Ref: %s · Transacción: %s
+                  <td colspan="2" style="padding:6px 16px 2px;color:#94a3b8;font-size:12px;">
+                    Medio de pago: <strong style="color:#ffffff;">Wompi</strong>
                   </td>
                 </tr>
               </table>
 
               <!-- SHIPPING ADDRESS -->
-              <table width="100%%" cellpadding="0" cellspacing="0" style="background-color:#0d0f16;border-radius:14px;border:1px solid #1e2130;overflow:hidden;margin-bottom:28px;">
+              <table width="100%%" cellpadding="0" cellspacing="0" bgcolor="#0d0f16" style="background-color:#0d0f16;border-radius:12px;border:1px solid #1e2130;overflow:hidden;margin-bottom:24px;">
                 <tr>
-                  <td style="padding:12px 16px;background-color:#161922;border-bottom:1px solid #1e2130;color:#39FF14;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">
+                  <td style="padding:12px 16px;background-color:#161922;border-bottom:1px solid #1e2130;color:#22c55e;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">
                     📍 Datos de Entrega
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:16px;">
                     <div style="font-size:14px;color:#ffffff;font-weight:600;margin-bottom:4px;">%s</div>
-                    <div style="font-size:13px;color:#94a3b8;margin-bottom:2px;">%s, %s</div>
-                    <div style="font-size:13px;color:#94a3b8;">Tel: %s</div>
+                    <div style="font-size:13px;color:#94a3b8;margin-bottom:3px;"><strong style="color:#cbd5e1;">Ciudad:</strong> %s</div>
+                    <div style="font-size:13px;color:#94a3b8;margin-bottom:3px;"><strong style="color:#cbd5e1;">Dirección:</strong> %s</div>
+                    <div style="font-size:13px;color:#94a3b8;"><strong style="color:#cbd5e1;">Teléfono:</strong> %s</div>
                   </td>
                 </tr>
               </table>
 
               <!-- WHATSAPP SUPPORT CTA -->
-              <table width="100%%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+              <table width="100%%" cellpadding="0" cellspacing="0" bgcolor="#0d0f16" style="background-color:#0d0f16;border-radius:12px;border:1px solid #1e2130;padding:22px 18px;margin-bottom:24px;text-align:center;">
                 <tr>
-                  <td align="center">
-                    <a href="https://personalbarber.co/wa"
-                      style="display:inline-block;background-color:#39FF14;color:#040605;text-decoration:none;padding:14px 34px;border-radius:50px;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:1.5px;">
-                      ¿Preguntas? Escríbenos por WhatsApp →
-                    </a>
+                  <td>
+                    <h3 style="margin:0 0 6px;color:#ffffff;font-size:16px;font-weight:700;">
+                      ¿Quieres consultar el estado de tu pedido?
+                    </h3>
+                    <p style="margin:0 0 16px;color:#94a3b8;font-size:13px;line-height:1.5;">
+                      Estamos listos para atenderte por WhatsApp y darte información sobre tu despacho.
+                    </p>
+                    <table border="0" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto;">
+                      <tr>
+                        <td align="center" bgcolor="#25D366" style="border-radius:10px;">
+                          <a href="%s" target="_blank"
+                            style="display:inline-block;background-color:#25D366;color:#040605;text-decoration:none;padding:14px 28px;border-radius:10px;font-weight:800;font-size:14px;line-height:20px;text-align:center;box-sizing:border-box;">
+                            💬 Dar seguimiento por WhatsApp
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
 
-              <p style="text-align:center;font-size:12px;color:#64748b;margin:0;">
-                O si prefieres, responde a este correo o escríbenos a <a href="mailto:ayuda@personalbarber.co" style="color:#39FF14;text-decoration:none;">ayuda@personalbarber.co</a>
+              <p style="text-align:center;font-size:12px;color:#94a3b8;margin:0 0 8px;line-height:1.5;">
+                ¿Tienes alguna pregunta sobre tu compra? Responde a este correo o escríbenos a <a href="mailto:ayuda@personalbarber.co" style="color:#25D366;text-decoration:none;font-weight:600;">ayuda@personalbarber.co</a>
               </p>
             </td>
           </tr>
@@ -334,7 +423,7 @@ func buildCustomerOrderEmailHTML(order StoredOrder, tx WompiTransaction) string 
                 Personal Barber · Medellín, Colombia
               </p>
               <p style="margin:0;font-size:11px;color:#475569;">
-                <a href="https://personalbarber.co" style="color:rgba(57,255,20,0.5);text-decoration:none;">personalbarber.co</a> · Tu tienda y barbería de confianza
+                <a href="https://personalbarber.co" style="color:#25D366;text-decoration:none;">personalbarber.co</a> · Tu tienda y barbería de confianza
               </p>
             </td>
           </tr>
@@ -344,14 +433,21 @@ func buildCustomerOrderEmailHTML(order StoredOrder, tx WompiTransaction) string 
     </tr>
   </table>
 </body>
-</html>`, order.ID, customerName, itemsHTML.String(), subtotalStr, shippingLabel,
-		func() string {
-			if order.ShippingCost == 0 {
-				return "GRATIS"
-			}
-			return fmt.Sprintf("$%s COP", shippingStr)
-		}(),
-		totalStr, tx.Reference, tx.ID, customerName, customerAddress, customerCity, customerPhone)
+</html>`,
+		escapedDisplayName,
+		order.ID,
+		dateHTML,
+		itemsHTML.String(),
+		subtotalStr,
+		shippingTitle,
+		shippingColor,
+		shippingVal,
+		totalStr,
+		escapedFullCustomerName,
+		customerCity,
+		customerAddress,
+		customerPhone,
+		escapedWaURL)
 }
 
 // buildAdminOrderEmailHTML genera la plantilla HTML de alerta de venta para los administradores
