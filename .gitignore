@@ -1,14 +1,23 @@
 # Dependencies
 node_modules/
 
-# Build output
-front/dist/
+# Go compiled binaries
+backend/create_order
+backend/create_transaction
+backend/order_status
+backend/wompi_webhook
+backend/get_slots
+backend/reserve
+backend/get_products
+backend/admin_update_product
+backend/admin_manage_category
+backend/update_prices
+backend/seed_cuts
 
 # Environment variables (secrets)
 .env
 .env.*
 !.env.example
-api_slots.gs
 
 # System files
 .DS_Store
